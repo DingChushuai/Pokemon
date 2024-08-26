@@ -128,14 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Backpack.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Pokemon.cpp" />
+    <ClCompile Include="PokemonLib.cpp" />
     <ClCompile Include="Pokemon_simple.cpp" />
     <ClCompile Include="Prop.cpp" />
     <ClCompile Include="SceneDrawer.cpp" />
+    <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -151,17 +154,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backpack.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Pokemon.h" />
+    <ClInclude Include="PokemonLib.h" />
     <ClInclude Include="Prop.h" />
     <ClInclude Include="SceneDrawer.h" />
+    <ClInclude Include="Shop.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="gamebar.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

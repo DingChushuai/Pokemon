@@ -31,7 +31,7 @@ string NPC::GetNotFinishTalk()
 	return string();
 }
 
-bool NPC::TryChangeState(Game* game)
+bool NPC::TryChangeState()
 {
 	/*
 	stateAction:

@@ -7,10 +7,9 @@ class Game;
 class SceneDrawer
 {
 public:
-    SceneDrawer(Game* game):_game(game) {};
+    SceneDrawer(){};
     void draw();    //根据游戏状态绘制场景, 只绘制固定不变的部分, 会随着选择而变化的部分由Command类绘制
 private:
-    Game* _game;
     void drawMenu();    //只绘制gamebar
     void drawGame();    //展示人物和地图基本信息和Log, 由于操作会改变地图信息, 所以由Command类绘制
     void drawSetting(); //只显示"设置", 因为设置的具体内容会随着选择而变化, 选中的选择项会高亮, 所以由Command类绘制

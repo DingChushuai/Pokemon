@@ -26,7 +26,7 @@ class Game
     };
 
 public:
-    Game() :soundPlayer(this), sceneDrawer(this) { gameSenceStack.push_back(START_MENU);};
+    Game() : sceneDrawer() { gameSenceStack.push_back(START_MENU);};
     ~Game() {};
     void Run();
     int playerX, playerY;
