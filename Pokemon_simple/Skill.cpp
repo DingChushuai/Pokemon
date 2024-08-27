@@ -20,7 +20,7 @@ Skill::Skill(int skillID)
             continue;
     }
     file.close();
-
+    
     this->skillID = skillID;
     skillName = data[1];
     skillDescription = data[2];
