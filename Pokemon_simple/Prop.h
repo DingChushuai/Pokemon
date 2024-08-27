@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <string>
-
+#include "tools.h"
 using namespace std;
 
 class Prop
