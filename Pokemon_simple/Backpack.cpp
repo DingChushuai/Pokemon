@@ -1,5 +1,8 @@
 #include "Backpack.h"
-
+#include<fstream>
+#include<vector>
+//#include<iostream>
+#include<string>
 Backpack::Backpack()
 {
 	//do nothing
@@ -12,6 +15,17 @@ Backpack::~Backpack()
 
 void Backpack::Load()
 {
+    ifstream ifs;
+    ifs.open("BACKPACK_STATE_PATH", ios::in);
+
+        string rea;
+        while (getline(ifs, rea))
+        {  if(rea==xxx.getID())
+            AddProp();
+        }
+            
+         ifs.close();
+
 	//从BACKPACK_STATE_PATH中读取背包信息
 	//使用AddProp()添加道具
 }
@@ -23,6 +37,8 @@ void Backpack::AddProp(Prop* prop)
 
 void Backpack::AddProp(int id, int num)
 {
+    Prop::Prop(id);
+    <vector>props.push_back(a);
     //将id和num对应的道具添加到背包中
 	//使用Prop构造函数
 }
