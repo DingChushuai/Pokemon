@@ -1,9 +1,34 @@
 #include "Prop.h"
+#include "tools.h"
+#include <fstream>
 
 Prop::Prop(int ID)
 {
 	//从PROP_INFO_PATH中按照ID读取信息
+    ifstream file("Prop_Info.csv");
 
+    string line;
+    vector<string>data;
+    while (getline(file, line)) {
+        data = Split(line, ',');
+        if (ID == stoi(data[0]))
+            break;
+        else
+            continue;
+    }
+    file.close();
+
+    this->ID = ID;
+    name = data[1];
+    description = data[2];
+    type = (PROP_TYPE)(stoi(data[3]));
+    price = stoi(data[4]);
+    sellPrice = stoi(data[5]);
+    canUseInField = stoi(data[6]);
+    canUseInBattle = stoi(data[7]);
+    vector<string>temp = Split(data[8], '/');
+    for (auto i : temp)
+        effectPara.push_back(stoi(i));
 }
 
 Prop::Prop(Prop& prop)
