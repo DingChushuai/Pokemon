@@ -48,11 +48,7 @@ void Text::Clear()
 {
 	texts.clear();
 }
-void Text::SetColor(int For, int Bac)
-		{
-			WORD wColor = ((Bac & 0x0F) << 4) + (For & 0x0F);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wColor);
-		}
+
 void Text::Print()
 {
 	//TODO: 遍历texts，打印出对应的color和str
