@@ -3,6 +3,7 @@
 #define SKILL_H
 #include <string>
 #include <vector>
+#include "tools.h"
 
 class Pokemon;
 
