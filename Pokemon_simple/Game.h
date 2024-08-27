@@ -6,6 +6,7 @@
 #include "NPC.h"
 #include "Map.h"
 #include "Combat.h"
+#include "Command.h"
 
 class Game
 {
@@ -19,6 +20,7 @@ public:
     GameSence gameSence;
     SoundPlayer soundPlayer;
     Log log;
+    Command command;
     SceneDrawer sceneDrawer;
     vector<GameSence> gameSenceStack;
     vector<NPC> npcs;

@@ -20,9 +20,10 @@ class ChooseList
 {
 public:
     ChooseList(vector<Text> list);
-    ~ChooseList();
+    ChooseList(vector<Text> list, int showMax);
     int chooseNow = 0;
     int chooseMax = 0;
+    int showMax = -1;
     int coverLines = 0; //覆盖行数, 用于显示时覆盖之前的选项
     void SetSelect(int select);
     void ShowList(int max = -1);
@@ -41,6 +42,6 @@ private:
 public:
     Command();
     ~Command();
-    int chooseMenu();
+    int chooseFromList(vector<Text> list, int showMax = -1);
 };
 

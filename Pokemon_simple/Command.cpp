@@ -62,44 +62,28 @@ Command::~Command()
 {
 }
 
-int Command::chooseMenu()
+int Command::chooseFromList(vector<Text> list, int showMax)
 {
-    //这是一个示例函数，用于选择菜单, 其他函数类似于此函数
-    vector<Text> Menu;
-    Menu.push_back(Text("1. 开始新游戏"));
-    Menu.push_back(Text("2. 加载游戏"));
-    Menu.push_back(Text("3. 退出游戏"));
-    ChooseList MenuList(Menu);
+    ChooseList chooseList(list, showMax);
     vector<char> possibleCommands = { UP, LEFT, DOWN, RIGHT, YES, ESC };
     char command;
     do {
-        MenuList.ShowList();
+        chooseList.ShowList();
         command = GetCommand(possibleCommands);
-        cout << command << endl;
         switch (command)
         {
         case UP:
         case LEFT:
-            MenuList.SelectUp();
+            chooseList.SelectUp();
             break;
         case DOWN:
         case RIGHT:
-            MenuList.SelectDown();
+            chooseList.SelectDown();
             break;
         case YES:
-            if (MenuList.chooseNow == 2)
-            {
-                if (DoubleConfirmation(Text("你确定要退出游戏吗?\n")))
-                    return 2;
-                else
-                    break;
-            }
-            return MenuList.chooseNow + 1;
+            return chooseList.chooseNow + 1;
         case ESC:
-            if (DoubleConfirmation(Text("你确定要退出游戏吗?\n")))
-                return 2;
-            else
-                break;
+            return 0;
         }
     } while (true);
 }
@@ -114,9 +98,17 @@ ChooseList::ChooseList(vector<Text> list)
     list[chooseNow].SetColor(None, GREEN);
 }
 
-ChooseList::~ChooseList()
+ChooseList::ChooseList(vector<Text> list, int showMax)
 {
-
+    if (list.size() == 0)
+        throw "choose list is empty";
+    this->list = list;
+    chooseNow = 0;
+    chooseMax = list.size() - 1;
+    list[chooseNow].SetColor(None, GREEN);
+    if (showMax > list.size())
+        showMax = list.size();
+    this->showMax = showMax;
 }
 
 void ChooseList::SetSelect(int select)
