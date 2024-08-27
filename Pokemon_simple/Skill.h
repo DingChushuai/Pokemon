@@ -54,7 +54,6 @@ class Skill
 public:
     Skill(int skillID);     //从技能表读取技能信息
     ~Skill() {};
-    bool UseSkill(Pokemon* user, Pokemon* target); //使用技能
 
     int skillID;            //编号
     string skillName;       //名称

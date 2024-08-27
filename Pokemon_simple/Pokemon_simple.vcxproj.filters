@@ -57,6 +57,18 @@
     <ClCompile Include="Pokemon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PokemonLib.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Shop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Combat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -95,6 +107,18 @@
     <ClInclude Include="Pokemon.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PokemonLib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Shop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Combat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
@@ -115,5 +139,8 @@
     <None Include="Backpack_State.csv">
       <Filter>资源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="gamebar.txt" />
   </ItemGroup>
 </Project>

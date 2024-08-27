@@ -1,15 +1,14 @@
 #include "SceneDrawer.h"
 
-void SceneDrawer::draw()
+void SceneDrawer::draw(GameSence gs, int* money, Map* map, Log* log, Combat* combat)
 {
-
 }
 
 void SceneDrawer::drawMenu()
 {
 }
 
-void SceneDrawer::drawGame()
+void SceneDrawer::drawGame(int money, Map* map, Log* log)
 {
 }
 
@@ -21,7 +20,7 @@ void SceneDrawer::drawPokemonLib()
 {
 }
 
-void SceneDrawer::drawPokemonInfo()
+void SceneDrawer::drawPokemonInfo(Pokemon* pokemon)
 {
 }
 
@@ -33,7 +32,7 @@ void SceneDrawer::drawPokemonCenter()
 {
 }
 
-void SceneDrawer::drawShop()
+void SceneDrawer::drawShop(int money)
 {
 }
 
@@ -53,7 +52,7 @@ void SceneDrawer::drawSellItem()
 {
 }
 
-void SceneDrawer::drawCombat()
+void SceneDrawer::drawCombat(Combat* combat)
 {
 }
 
