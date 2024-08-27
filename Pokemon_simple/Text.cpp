@@ -48,7 +48,11 @@ void Text::Clear()
 {
 	texts.clear();
 }
-
+void Text::SetColor(int For, int Bac)
+		{
+			WORD wColor = ((Bac & 0x0F) << 4) + (For & 0x0F);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wColor);
+		}
 void Text::Print()
 {
 	//TODO: 遍历texts，打印出对应的color和str
@@ -67,8 +71,11 @@ void Text::Print()
 			if (a[j] == "BLUE")a1[j] = 1;
 			if (a[j] == "YELLOW")a1[j] = 6;
 			if (a[j] == "CYAN")a1[j] = 9;
+			if (a[j] == "MAGENTA")a1[j] = 5;
+			if (a[j] == "GRAY")a1[j] = 8;
 		}
-		SetConsoleTextAttribute(a1[0],a1[1]);
+		
+		SetColor(a1[0], a1[1]);
 		cout << texts[i].first << endl;
 	}
 }
