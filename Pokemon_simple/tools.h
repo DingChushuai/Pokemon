@@ -34,6 +34,7 @@ const enum Color
     CYAN,		//浅蓝色
     MAGENTA,	//紫色
     GRAY,		//灰色
+    BLACK,		//黑色
 };
 
 #define NPC_INFO_PATH "NPC_Info.csv"

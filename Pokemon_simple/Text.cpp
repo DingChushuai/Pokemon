@@ -52,24 +52,78 @@ void Text::Clear()
 void Text::Print()
 {
 	//TODO: 遍历texts，打印出对应的color和str
-	//此处为debug仅实现打印功能, 需要改写, 
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	for (int i = 0; i < texts.size(); i++)
 	{
-		
-		string a[2];
-		int a1[2];
-		a[0] = texts[i].second.first;
-		a[1] = texts[i].second.second;
-		for (int j = 0; j < 2; j++)
-		{
-			if (a[j] == "RED")a1[j] = 4;
-			if (a[j] == "GREEN")a1[j] = 2;
-			if (a[j] == "BLUE")a1[j] = 1;
-			if (a[j] == "YELLOW")a1[j] = 6;
-			if (a[j] == "CYAN")a1[j] = 9;
-		}
-		SetConsoleTextAttribute(a1[0],a1[1]);
-		cout << texts[i].first << endl;
+		string text = texts[i].first;
+		Color textColor = texts[i].second.first;
+		Color backColor = texts[i].second.second;
+
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        WORD attributes = 0;
+
+        // 设置文本颜色
+        switch (textColor) {
+        case RED:
+            attributes |= FOREGROUND_RED;
+            break;
+        case GREEN:
+            attributes |= FOREGROUND_GREEN;
+            break;
+        case BLUE:
+            attributes |= FOREGROUND_BLUE;
+            break;
+        case YELLOW:
+            attributes |= FOREGROUND_RED | FOREGROUND_GREEN;
+            break;
+        case CYAN:
+            attributes |= FOREGROUND_GREEN | FOREGROUND_BLUE;
+            break;
+        case MAGENTA:
+            attributes |= FOREGROUND_RED | FOREGROUND_BLUE;
+            break;
+        case GRAY:
+            attributes |= FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+            break;
+        case BLACK:
+            break;
+        case None:
+        default:
+            attributes |= FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+            break;
+        }
+
+        // 设置背景颜色
+        switch (backColor) {
+        case RED:
+            attributes |= BACKGROUND_RED;
+            break;
+        case GREEN:
+            attributes |= BACKGROUND_GREEN;
+            break;
+        case BLUE:
+            attributes |= BACKGROUND_BLUE;
+            break;
+        case YELLOW:
+            attributes |= BACKGROUND_RED | BACKGROUND_GREEN;
+            break;
+        case CYAN:
+            attributes |= BACKGROUND_GREEN | BACKGROUND_BLUE;
+            break;
+        case MAGENTA:
+            attributes |= BACKGROUND_RED | BACKGROUND_BLUE;
+            break;
+        case GRAY:
+            attributes |= BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+            break;
+        case BLACK:
+            break;
+        case None:
+        default:
+            break;
+        }
+        SetConsoleTextAttribute(hConsole, attributes);
+        cout << text;
 	}
 }
 
