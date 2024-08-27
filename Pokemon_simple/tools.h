@@ -39,7 +39,7 @@ const enum Color
 #define NPC_INFO_PATH = "resources/NPC_Info.csv"
 #define POKEMON_INFO_PATH = "resources/Pokemon_Info.csv"
 #define PROP_INFO_PATH = "resources/Prop_Info.csv"
-#define SKILL_INFO_PATH = "resources/Skill_Info.csv"
+#define SKILL_INFO_PATH = "Skill_Info.csv"
 
 #define  NPC_STATE_PATH = "saves/NPC_State.csv"
 #define  POKEMON_STATE_PATH = "saves/Pokemon_State.csv"
@@ -53,7 +53,7 @@ const enum Color
 using namespace std;
 
 inline vector<string> Split(const string& s, char delimiter);
-inline int stoi(const string& s);
+inline int Stoi(const string& s);
 inline pair<int, int> GetPos();		//获取当前光标位置
 inline void GotoXY(int x, int y);	//移动光标到指定位置
 inline void ClearScreen();				//清屏

@@ -17,7 +17,7 @@ inline vector<string> Split(const string& s, char delimiter)
 
   
 
-inline int stoi(const string& s)
+inline int Stoi(const string& s)
 {
     return 0;
 }
