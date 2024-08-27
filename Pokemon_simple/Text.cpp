@@ -124,6 +124,8 @@ void Text::Print()
         }
         SetConsoleTextAttribute(hConsole, attributes);
         cout << text;
+        // 重置控制台文本颜色
+        SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 }
 

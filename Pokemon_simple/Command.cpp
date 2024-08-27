@@ -1,5 +1,6 @@
 #include "Command.h"
 #include <conio.h>
+#include "tools.h"
 
 char Command::GetCommand(vector<char> possibleCommands)
 {
@@ -96,6 +97,7 @@ ChooseList::ChooseList(vector<Text> list)
     chooseNow = 0;
     chooseMax = list.size() - 1;
     list[chooseNow].SetColor(None, GREEN);
+    startLine = -1;
 }
 
 ChooseList::ChooseList(vector<Text> list, int showMax)
@@ -108,6 +110,7 @@ ChooseList::ChooseList(vector<Text> list, int showMax)
     list[chooseNow].SetColor(None, GREEN);
     if (showMax > list.size())
         showMax = list.size();
+    startLine = -1;
     this->showMax = showMax;
 }
 
@@ -122,35 +125,67 @@ void ChooseList::SetSelect(int select)
     list[chooseNow].SetColor(None, GREEN);
 }
 
-void ChooseList::ShowList(int max)
+void ChooseList::ShowList()
 {
-    //覆盖显示最后一次显示的内容
-    //移动光标到前vector.size()行
-
     int n = list.size();
-    //移动光标到前vector.size()行
-    if (max == -1 || max >= list.size())
-        for (int i = 0; i < list.size(); i++)
-        {
-            list[i].Print();
-        }
-    else
+    if (startLine == -1)
     {
-        int showStart, showEnd;
-        if (chooseNow < max / 2)
+        pair<int, int> pos = GetPos();
+        startLine = pos.second;
+    }
+    if (startLine >= 0 && showMax >n)
+    {
+        static bool first = true;
+        if (first)
         {
-            showStart = 0;
-            showEnd = max;
+            for (int i = 0; i < list.size(); i++)
+            {
+                list[i].Print();
+            }
+            first = false;
+        }
+        pair<int, int> pos = GetPos();
+        if (chooseNow == 0)
+        {
+            GotoXY(0,startLine);
+            list[chooseNow].Print();
+            GotoXY(0, startLine + 1);
+            list[chooseNow + 1].Print();
+        }
+        else if (chooseNow == list.size()-1)
+        {
+            GotoXY(0,startLine + list.size() - 2);
+            list[chooseNow - 1].Print();
+            GotoXY(0, startLine + list.size() - 1);
+            list[chooseNow].Print();
         }
         else
         {
-            showStart = chooseNow - max / 2;
-            showEnd = chooseNow + max / 2;
+            GotoXY(0,startLine + chooseNow - 1);
+            list[chooseNow - 1].Print();
+            GotoXY(0, startLine + chooseNow);
+            list[chooseNow].Print();
+            GotoXY(0, startLine + chooseNow + 1);
+            list[chooseNow + 1].Print();
         }
-        for (int i = showStart; i < showEnd; i++)
-        {
-            list[i].Print();
-        }
+        return;
+    }
+
+    GotoXY(0, startLine);
+    int showStart, showEnd;
+    if (chooseNow < showMax / 2)
+    {
+        showStart = 0;
+        showEnd = showMax;
+    }
+    else
+    {
+        showStart = chooseNow - showMax / 2;
+        showEnd = chooseNow + showMax / 2;
+    }
+    for (int i = showStart; i < showEnd; i++)
+    {
+        list[i].Print();
     }
 }
 
