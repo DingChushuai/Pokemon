@@ -29,7 +29,6 @@ public:
     bool LoadInfo(string info);
     string GetTalk();
     string GetNotFinishTalk();
-    bool TryChangeState();      //尝试改变NPC状态，成功返回true, 根据stateAction执行相应动作, 并add log
     ~NPC() {};
 private:
     vector<State> stateList;

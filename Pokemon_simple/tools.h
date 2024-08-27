@@ -3,6 +3,27 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#ifndef GAME_SENCE
+#define GAME_SENCE
+const enum GameSence
+{
+    START_MENU = 0, //开始菜单:to GAME GAMEOVER
+    GAME,       //游戏主界面:to SETTING POKEMON_LIB BACKPACK POKEMON_CENTER SHOP COMBAT DEBUG
+    SETTING,    //设置界面
+    POKEMON_LIB,    //宝可梦库界面:to POKEMON_INFO
+    POKEMON_INFO,   //宝可梦信息界面
+    BACKPACK,       //背包界面
+    POKEMON_CENTER, //宝可梦中心界面
+    SHOP,           //商店界面:to SHOOSE_BUY_OR_SELL
+    SHOOSE_BUY_OR_SELL, //选择购买或出售界面: to BUY_ITEM SELL_POKEMON SELL_ITEM
+    BUY_ITEM,
+    SELL_POKEMON,
+    SELL_ITEM,
+    COMBAT,         //战斗界面
+    DEBUG           //调试界面
+};
+#endif
+
 const enum Color
 {
     None = 0,	//控制台默认输出应该是白色

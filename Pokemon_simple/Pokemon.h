@@ -62,13 +62,15 @@ public:
         int attack, int defense, int speed, int specialAttack, int specialDefense,
         PokemonStatu statu, vector<Skill> skills, int evolutionLevel, int evolutionID, int captureRate);
     ~Pokemon();
+    bool UseSkill(Skill* skill, Pokemon* user, Pokemon* target); //使用技能
 
-private:
+
     int ID;
     ATTRIBUTE attribute; //能力值
     PokemonStatu statu; //异常状态
     Buff buff;          //能力状态修正值
     vector<Skill> skills; //技能
+private:
     int evolutionLevel; //进化等级
     int evolutionID;    //进化后的ID
     int captureRate; //捕获率

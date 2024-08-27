@@ -2,6 +2,7 @@
 #ifndef _SOUNDPLAYER_H_
 #define _SOUNDPLAYER_H_
 
+#include "tools.h"
 
 class SoundPlayer
 {
@@ -27,7 +28,7 @@ public:
     bool Play_Sound(SoundID soundID);    //播放音效(防止重定义加下划线)
     bool PlayMusic(SoundID soundID);    //播放音乐
     bool StopMusic();    //停止播放当前音乐
-    void AdjustMusic();    //根据游戏状态调整音乐
+    void AdjustMusic(GameSence gameSence);    //根据游戏状态调整音乐
 };
 
 #endif // !_SOUNDPLAYER_H_

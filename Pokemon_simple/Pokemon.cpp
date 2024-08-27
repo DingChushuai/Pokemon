@@ -15,3 +15,8 @@ Pokemon::Pokemon(string name, pair<Type, Type> type, int hp, int maxHp, int leve
 Pokemon::~Pokemon()
 {
 }
+
+bool Pokemon::UseSkill(Skill* skill, Pokemon* user, Pokemon* target)
+{
+    return false;
+}

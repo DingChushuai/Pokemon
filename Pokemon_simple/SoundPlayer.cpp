@@ -35,7 +35,6 @@ bool SoundPlayer::StopMusic()
 	return true;
 }
 
-void SoundPlayer::AdjustMusic()
+void SoundPlayer::AdjustMusic(GameSence gameSence)
 {
-	//根据所处的场景, 调整背景音乐的播放
 }
