@@ -19,9 +19,11 @@ void Backpack::Load()
     ifs.open("BACKPACK_STATE_PATH", ios::in);
 
         string rea;
+        vector<string> data;
         while (getline(ifs, rea))
-        {  if(rea==xxx.getID())
-            AddProp();
+        {  
+            data = Split(rea, ',');
+
         }
             
          ifs.close();
@@ -32,13 +34,12 @@ void Backpack::Load()
 
 void Backpack::AddProp(Prop* prop)
 {
-    //将prop添加到背包中
+    props.push_back(prop);//将prop添加到背包中
 }
 
 void Backpack::AddProp(int id, int num)
 {
-    Prop::Prop(id);
-    <vector>props.push_back(a);
+    Prop(id);
     //将id和num对应的道具添加到背包中
 	//使用Prop构造函数
 }
@@ -56,18 +57,45 @@ Prop* Backpack::GetProp(int id)
 
 void Backpack::ReduceProp(int id, int num)
 {
+    for (auto prop : props)
+    {
+        if (prop->GetID() == id)
+        {
+            int n;
+            n = prop->GetNum();
+            prop->SetNum(n-num);
+        }
+    }
+
 }
 
 void Backpack::ReduceProp(Prop* prop)
 {
+
+
+
 }
 
 void Backpack::IncreaseProp(int id, int num)
 {
+    for (auto prop:props)
+    {
+        if (prop->GetID() == id)
+        {
+            int m;
+            m = prop->GetNum();
+            prop->SetNum(m + num);
+        }
+    }
+
 }
 
 void Backpack::IncreaseProp(Prop* prop)
 {
+    props.add(std::remove(props.begin(), props.end(), prop), props.end());
+
+    
+
 }
 
 void Backpack::RemoveProp(Prop* prop)
