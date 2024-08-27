@@ -1,5 +1,5 @@
 #include "tools.h"
-
+#include <sstream>
 
 inline vector<string> Split(const string& s, char delimiter)
 {
@@ -19,7 +19,10 @@ inline vector<string> Split(const string& s, char delimiter)
 
 inline int Stoi(const string& s)
 {
-    return 0;
+    istringstream is(s);
+    int num;
+    is >> num;
+    return num;
 }
 
 inline pair<int, int> GetPos()
@@ -33,4 +36,6 @@ inline void GotoXY(int x, int y)
 
 inline void ClearScreen()
 {
+    system("cls");
+    return;
 }

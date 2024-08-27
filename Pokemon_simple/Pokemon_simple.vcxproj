@@ -143,7 +143,6 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Backpack_State.csv" />

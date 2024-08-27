@@ -24,9 +24,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="tools.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

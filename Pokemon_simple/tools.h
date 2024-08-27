@@ -34,16 +34,17 @@ const enum Color
     CYAN,		//浅蓝色
     MAGENTA,	//紫色
     GRAY,		//灰色
+    BLACK,		//黑色
 };
 
-#define NPC_INFO_PATH = "resources/NPC_Info.csv"
-#define POKEMON_INFO_PATH = "resources/Pokemon_Info.csv"
-#define PROP_INFO_PATH = "resources/Prop_Info.csv"
-#define SKILL_INFO_PATH = "Skill_Info.csv"
+#define NPC_INFO_PATH "NPC_Info.csv"
+#define POKEMON_INFO_PATH "Pokemon_Info.csv"
+#define PROP_INFO_PATH "Prop_Info.csv"
+#define SKILL_INFO_PATH "Skill_Info.csv"
 
-#define  NPC_STATE_PATH = "saves/NPC_State.csv"
-#define  POKEMON_STATE_PATH = "saves/Pokemon_State.csv"
-#define  BACKPACK_STATE_PATH = "saves/Backpack_State.csv"
+#define  NPC_STATE_PATH "NPC_State.csv"
+#define  POKEMON_STATE_PATH "Pokemon_State.csv"
+#define  BACKPACK_STATE_PATH "Backpack_State.csv"
 
 #pragma once
 #include <string>
@@ -52,10 +53,35 @@ const enum Color
 #include <cstdlib>
 using namespace std;
 
-inline vector<string> Split(const string& s, char delimiter);
-inline int Stoi(const string& s);
-inline pair<int, int> GetPos();		//获取当前光标位置
-inline void GotoXY(int x, int y);	//移动光标到指定位置
-inline void ClearScreen();				//清屏
+inline vector<string> Split(const string& s, char delimiter)
+{
+    vector<string>out;
+    string temp = "";
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (s[i] == delimiter) { out.push_back(temp); temp = ""; }
+        else temp += s[i];
+    }
+    out.push_back(temp);
+    return out;
+}
+
+inline int Stoi(const string& s)
+{
+    return atoi(s.c_str());
+}
+
+inline pair<int, int> GetPos()
+{
+    return make_pair(0, 0);
+}
+inline void GotoXY(int x, int y)
+{
+
+}
+inline void ClearScreen()
+{
+    system("cls");
+}
 
 #endif
