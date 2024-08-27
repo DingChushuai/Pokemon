@@ -16,13 +16,13 @@ Skill::Skill(int skillID)
             continue;
     }
     file.close();
-
+    
     this->skillID = skillID;
     skillName = data[1];
     skillDescription = data[2];
     vector<int> temp(8);
     for (int i = 3; i < 10; ++i) {
-        temp[i - 3] = stoi(data[i]);
+        temp.push_back(stoi(data[i]));
     }
     type = (Type)(temp[0]);
     skillType = (SkillType)(temp[1]);

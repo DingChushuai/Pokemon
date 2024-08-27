@@ -1,5 +1,6 @@
 #include "Text.h"
 #include <iostream>
+#include<windows.h>
 using namespace std;
 
 Text::Text()
@@ -27,7 +28,14 @@ void Text::Add(string str, Color textColor, Color backColor)
 }
 
 void Text::SetColor(Color textColor, Color backColor)
-{
+{    
+
+	for(int i=0;i<texts.size();i++)
+	{ 
+		texts[i].second.first = textColor;
+		texts[i].second.second = backColor;
+	}
+
 	//统一设置texts所有字符串的颜色
 }
 
@@ -47,6 +55,20 @@ void Text::Print()
 	//此处为debug仅实现打印功能, 需要改写, 
 	for (int i = 0; i < texts.size(); i++)
 	{
+		
+		string a[2];
+		int a1[2];
+		a[0] = texts[i].second.first;
+		a[1] = texts[i].second.second;
+		for (int j = 0; j < 2; j++)
+		{
+			if (a[j] == "RED")a1[j] = 4;
+			if (a[j] == "GREEN")a1[j] = 2;
+			if (a[j] == "BLUE")a1[j] = 1;
+			if (a[j] == "YELLOW")a1[j] = 6;
+			if (a[j] == "CYAN")a1[j] = 9;
+		}
+		SetConsoleTextAttribute(a1[0],a1[1]);
 		cout << texts[i].first << endl;
 	}
 }
