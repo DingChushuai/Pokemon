@@ -22,7 +22,6 @@ public:
     ChooseList(vector<Text> list);
     ChooseList(vector<Text> list, int showMax);
     int chooseNow = 0;
-    int chooseMax = 0;
     int showMax = -1;
     void SetSelect(int select);
     void ShowList();

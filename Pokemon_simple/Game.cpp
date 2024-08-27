@@ -30,7 +30,7 @@ void Game::Run()
 				Menu.push_back(Text("3. 退出游戏  \n"));
                 Menu.push_back(Text("4. 退出游戏  \n"));
                 Menu.push_back(Text("5. 退出游戏  \n"));
-				int choice = command.chooseFromList(Menu, 2);
+				int choice = command.chooseFromList(Menu,3);
 				if (choice == 1)
 				{
 
