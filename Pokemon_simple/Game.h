@@ -27,5 +27,11 @@ public:
     vector<Map> maps;
     Map* currentMap;
     Combat combat;
+
+private:
+    void Init();
+    void Load();
+    void Save();
+    int ActOnMap();
 };
 
