@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Log.h"
+#include "tools.h"
 using namespace std;
 
 const char UP = 'w';
@@ -29,6 +30,7 @@ public:
     void SelectDown();
 private:
     vector<Text> list;
+    int startLine = 0;
 };
 
 class Command

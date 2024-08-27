@@ -66,6 +66,9 @@
     <ClCompile Include="Shop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Combat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -111,6 +114,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Shop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Combat.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
