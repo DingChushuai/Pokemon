@@ -34,6 +34,15 @@ Prop::Prop(int ID)
 Prop::Prop(Prop& prop)
 {
     //复制构造函数
+    this->ID = prop.ID;
+    this->name = prop.name;
+    this->description = prop.description;
+    this->type = prop.type;
+    this->price = prop.price;
+    this->sellPrice = prop.sellPrice;
+    this->canUseInField = prop.canUseInField;
+    this->canUseInBattle = prop.canUseInBattle;
+    this->effectPara = prop.effectPara;
 }
 
 int Prop::GetID()
