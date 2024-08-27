@@ -24,9 +24,8 @@ public:
     int chooseNow = 0;
     int chooseMax = 0;
     int showMax = -1;
-    int coverLines = 0; //覆盖行数, 用于显示时覆盖之前的选项
     void SetSelect(int select);
-    void ShowList(int max = -1);
+    void ShowList();
     void SelectUp();
     void SelectDown();
 private:
