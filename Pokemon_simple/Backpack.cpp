@@ -15,15 +15,18 @@ Backpack::~Backpack()
 
 void Backpack::Load()
 {
+    Clear();
     ifstream ifs;
     ifs.open("BACKPACK_STATE_PATH", ios::in);
-
+    
         string rea;
-        vector<string> data;
+        vector<string>data;
+    
         while (getline(ifs, rea))
         {  
             data = Split(rea, ',');
-
+            AddProp(atoi(data[0].c_str()), atoi(data[1].c_str()));
+            
         }
             
          ifs.close();
@@ -136,7 +139,16 @@ vector<Prop*> Backpack::GetProps()
 
 void Backpack::Save()
 {
+    ofstream ofs;
+    string ouc;
+    ofs.open("BACKPACK_STATE_PATH", ios::out);
+    for (auto prop : props)
+    {
+        ofs << prop->GetID() << "," << prop->GetNum() << endl;
+    }
+    ofs.close();
     //将背包信息保存到BACKPACK_STATE_PATH中
+
 }
 
 void Backpack::Clear()
