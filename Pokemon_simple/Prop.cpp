@@ -1,5 +1,7 @@
 #include "Prop.h"
+#include "tools.h"
 #include <fstream>
+
 Prop::Prop(int ID)
 {
 	//从PROP_INFO_PATH中按照ID读取信息
