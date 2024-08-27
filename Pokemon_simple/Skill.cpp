@@ -7,7 +7,7 @@ Skill::Skill(int skillID)
     //技能表的文件格式在global.h中定义
     //填充所有属性
     //pp默认为最大pp
-    ifstream file("Skill_Info.csv");
+    ifstream file(SKILL_INFO_PATH);
     string line;
     vector<string> data;
     while (getline(file, line)) {

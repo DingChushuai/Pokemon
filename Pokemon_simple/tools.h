@@ -36,14 +36,14 @@ const enum Color
     GRAY,		//»ÒÉ«
 };
 
-#define NPC_INFO_PATH = "resources/NPC_Info.csv"
-#define POKEMON_INFO_PATH = "resources/Pokemon_Info.csv"
-#define PROP_INFO_PATH = "resources/Prop_Info.csv"
-#define SKILL_INFO_PATH = "Skill_Info.csv"
+#define NPC_INFO_PATH "NPC_Info.csv"
+#define POKEMON_INFO_PATH "Pokemon_Info.csv"
+#define PROP_INFO_PATH "Prop_Info.csv"
+#define SKILL_INFO_PATH "Skill_Info.csv"
 
-#define  NPC_STATE_PATH = "saves/NPC_State.csv"
-#define  POKEMON_STATE_PATH = "saves/Pokemon_State.csv"
-#define  BACKPACK_STATE_PATH = "saves/Backpack_State.csv"
+#define  NPC_STATE_PATH "NPC_State.csv"
+#define  POKEMON_STATE_PATH "Pokemon_State.csv"
+#define  BACKPACK_STATE_PATH "Backpack_State.csv"
 
 #pragma once
 #include <string>
