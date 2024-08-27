@@ -1,5 +1,6 @@
 #include "Command.h"
 #include <conio.h>
+#include "tools.h"
 
 char Command::GetCommand(vector<char> possibleCommands)
 {
@@ -124,11 +125,14 @@ void ChooseList::SetSelect(int select)
 
 void ChooseList::ShowList(int max)
 {
-    //覆盖显示最后一次显示的内容
-    //移动光标到前vector.size()行
+    if (startLine == -1)
+    {
+        pair<int, int> pos = GetPos();
+        startLine = pos.second;
+    }
+    GotoXY(0, startLine);
 
     int n = list.size();
-    //移动光标到前vector.size()行
     if (max == -1 || max >= list.size())
         for (int i = 0; i < list.size(); i++)
         {

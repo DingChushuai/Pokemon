@@ -15,6 +15,7 @@ void Game::Run()
 {
 	while (gameSenceStack.empty() == false)
 	{
+		ClearScreen();
 		gameSence= gameSenceStack.back();
 		soundPlayer.AdjustMusic(gameSence);
 		sceneDrawer.draw(gameSence, &money, currentMap, &log, &combat);

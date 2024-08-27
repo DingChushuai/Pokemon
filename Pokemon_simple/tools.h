@@ -50,6 +50,7 @@ const enum Color
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <windows.h>
 #include <cstdlib>
 using namespace std;
 
@@ -71,13 +72,21 @@ inline int Stoi(const string& s)
     return atoi(s.c_str());
 }
 
-inline pair<int, int> GetPos()
-{
-    return make_pair(0, 0);
+inline pair<int, int> GetPos() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO  pos;
+    if (GetConsoleScreenBufferInfo(hConsole,&pos)) {
+        return make_pair(pos.dwCursorPosition.X, pos.dwCursorPosition.Y);
+    }
+    else {
+        // 如果获取光标位置失败，返回一个错误标志，这里使用(-1, -1)
+        return make_pair(-1, -1);
+    }
 }
-inline void GotoXY(int x, int y)
-{
-
+inline void GotoXY(int x, int y) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD pos = { (SHORT)x, (SHORT)y };
+    SetConsoleCursorPosition(hConsole, pos);
 }
 inline void ClearScreen()
 {

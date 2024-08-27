@@ -31,7 +31,7 @@ public:
     void SelectDown();
 private:
     vector<Text> list;
-    int startLine = 0;
+    int startLine = -1;
 };
 
 class Command
