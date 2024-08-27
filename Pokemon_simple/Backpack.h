@@ -14,11 +14,12 @@ public:
     void AddProp(int id, int num);
     Prop* GetProp(int id);
     void ReduceProp(int id, int num);
-    void ReduceProp(Prop* prop);
+    void ReduceProp(Prop* prop,int num);
     void IncreaseProp(int id, int num);
-    void IncreaseProp(Prop* prop);
+    void IncreaseProp(Prop* prop,int num);
     void RemoveProp(Prop* prop);
     void RemoveProp(int id);
+    void check();
     vector<Prop*> GetProps();
     void Save();
     void Clear();

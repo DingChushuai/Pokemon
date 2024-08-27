@@ -39,7 +39,9 @@ void Backpack::AddProp(Prop* prop)
 
 void Backpack::AddProp(int id, int num)
 {
-    Prop(id);
+    Prop *a=new Prop(id);
+    a->SetNum(num);
+    props.push_back(a);
     //将id和num对应的道具添加到背包中
 	//使用Prop构造函数
 }
@@ -63,16 +65,27 @@ void Backpack::ReduceProp(int id, int num)
         {
             int n;
             n = prop->GetNum();
-            prop->SetNum(n-num);
+            
+            if (n - num >= 0)
+            {
+                prop->SetNum(n - num);
+            }
+            if (n - num == 0)RemoveProp(prop);
         }
     }
 
 }
+//bool Backpack::check( )
 
-void Backpack::ReduceProp(Prop* prop)
+void Backpack::ReduceProp(Prop* prop,int num)
 {
-
-
+    int n;
+    n = prop->GetNum();
+    if (n - num >=0)
+    {
+        prop->SetNum(prop->GetNum() - num);
+    }
+    if (n - num == 0)RemoveProp(prop);
 
 }
 
@@ -90,9 +103,9 @@ void Backpack::IncreaseProp(int id, int num)
 
 }
 
-void Backpack::IncreaseProp(Prop* prop)
-{
-    props.add(std::remove(props.begin(), props.end(), prop), props.end());
+void Backpack::IncreaseProp(Prop* prop,int num)
+{  
+    prop->SetNum(prop->GetNum() + num);
 
     
 
