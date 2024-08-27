@@ -8,7 +8,6 @@ Skill::Skill(int skillID)
     //填充所有属性
     //pp默认为最大pp
     ifstream file("Skill_Info.csv");
-
     string line;
     vector<string> data;
     while (getline(file, line)) {
@@ -26,7 +25,7 @@ Skill::Skill(int skillID)
     skillDescription = data[2];
     vector<int> temp(7);
     for (int i = 3; i < 10; ++i) {
-        temp[i - 3] = stoi(data[i]);
+        temp.push_back(stoi(data[i]));
     }
     type = (Type)(temp[0]);
     skillType = (SkillType)(temp[1]);
