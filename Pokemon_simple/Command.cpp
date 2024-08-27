@@ -95,7 +95,6 @@ ChooseList::ChooseList(vector<Text> list)
         throw "choose list is empty";
     this->list = list;
     chooseNow = 0;
-    chooseMax = list.size() - 1;
     list[chooseNow].SetColor(None, GREEN);
     startLine = -1;
 }
@@ -106,7 +105,6 @@ ChooseList::ChooseList(vector<Text> list, int showMax)
         throw "choose list is empty";
     this->list = list;
     chooseNow = 0;
-    chooseMax = list.size() - 1;
     list[chooseNow].SetColor(None, GREEN);
     if (showMax > list.size())
         showMax = list.size();
@@ -116,7 +114,7 @@ ChooseList::ChooseList(vector<Text> list, int showMax)
 
 void ChooseList::SetSelect(int select)
 {
-    if (select < 0 || select > chooseMax)
+    if (select < 0 || select >=list.size())
         throw "choose list index out of range";
     if (select == chooseNow)
         return;
@@ -133,7 +131,7 @@ void ChooseList::ShowList()
         pair<int, int> pos = GetPos();
         startLine = pos.second;
     }
-    if (startLine >= 0 && showMax >n)
+    if (showMax >=n)
     {
         static bool first = true;
         if (first)
@@ -177,16 +175,34 @@ void ChooseList::ShowList()
     {
         showStart = 0;
         showEnd = showMax;
+        for (int i = showStart; i <= showEnd; i++)
+        {
+            list[i].Print();
+        }
+        Text("¨‹                                 \n", Color::YELLOW).Print();
+    }
+    else if (chooseNow > n - 1 - showMax / 2)
+    {
+        showStart = n - showMax -1;
+        showEnd = n-1;
+        Text("¡ø                                 \n", Color::YELLOW).Print();
+        for (int i = showStart; i <= showEnd; i++)
+        {
+            list[i].Print();
+        }
     }
     else
     {
         showStart = chooseNow - showMax / 2;
         showEnd = chooseNow + showMax / 2;
+        Text("¡ø                                 \n", Color::YELLOW).Print();
+        for (int i = showStart; i <= showEnd; i++)
+        {
+            list[i].Print();
+        }
+        Text("¨‹                                 \n", Color::YELLOW).Print();
     }
-    for (int i = showStart; i < showEnd; i++)
-    {
-        list[i].Print();
-    }
+
 }
 
 void ChooseList::SelectUp()
@@ -198,7 +214,7 @@ void ChooseList::SelectUp()
 
 void ChooseList::SelectDown()
 {
-    if (chooseNow == chooseMax)
+    if (chooseNow == list.size() - 1)
         return;
     SetSelect(chooseNow + 1);
 }
