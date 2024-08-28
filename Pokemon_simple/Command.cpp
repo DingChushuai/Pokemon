@@ -1,6 +1,7 @@
 #include "Command.h"
 #include <conio.h>
 #include "tools.h"
+#pragma once
 
 char Command::GetCommand(vector<char> possibleCommands)
 {

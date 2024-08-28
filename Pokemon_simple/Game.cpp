@@ -1,4 +1,5 @@
 #include "Game.h"
+#pragma once
 
 Game::Game()
 {
@@ -9,35 +10,17 @@ Game::Game()
     money = 0;
     currentMap = nullptr;
 	inCombat = false;
+	pokemonNow = nullptr;
+	HideCursor(); 
 }
-
-/*
-const enum GameSence
-{
-	START_MENU = 0, //开始菜单:to GAME GAMEOVER
-	GAME,       //游戏主界面:to SETTING POKEMON_LIB BACKPACK POKEMON_CENTER SHOP COMBAT DEBUG
-	SETTING,    //设置界面
-	POKEMON_LIB,    //宝可梦库界面:to POKEMON_INFO
-	POKEMON_INFO,   //宝可梦信息界面
-	BACKPACK,       //背包界面
-	POKEMON_CENTER, //宝可梦中心界面
-	SHOP,           //商店界面:to SHOOSE_BUY_OR_SELL
-	SHOOSE_BUY_OR_SELL, //选择购买或出售界面: to BUY_ITEM SELL_POKEMON SELL_ITEM
-	BUY_ITEM,
-	SELL_POKEMON,
-	SELL_ITEM,
-	COMBAT,         //战斗界面
-	DEBUG           //调试界面
-};
-*/
 
 void Game::Run()
 {
 	while (gameSenceStack.empty() == false)
 	{
 		ClearScreen();
+		gameSence = gameSenceStack.back();
 		cout<< "GameScence: " << gameSence << endl;
-		gameSence= gameSenceStack.back();
 		soundPlayer.AdjustMusic(gameSence);
 		sceneDrawer.draw(gameSence, &money, currentMap, &log, &combat);
 		switch (gameSence)
@@ -110,6 +93,14 @@ void Game::Run()
 			{
 				{
 					vector<Text> pokemonsInGame = pokemonLib.GetPokemonInGameInfo();
+					if (pokemonsInGame.size() == 0)
+					{
+                        Text("\n你的队伍中没有宝可梦，请先获取一只宝可梦!\n", RED, GRAY).Print();
+                        command.Pause();
+                        gameSenceStack.pop_back();
+                        break;
+
+					}
 					int choice = command.chooseFromList(pokemonsInGame);
                     if (choice == 0) { gameSenceStack.pop_back(); break; }
 					pokemonNow = pokemonLib.GetPokemonInGame(choice); 
@@ -130,6 +121,13 @@ void Game::Run()
 			{
 				{
 					vector<Text> props = backpack.GetPropsInfo();
+                    if (props.size() == 0)
+                    {
+                        Text("\n你的背包中没有道具，请先获取一些道具!\n", RED, GRAY).Print();
+                        command.Pause();
+                        gameSenceStack.pop_back();
+                        break;
+                    }
 					int choice = command.chooseFromList(props,10);
                     if (choice == 0) { gameSenceStack.pop_back(); break; } 
 					Prop* PropNow = backpack.GetPropFromIndex(choice);
@@ -222,7 +220,8 @@ void Game::Run()
 					options.push_back(Text("1. 购买道具\n"));
 					options.push_back(Text("2. 卖出道具\n"));
 					options.push_back(Text("3. 卖出仓库中的宝可梦\n"));
-					int choice = command.chooseFromList(options);
+					int choice = command.chooseFromList(options,3);
+                    if (choice == 0) { gameSenceStack.pop_back(); gameSenceStack.pop_back(); break; }
 					if (choice == 1) { gameSenceStack.push_back(BUY_ITEM); }
 					else if (choice == 2) { gameSenceStack.push_back(SELL_ITEM); }
 					else if (choice == 3) { gameSenceStack.push_back(SELL_POKEMON); }
@@ -309,12 +308,26 @@ void Game::Run()
 				gameSenceStack.pop_back();
                 break;
 			}
+			case WORLD_MAP:  
+			{
+				{
+					command.Pause();
+					gameSenceStack.pop_back();
+				}
+                break;
+			}
 		}
 	}
 }
 
 void Game::Init()
 {
+	playerX = 1;
+    playerY = 8;
+	money = 0;
+	inCombat = false;
+	Map* map1= new Map(1);
+	currentMap = map1;
 }
 
 void Game::Load()
@@ -327,7 +340,99 @@ void Game::Save()
 
 void Game::ActOnMap()
 {
+	pair<int, int> pos = GetPos();
+	int maxX = currentMap->getMapWidth();
+    int maxY = currentMap->getMapHeight();
+	for (int i = 0; i < maxY; i++)
+	{
+		for (int j = 0; j < maxX; j++)
+		{
+			Map::MapBlock  block = currentMap->getMapBlock(j,i); 
+			Text(string(1, block.symbol), block.color).Print();
+		}
+        cout << endl; 
+	}
+	GotoXY(pos.first + playerX, pos.second + playerY);
+	Text("@", MAGENTA).Print();
+	while (true)
+	{
+		char cmd = command.GetCommand({ UP,DOWN,LEFT,RIGHT,ESC,OPEN_BACKPACK,POKEMON_LIST,OPEN_WORLD_MAP });
+		if (cmd == ESC)
+		{
+			gameSenceStack.push_back(SETTING);
+			break;
+		}
+		else if (cmd == OPEN_BACKPACK)
+		{
+			gameSenceStack.push_back(BACKPACK);
+			break;
+		}
+        else if (cmd == POKEMON_LIST)
+        {
+            gameSenceStack.push_back(POKEMON_LIB);
+            break;
+        }
+        else if (cmd == OPEN_WORLD_MAP)
+        {
+            gameSenceStack.push_back(WORLD_MAP);
+            break;
+        }
+		else
+		{
+            int newX = playerX;
+            int newY = playerY;
+            switch (cmd)
+            {
+            case UP: if(newY>=0) newY--; break;
+            case DOWN:if(newY<maxY) newY++; break;
+            case LEFT:if(newX>=0) newX--; break; 
+            case RIGHT:if(newX<maxX) newX++; break; 
+            }
+            Map::MapBlock block = currentMap->getMapBlock(newX, newY);
+			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
+			if (block.type == Map::EMPTY)
+			{
+				GotoXY(pos.first + playerX, pos.second + playerY);
+                Text(string(1, blockOld.symbol), blockOld.color).Print();
+                playerX = newX;
+                playerY = newY;
+                GotoXY(pos.first + playerX, pos.second + playerY);
+                Text("@", MAGENTA).Print();
+            }
+            else if (block.type == Map::WALL)
+            {
+				//do nothing
+			}
+			else if (block.type == Map::GRASS)
+			{
+				GotoXY(pos.first + playerX, pos.second + playerY);
+				Text(string(1, blockOld.symbol), blockOld.color).Print();
+				playerX = newX;
+				playerY = newY;
+				GotoXY(pos.first + playerX, pos.second + playerY);
+				Text("@", MAGENTA).Print();
+			}
+			else if (block.type == Map::EXIT)
+			{
 
+			}
+			else if (block.type == Map::SHOP)
+			{
+				gameSenceStack.push_back(SHOP);
+                break;
+			}
+			else if (block.type == Map::HOSPITAL)
+			{
+
+			}
+			else if (block.type == Map::POKEMON_CENTER)
+			{
+				gameSenceStack.push_back(POKEMON_CENTER);
+                break;
+			}
+
+		}
+	}
 }
 
 void Game::UseProp(Prop* prop)

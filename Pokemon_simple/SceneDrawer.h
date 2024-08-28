@@ -28,6 +28,7 @@ private:
     void drawSellItem(); //只显示"出售物品"
     void drawCombat(Combat* combat); //显示"战斗", 和战斗信息
     void drawDebug(); //显示"调试"和调试的帮助函数
+    void drawWorldMap(Map* map); //显示"世界地图"
 };
 
 #endif // !SCENEDRAWER_H

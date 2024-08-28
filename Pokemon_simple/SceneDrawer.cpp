@@ -1,4 +1,5 @@
 #include "SceneDrawer.h"
+#pragma once
 
 void SceneDrawer::draw(GameSence gs, int* money, Map* map, Log* log, Combat* combat)
 {
@@ -57,5 +58,9 @@ void SceneDrawer::drawCombat(Combat* combat)
 }
 
 void SceneDrawer::drawDebug()
+{
+}
+
+void SceneDrawer::drawWorldMap(Map* map)
 {
 }

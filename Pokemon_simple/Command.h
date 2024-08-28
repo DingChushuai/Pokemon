@@ -15,7 +15,7 @@ const char ESC = 27;
 const char OPEN_BACKPACK = 'e';
 const char POKEMON_LIST = 'f';
 const char COMMAND = '/';
-const char WORLD_MAP = 'm';
+const char OPEN_WORLD_MAP = 'm';
 
 class ChooseList
 {

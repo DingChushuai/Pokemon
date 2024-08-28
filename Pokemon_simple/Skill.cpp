@@ -1,5 +1,6 @@
 #include "Skill.h"
 #include <fstream>
+#pragma once
 
 Skill::Skill(int skillID)
 {

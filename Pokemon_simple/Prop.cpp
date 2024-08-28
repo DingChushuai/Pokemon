@@ -1,6 +1,7 @@
 #include "Prop.h"
 #include "tools.h"
 #include <fstream>
+#pragma once
 
 Prop::Prop(int ID)
 {
