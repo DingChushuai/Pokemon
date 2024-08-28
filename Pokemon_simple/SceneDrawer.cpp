@@ -20,7 +20,7 @@ void SceneDrawer::drawPokemonLib()
 {
 }
 
-void SceneDrawer::drawPokemonInfo(Pokemon* pokemon)
+void SceneDrawer::drawPokemonInfo()
 {
 }
 

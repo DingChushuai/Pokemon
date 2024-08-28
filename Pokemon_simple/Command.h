@@ -35,12 +35,14 @@ private:
 
 class Command
 {
-private:
+public:
     char GetCommand(vector<char> possibleCommands); //接收用户输入,直到按下可能生效的按键为止
     bool DoubleConfirmation(Text message = Text("你确定要这么做吗?\n", RED)); //二次确认
-public:
     Command();
     ~Command();
+    void Pause();
     int chooseFromList(vector<Text> list, int showMax = -1);
+    void PrintfList(vector<Text> list);
+    int ChooseCount(int max);
 };
 

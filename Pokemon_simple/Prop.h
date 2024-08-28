@@ -34,7 +34,7 @@ class Prop
     };
 public:
     Prop(int ID);
-    Prop(Prop& prop);
+    Prop(const Prop& prop);
     int GetID();
     void SetNum(int num);
     int GetNum();

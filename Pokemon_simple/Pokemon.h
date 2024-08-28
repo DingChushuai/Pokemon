@@ -63,8 +63,9 @@ public:
         PokemonStatu statu, vector<Skill> skills, int evolutionLevel, int evolutionID, int captureRate);
     ~Pokemon();
     bool UseSkill(Skill* skill, Pokemon* user, Pokemon* target); //使用技能
-
-
+    void Print(); //打印宝可梦信息
+    void PrintDetail(); //打印宝可梦详细信息
+    int GetSellPrice(); //获取出售价格
     int ID;
     ATTRIBUTE attribute; //能力值
     PokemonStatu statu; //异常状态

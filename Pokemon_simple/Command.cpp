@@ -63,6 +63,11 @@ Command::~Command()
 {
 }
 
+void Command::Pause()
+{
+    _getch();
+}
+
 int Command::chooseFromList(vector<Text> list, int showMax)
 {
     ChooseList chooseList(list, showMax);
@@ -89,23 +94,72 @@ int Command::chooseFromList(vector<Text> list, int showMax)
     } while (true);
 }
 
+void Command::PrintfList(vector<Text> list)
+{
+    for (int i = 0; i < list.size(); i++)
+    {
+        list[i].Print();
+    }
+}
+
+int Command::ChooseCount(int max)
+{
+    int count = 1;
+    Text message("请选择数量：");
+    message.Print();
+    pair<int, int> pos = GetPos();
+    while (true)
+    {
+        string str = to_string(count);
+        string str2 = to_string(max);
+        GotoXY(pos.first, pos.second);
+        Text(str).Print();
+        Text(" / ").Print();
+        Text(str2).Print();
+        Text("    ").Print();
+        char command = GetCommand({ UP, LEFT, DOWN, RIGHT, YES, ESC ,'/'});
+        switch (command)
+        {
+        case UP:
+        case LEFT:
+            if (count > 1)
+                count--;
+            break;
+        case DOWN:
+        case RIGHT:
+            if (count < max)
+                count++;
+            break;
+        case YES:
+            return count;
+        case ESC:
+            return 0;
+        case '/':
+            Text("\n请输入具体数量").Print();
+            int n;
+            do
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(1024, '\n');
+                }
+                cin >> n;
+            }while (n <= 0 || n > max);
+            return n;
+        }
+    }
+}
+
 ChooseList::ChooseList(vector<Text> list)
 {
-    if (list.size() == 0)
-        throw "choose list is empty";
     this->list = list;
-    chooseNow = 0;
-    list[chooseNow].SetColor(None, GREEN);
     startLine = -1;
 }
 
 ChooseList::ChooseList(vector<Text> list, int showMax)
 {
-    if (list.size() == 0)
-        throw "choose list is empty";
     this->list = list;
-    chooseNow = 0;
-    list[chooseNow].SetColor(None, GREEN);
     if (showMax > list.size())
         showMax = list.size();
     startLine = -1;
@@ -128,6 +182,8 @@ void ChooseList::ShowList()
     int n = list.size();
     if (startLine == -1)
     {
+        chooseNow = 0;
+        list[chooseNow].SetColor(None, GREEN);
         pair<int, int> pos = GetPos();
         startLine = pos.second;
     }

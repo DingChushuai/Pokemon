@@ -7,9 +7,13 @@
 #include "Map.h"
 #include "Combat.h"
 #include "Command.h"
+#include "PokemonLib.h"
+#include "Backpack.h"
+#include "Shop.h"
 
 class Game
 {
+    const int MAX_POKEMON_INGAME = 6;
 public:
     Game(); 
     ~Game() {};
@@ -27,11 +31,17 @@ public:
     vector<Map> maps;
     Map* currentMap;
     Combat combat;
+    PokemonLib pokemonLib;
+    Pokemon* pokemonNow;
+    Backpack backpack;
+    Shop shop;
 
 private:
     void Init();
     void Load();
     void Save();
-    int ActOnMap();
+    void ActOnMap();
+    void UseProp(Prop* prop);
+
 };
 

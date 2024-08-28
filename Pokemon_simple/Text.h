@@ -20,7 +20,6 @@ public:
     vector<pair<string, pair<Color, Color>>> GetTexts();
     void Clear();
     void Print();
-    void SetColor(int For, int Bac);
 
 private:
     vector<pair<string, pair<Color, Color>>> texts;

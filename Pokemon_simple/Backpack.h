@@ -3,6 +3,7 @@
 #define BACKPACK_H
 
 #include "Prop.h"
+#include "Text.h"
 
 class Backpack
 {
@@ -12,14 +13,18 @@ public:
     void Load();
     void AddProp(Prop* prop);
     void AddProp(int id, int num);
-    Prop* GetProp(int id);
+    Prop* GetProp_(int id);
+    Prop* GetPropFromIndex(int index);
     void ReduceProp(int id, int num);
-    void ReduceProp(Prop* prop);
+    void ReduceProp(Prop* prop,int num);
     void IncreaseProp(int id, int num);
-    void IncreaseProp(Prop* prop);
-    void RemoveProp(Prop* prop);
-    void RemoveProp(int id);
+    void IncreaseProp(Prop* prop,int num);
+    void RemoveProp_(Prop* prop);
+    void RemoveProp_(int id);
     vector<Prop*> GetProps();
+    vector<Text> GetPropsInfo();
+    vector<Text> GetPropsSellPrice();
+    vector<Text> GetPropsBuyPrice();
     void Save();
     void Clear();
 

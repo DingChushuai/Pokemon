@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "tools.h"
+#include "Text.h"
 
 class Pokemon;
 

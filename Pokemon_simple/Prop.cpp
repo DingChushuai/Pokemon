@@ -33,7 +33,7 @@ Prop::Prop(int ID)
 		effectPara.push_back(stoi(tempEffect[i]));
 }
 
-Prop::Prop(Prop& prop)
+Prop::Prop(const Prop& prop)
 {
 	ID = prop.ID;
 	name = prop.name;

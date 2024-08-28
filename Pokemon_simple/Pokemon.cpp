@@ -20,3 +20,16 @@ bool Pokemon::UseSkill(Skill* skill, Pokemon* user, Pokemon* target)
 {
     return false;
 }
+
+void Pokemon::Print()
+{
+}
+
+void Pokemon::PrintDetail()
+{
+}
+
+int Pokemon::GetSellPrice()
+{
+    return 0;
+}
