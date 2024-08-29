@@ -18,6 +18,7 @@ public:
 	vector<Text> GetPokemonInGameInfo();
 	vector<Text> GetPokemonInLibInfo();
 	vector<Text> GetPokemonSellPrice();
-
+	void Save();
+    void Load();
 };
 

@@ -58,10 +58,12 @@ bool Command::DoubleConfirmation(Text message)
 
 Command::Command()
 {
+    //do nothing
 }
 
 Command::~Command()
 {
+    //do nothing
 }
 
 void Command::Pause()

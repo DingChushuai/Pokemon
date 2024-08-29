@@ -4,7 +4,7 @@
 
 Skill::Skill(int skillID)
 {
-    ifstream file("Skill_Info.csv");
+    ifstream file(SKILL_INFO_PATH);
 
     string line;
     vector<string> data;

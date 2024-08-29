@@ -9,6 +9,5 @@ public:
     vector<Text> GetPropsInShop();
     int GetPriceOfProp(int index);
     Prop BuyProp(int index,int count);
-    
 };
 

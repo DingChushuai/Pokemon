@@ -20,9 +20,7 @@ void Game::Run()
 	{
 		ClearScreen();
 		gameSence = gameSenceStack.back();
-		cout<< "GameScence: " << gameSence << endl;
 		ChangeMusic();
-		sceneDrawer.draw(gameSence, money, currentMap, &log, &combat);
 		switch (gameSence)
 		{
 			case START_MENU:
@@ -378,6 +376,12 @@ void Game::Init()
 	inCombat = false;
 	Map* map1= new Map(1);
 	currentMap = map1;
+	maps.push_back(map1);
+
+	//TODO: 从NPC_Info.txt读取所有NPC信息,数量为NPCS_COUNT
+	//使用 new 创建新的对象, 构造函数使用NPC(int id);
+	//正常情况下,NPC的id与NPC_Info.txt中的行数对应(从1开始)
+
 	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
 	log.clearLog();
 	log.AddLog(Text("欢迎来到宝可梦世界！",GREEN));
@@ -385,10 +389,29 @@ void Game::Init()
 
 void Game::Load()
 {
+    //TODO: 从Game_State.txt读取
+    //读取内容在README.md中有详细说明
+	// 注意处理空文件的情况
+
+    //TODO: 从NPC_State.csv读取,并存入npcs
+    //读取内容在README.md中有详细说明
+	//读取每个npc时使用 new 创建新的对象, 构造函数使用NPC(string info);
+    //注意处理空文件的情况
+
+    backpack.Load(); 
+    pokemonLib.Load(); 
 }
 
 void Game::Save()
 {
+	//TODO: 储存到Game_State.txt
+	//储存内容在README.md中有详细说明
+
+	//TODO: 储存到NPC_State.csv
+	//NPC: vector<NPC*> npcs;
+	//储存内容在README.md中有详细说明
+	backpack.Save();
+	pokemonLib.Save();
 }
 
 void Game::ActOnMap()
@@ -519,5 +542,23 @@ void Game::ChangeMusic()
 		default: BGM = SoundPlayer::MUSIC_YeWai; break;
 	}
     soundPlayer.PlayMusic(BGM);
+}
+
+bool Game::ChangeNPCState(NPC* npc)
+{
+	//TODO:
+	//尝试改变NPC状态，如果成功返回true
+	/*
+	NPC改变的逻辑如下:
+	先获取NPC的当前状态npc.GetState()
+	获取NPC的状态类型stateAction[0]
+	根据NPC的状态类型,和对应的状态参数stateAction[1 ~ n]
+    根据状态类型和对应参数判断是否可以改变NPC状态
+	一共8种可能的改变方式,每一种需要调用不同的类和函数,在README.md中有详细说明
+	如果不清楚其中的某一种应该如何判断,在对应位置写上"//CAN NOT FINISH" 注释,我会补全
+	如果可以改变NPC状态,将npc的state改为stateNext.并且返回true(别忘了可能的移动npc的位置)
+    否则返回false
+	*/
+	return false;
 }
 

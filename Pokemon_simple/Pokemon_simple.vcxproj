@@ -138,16 +138,18 @@
     <ClCompile Include="PokemonLib.cpp" />
     <ClCompile Include="Pokemon_simple.cpp" />
     <ClCompile Include="Prop.cpp" />
-    <ClCompile Include="SceneDrawer.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="worldmap.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Backpack_State.csv" />
+    <None Include="Battle_Info.csv" />
     <None Include="NPC_Info.csv" />
     <None Include="NPC_State.csv" />
+    <None Include="PokemonLib_State.csv" />
     <None Include="Pokemon_Info.csv" />
     <None Include="Prop_info.csv" />
     <None Include="README.md" />
@@ -164,7 +166,6 @@
     <ClInclude Include="Pokemon.h" />
     <ClInclude Include="PokemonLib.h" />
     <ClInclude Include="Prop.h" />
-    <ClInclude Include="SceneDrawer.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SoundPlayer.h" />
@@ -173,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="gamebar.txt" />
+    <Text Include="Game_State.txt" />
     <Text Include="map_1.txt" />
   </ItemGroup>
   <ItemGroup>

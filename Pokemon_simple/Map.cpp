@@ -33,9 +33,13 @@ Map::Map(int mapID)
 		texts.push_back(text);
 	}
 	getline(file, line);
-	//出口信息
+
+	//TODO: 将出口信息存入exits
+
 	getline(file, line);
-	//野生宝可梦信息
+
+	//TODO: 将野生宝可梦信息存入wildPokemon
+
 	for (int i = 0; i < mapHeight; i++) 
 	{
 		getline(file, line); 
@@ -64,6 +68,7 @@ Map::Map(int mapID)
 
 Map::~Map()
 {
+	//do nothing
 }
 
 int Map::getMapID()
@@ -93,8 +98,10 @@ Map::BlockType Map::getBlockType(int x, int y)
 
 vector<int> Map::getExit(int x, int y)
 {
-	//在所有exits中寻找(x,y)的出口信息
-    return exits[0];
+	//TODO:
+	//在所有exits中寻找(x,y)的出口信息,并返回出口信息
+	//tips:exits[i]前两项为x,y, 后三项为地图ID,出口坐标
+    return vector<int>();
 }
 
 vector<Text> Map::getTexts()
@@ -102,7 +109,7 @@ vector<Text> Map::getTexts()
 	return texts;
 }
 
-vector<pair<int, int>> Map::getWildPokemon()
+vector<vector<int>> Map::getWildPokemon()
 {
 	return wildPokemon;
 }

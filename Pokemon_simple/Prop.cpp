@@ -5,8 +5,7 @@
 
 Prop::Prop(int ID)
 {
-	//从PROP_INFO_PATH中按照ID读取信息
-	ifstream file("Prop_Info.csv");
+	ifstream file(PROP_INFO_PATH);
 	string line;
 	vector<string> data;
 	while (getline(file, line)) {

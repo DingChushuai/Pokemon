@@ -34,7 +34,7 @@ const enum Color
     YELLOW,
     CYAN,		//浅蓝色
     MAGENTA,	//紫色
-    GRAY,		//灰色
+    GRAY,		//白色
     BLACK,		//黑色
 };
 
@@ -42,12 +42,15 @@ const enum Color
 #define POKEMON_INFO_PATH "Pokemon_Info.csv"
 #define PROP_INFO_PATH "Prop_Info.csv"
 #define SKILL_INFO_PATH "Skill_Info.csv"
+#define Battle_Info_PATH "Battle_Info.csv"
 
 #define  NPC_STATE_PATH "NPC_State.csv"
-#define  POKEMON_STATE_PATH "Pokemon_State.csv"
+#define  POKEMONLIB_STATE_PATH "PokemonLib_State.csv"
 #define  BACKPACK_STATE_PATH "Backpack_State.csv"
+#define  GAME_STATE_PATH "Game_State.csv"
 
 #define PROPS_COUNT 56
+#define NPCS_COUNT 6
 
 #pragma once
 #include <string>
@@ -82,7 +85,6 @@ inline pair<int, int> GetPos() {
         return make_pair(pos.dwCursorPosition.X, pos.dwCursorPosition.Y);
     }
     else {
-        // 如果获取光标位置失败，返回一个错误标志，这里使用(-1, -1)
         return make_pair(-1, -1);
     }
 }

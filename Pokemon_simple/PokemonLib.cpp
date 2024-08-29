@@ -55,3 +55,11 @@ vector<Text> PokemonLib::GetPokemonSellPrice()
 {
     return vector<Text>();
 }
+
+void PokemonLib::Save()
+{
+}
+
+void PokemonLib::Load()
+{
+}

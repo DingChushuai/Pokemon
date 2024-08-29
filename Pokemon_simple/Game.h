@@ -2,7 +2,6 @@
 
 #include "SoundPlayer.h"
 #include "Log.h"
-#include "SceneDrawer.h"
 #include "NPC.h"
 #include "Map.h"
 #include "Combat.h"
@@ -25,9 +24,8 @@ public:
     SoundPlayer soundPlayer;
     Log log;
     Command command;
-    SceneDrawer sceneDrawer;
     vector<GameSence> gameSenceStack;
-    vector<NPC> npcs;
+    vector<NPC*> npcs;
     vector<Map*> maps;
     Map* currentMap;
     Combat combat;
@@ -43,6 +41,6 @@ private:
     void ActOnMap();
     void UseProp(Prop* prop);
     void ChangeMusic();
-
+    bool ChangeNPCState(NPC* npc);  //尝试改变NPC状态，如果成功返回true
 };
 

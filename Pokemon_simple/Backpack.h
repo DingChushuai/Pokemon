@@ -15,8 +15,8 @@ public:
     void AddProp(int id, int num);
     Prop* GetProp_(int id);
     Prop* GetPropFromIndex(int index);
-    void ReduceProp(int id, int num);
-    void ReduceProp(Prop* prop,int num);
+    bool ReduceProp(int id, int num);
+    bool ReduceProp(Prop* prop,int num);
     void IncreaseProp(int id, int num);
     void IncreaseProp(Prop* prop,int num);
     void RemoveProp_(Prop* prop);

@@ -42,5 +42,4 @@ Prop Shop::BuyProp(int index, int count)
     Prop prop = *shop.GetPropFromIndex(index);
     prop.SetNum(count);
     return prop; 
-
 }

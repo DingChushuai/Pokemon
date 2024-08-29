@@ -30,9 +30,9 @@ public:
     int getMapHeight();
     MapBlock getMapBlock(int x, int y);
     BlockType getBlockType(int x, int y);
-    vector<int> getExit(int x, int y);
-    vector<Text> getTexts();
-    vector<pair<int, int>> getWildPokemon();
+    vector<int> getExit(int x, int y);  //返回出口信息(出口地图ID/出口地图X坐标/出口地图Y坐标),如果没有出口则返回空向量
+    vector<Text> getTexts();            //返回地图上的文字信息
+    vector<vector<int>> getWildPokemon();   //返回地图上的野生宝可梦信息(宝可梦ID/宝可梦出现的等级/宝可梦出现的概率)
 
 private:
     int mapID;
@@ -42,7 +42,7 @@ private:
     vector<vector<MapBlock>> mapBlocks;
     vector<vector<int>> exits; //记录地图出口信息,每一项包括:出口X坐标/出口Y坐标/出口地图ID/出口地图X坐标/出口地图Y坐标
     vector<Text> texts; //记录地图上的文字信息
-    vector<pair<int, int>> wildPokemon; //记录地图上的野生宝可梦信息,每一项包括:宝可梦ID/宝可梦出现的等级
+    vector<vector<int>> wildPokemon; //记录地图上的野生宝可梦信息,每一项包括:宝可梦ID/宝可梦出现的等级/宝可梦出现的概率
 };
 
 #endif

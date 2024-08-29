@@ -31,48 +31,18 @@
     <Filter Include="头文件\Finished">
       <UniqueIdentifier>{e49f136f-a535-4acf-9628-e1cd547f0718}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\TODO">
+      <UniqueIdentifier>{518018ca-ae75-456f-bbc0-764b42935a96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Pokemon_simple.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Prop.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Backpack.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneDrawer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="NPC.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Skill.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Pokemon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="PokemonLib.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Shop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Combat.cpp">
@@ -81,54 +51,84 @@
     <ClCompile Include="SoundPlayer.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
+    <ClCompile Include="worldmap.txt">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC.cpp">
+      <Filter>源文件\TODO</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>源文件\TODO</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Prop.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Backpack.cpp">
+      <Filter>源文件\TODO</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Pokemon_simple.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Shop.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="tools.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Skill.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Pokemon.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Command.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="PokemonLib.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Shop.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Combat.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Backpack.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="SoundPlayer.h">
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
     <ClInclude Include="NPC.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
-    <ClInclude Include="Prop.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Log.h">
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
-    <ClInclude Include="SceneDrawer.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Map.h">
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
-    <ClInclude Include="SoundPlayer.h">
+    <ClInclude Include="Prop.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="Backpack.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="Shop.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="tools.h">
       <Filter>头文件\Finished</Filter>
     </ClInclude>
   </ItemGroup>
@@ -154,13 +154,22 @@
     <None Include="NPC_State.csv">
       <Filter>资源文件\states</Filter>
     </None>
+    <None Include="Battle_Info.csv">
+      <Filter>资源文件\infos</Filter>
+    </None>
+    <None Include="PokemonLib_State.csv">
+      <Filter>资源文件\states</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="map_1.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
     <Text Include="gamebar.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="map_1.txt">
-      <Filter>资源文件\maps</Filter>
+    <Text Include="Game_State.txt">
+      <Filter>资源文件\states</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,7 @@ class Prop
         HEAL,  //回复体力(濒死时是否可用,回复方式(0按百分比,1按具体值),百分比/具体值)
         GET_SKILL,   //使宝可梦获得技能(技能ID), 生效前需要判断是否合理
         CAPTURE,    //精灵球类型(捕获率加成,对特定的Type属性的宝可梦,特定捕获率加成)
+        SPECIAL_PROP,  //特殊道具(特殊函数id,函数参数1,函数参数2...)
     };
 public:
     Prop(int ID);
@@ -53,10 +54,10 @@ private:
     string description;
     int num;
     int price;
-    int sellPrice;              //出售价格为0的道具不能出售
-    vector<int> effectPara;     //效果参数
-    int canUseInBattle;      //是否可以在战斗中使用
-    int canUseInField;       //是否可以在野外使用
+    int sellPrice;
+    vector<int> effectPara;
+    int canUseInBattle;
+    int canUseInField;
 };
 
 #endif // !PROP_H
