@@ -190,14 +190,13 @@ void ChooseList::ShowList()
     }
     if (showMax >=n)
     {
-        static bool first = true;
-        if (first)
+        if (firstShow)
         {
             for (int i = 0; i < list.size(); i++)
             {
                 list[i].Print();
             }
-            first = false;
+            firstShow = false;
         }
         pair<int, int> pos = GetPos();
         if (chooseNow == 0)

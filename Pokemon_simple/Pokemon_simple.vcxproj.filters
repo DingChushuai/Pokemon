@@ -74,30 +74,6 @@
     <ClInclude Include="tools.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SoundPlayer.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="Prop.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="Backpack.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneDrawer.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
-    <ClInclude Include="NPC.h">
-      <Filter>头文件\完成</Filter>
-    </ClInclude>
     <ClInclude Include="Skill.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -114,6 +90,30 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Combat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Backpack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Prop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDrawer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundPlayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -136,7 +136,9 @@
     <None Include="Backpack_State.csv">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="Pokemon_Info.csv" />
+    <None Include="Pokemon_Info.csv">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="gamebar.txt">

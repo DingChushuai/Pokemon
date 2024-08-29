@@ -11,6 +11,7 @@ class Pokemon;
 using namespace std;
 
 enum Type {
+    NONE = -1,
     NORMAL = 0,
     FIGHTING, //¸ñ¶·
     FLYING,   //·ÉÐÐ

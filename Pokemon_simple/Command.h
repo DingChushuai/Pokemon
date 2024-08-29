@@ -31,6 +31,7 @@ public:
 private:
     vector<Text> list;
     int startLine = -1;
+    bool firstShow = true;
 };
 
 class Command

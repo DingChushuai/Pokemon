@@ -22,7 +22,7 @@ void Game::Run()
 		gameSence = gameSenceStack.back();
 		cout<< "GameScence: " << gameSence << endl;
 		soundPlayer.AdjustMusic(gameSence);
-		sceneDrawer.draw(gameSence, &money, currentMap, &log, &combat);
+		sceneDrawer.draw(gameSence, money, currentMap, &log, &combat);
 		switch (gameSence)
 		{
 			case START_MENU:

@@ -58,9 +58,6 @@ public:
     Pokemon(int ID, int level);     //根据ID和等级构造一个随机属性的宝可梦, 用于随机生成宝可梦
     Pokemon(const Pokemon& other);  //复制构造函数, 用于复制宝可梦到战斗中
     //从存档中读取宝可梦信息
-    Pokemon(string name, pair<Type, Type> type, int hp, int maxHp, int level, int experience, int experienceToNextLevel,
-        int attack, int defense, int speed, int specialAttack, int specialDefense,
-        PokemonStatu statu, vector<Skill> skills, int evolutionLevel, int evolutionID, int captureRate);
     ~Pokemon();
     bool UseSkill(Skill* skill, Pokemon* user, Pokemon* target); //使用技能
     void Print(); //打印宝可梦信息
@@ -75,6 +72,20 @@ private:
     int evolutionLevel; //进化等级
     int evolutionID;    //进化后的ID
     int captureRate; //捕获率
+    struct EthnicValue
+    {
+
+    }ethnicValue; //种族值
+    struct IndividualValue
+    {
+
+    }individualValue; //个体值
+    struct BasicValue
+    {
+
+    }basicValue; //基础点数
+    int growthRate; //成长速度
+
 };
 
 #endif // !POKEMON_H
