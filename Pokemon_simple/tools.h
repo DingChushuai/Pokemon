@@ -47,6 +47,8 @@ const enum Color
 #define  POKEMON_STATE_PATH "Pokemon_State.csv"
 #define  BACKPACK_STATE_PATH "Backpack_State.csv"
 
+#define PROPS_COUNT 56
+
 #pragma once
 #include <string>
 #include <vector>

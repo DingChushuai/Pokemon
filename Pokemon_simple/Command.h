@@ -28,6 +28,7 @@ public:
     void ShowList();
     void SelectUp();
     void SelectDown();
+    int maxstrlen = 0;
 private:
     vector<Text> list;
     int startLine = -1;

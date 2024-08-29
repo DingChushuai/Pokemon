@@ -23,6 +23,11 @@ Text::Text(const Text& other)
 	}
 }
 
+Text::Text(vector<pair<string, pair<Color, Color>>> texts)
+{
+    this->texts = texts;
+}
+
 void Text::Add(string str, Color textColor, Color backColor)
 {
 	texts.push_back(make_pair(str, make_pair(textColor, backColor)));

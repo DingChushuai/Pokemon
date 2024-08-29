@@ -24,6 +24,7 @@ void Log::ShowLog()
 		for (int i = 0; i < logList.size(); i++)
 		{
 			logList[i].Print();
+			Text("\n").Print();
 		}
 	}
 }

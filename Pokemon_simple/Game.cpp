@@ -21,16 +21,16 @@ void Game::Run()
 		ClearScreen();
 		gameSence = gameSenceStack.back();
 		cout<< "GameScence: " << gameSence << endl;
-		soundPlayer.AdjustMusic(gameSence);
+		ChangeMusic();
 		sceneDrawer.draw(gameSence, money, currentMap, &log, &combat);
 		switch (gameSence)
 		{
 			case START_MENU:
 			{
 				vector<Text> Menu;
-				Menu.push_back(Text("1. 开始新游戏\n"));
-				Menu.push_back(Text("2. 加载游戏  \n"));
-				Menu.push_back(Text("3. 退出游戏  \n"));
+				Menu.push_back(Text("1. 开始新游戏"));
+				Menu.push_back(Text("2. 加载游戏"));
+				Menu.push_back(Text("3. 退出游戏"));
 				int choice = command.chooseFromList(Menu);
 				if (choice == 1)
 				{
@@ -56,11 +56,11 @@ void Game::Run()
 			case SETTING:
 			{
                 vector<Text> Menu;
-				Menu.push_back(Text("1. 保存游戏\n"));
-				Menu.push_back(Text("2. 返回游戏\n"));
-				Menu.push_back(Text("3. 返回标题\n"));
-				Menu.push_back(Text("4. 保存并退出\n"));
-				Menu.push_back(Text("5. 不保存退出\n"));
+				Menu.push_back(Text("1. 保存游戏"));
+				Menu.push_back(Text("2. 返回游戏"));
+				Menu.push_back(Text("3. 开关音乐"));
+				Menu.push_back(Text("4. 保存并退出"));
+				Menu.push_back(Text("5. 返回菜单"));
 				int choice = command.chooseFromList(Menu);
 				if (choice == 1)
 				{
@@ -75,8 +75,20 @@ void Game::Run()
 				}
 				else if (choice == 3)
 				{
-					gameSenceStack.clear();
-					gameSenceStack.push_back(START_MENU);
+					if (soundPlayer.forbidMusic)
+					{
+                        soundPlayer.forbidMusic = false;
+                        Text("音乐已开启", GREEN, GRAY).Print();
+                        log.AddLog(Text("音乐已开启!", GREEN));
+						command.Pause();
+					}
+					else
+					{
+                        soundPlayer.forbidMusic = true;
+                        Text("音乐已关闭", GREEN, GRAY).Print();
+                        log.AddLog(Text("音乐已关闭!", GREEN));
+                        command.Pause();
+					}
 				}
 				else if (choice == 4)
 				{
@@ -86,6 +98,7 @@ void Game::Run()
 				else if (choice == 5)
 				{
 					gameSenceStack.clear();
+                    gameSenceStack.push_back(START_MENU);
 				}
 			break;
 			}
@@ -217,9 +230,9 @@ void Game::Run()
 			{
 				{
 					vector<Text> options;
-					options.push_back(Text("1. 购买道具\n"));
-					options.push_back(Text("2. 卖出道具\n"));
-					options.push_back(Text("3. 卖出仓库中的宝可梦\n"));
+					options.push_back(Text("1. 购买道具"));
+					options.push_back(Text("2. 卖出道具"));
+					options.push_back(Text("3. 卖出仓库中的宝可梦"));
 					int choice = command.chooseFromList(options,3);
                     if (choice == 0) { gameSenceStack.pop_back(); gameSenceStack.pop_back(); break; }
 					if (choice == 1) { gameSenceStack.push_back(BUY_ITEM); }
@@ -231,7 +244,7 @@ void Game::Run()
 			case BUY_ITEM:
 			{
 				vector<Text> props = shop.GetPropsInShop();
-				int choice = command.chooseFromList(props);
+				int choice = command.chooseFromList(props,10);
 				if (choice == 0) { gameSenceStack.pop_back(); break; }
 				int price = shop.GetPriceOfProp(choice);
 				if (money < price)
@@ -261,7 +274,7 @@ void Game::Run()
             case SELL_ITEM:
 			{
 				vector<Text> props = backpack.GetPropsSellPrice();
-                int choice = command.chooseFromList(props);
+                int choice = command.chooseFromList(props,10);
                 if (choice == 0) { gameSenceStack.pop_back(); break; }
 				Prop* prop = backpack.GetPropFromIndex(choice);
 				int price = prop->GetSellPrice();
@@ -283,7 +296,7 @@ void Game::Run()
 			case SELL_POKEMON:
 			{
                 vector<Text> pokemonNames = pokemonLib.GetPokemonSellPrice();
-                int choice = command.chooseFromList(pokemonNames);
+                int choice = command.chooseFromList(pokemonNames,10);
                 if (choice == 0) { gameSenceStack.pop_back(); break; }
                 Pokemon* pokemon = pokemonLib.GetPokemonInLib(choice);
                 int price = pokemon->GetSellPrice();
@@ -305,7 +318,44 @@ void Game::Run()
 			}
 			case DEBUG:
 			{
-				gameSenceStack.pop_back();
+				Text("Debug:\ninput cmd:", RED).Print();
+				string input;
+                cin >> input;
+                if (input == "") { gameSenceStack.pop_back(); break; }
+                if (input == "exit") { gameSenceStack.pop_back(); break; }
+				else if (input == "music")
+				{
+                    Text("input music id:", RED).Print();
+                    int id;
+					do {
+						cin >> id;
+						if (cin.fail())
+						{
+							cin.clear();
+							cin.ignore(1024, '\n');
+						}
+					} while (id< 0 || id > 20);
+                    soundPlayer.PlayMusic((SoundPlayer::SoundID)id);
+					command.Pause();
+				}
+				else if (input == "money")
+				{
+					Text("input money to set:", RED).Print();
+                    int money;
+                    do {
+                        cin >> money;
+                        if (cin.fail())
+                        {
+                            cin.clear();
+                            cin.ignore(1024, '\n');
+                        }
+                    } while (money < 0);
+                    this->money = money;
+					Text("money set to:").Print();
+                    Text(to_string(money), YELLOW).Print(); 
+					log.AddLog(Text("你的金币数量已更改为: " + to_string(money), YELLOW));
+                    command.Pause();
+                }
                 break;
 			}
 			case WORLD_MAP:  
@@ -329,6 +379,8 @@ void Game::Init()
 	Map* map1= new Map(1);
 	currentMap = map1;
 	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
+	log.clearLog();
+	log.AddLog(Text("欢迎来到宝可梦世界！",GREEN));
 }
 
 void Game::Load()
@@ -353,11 +405,14 @@ void Game::ActOnMap()
 		}
         cout << endl; 
 	}
+	pair<int, int> logPos = GetPos();
+	log.ShowLog();
 	GotoXY(pos.first + playerX, pos.second + playerY);
 	Text("@", MAGENTA).Print();
+    
 	while (true)
 	{
-		char cmd = command.GetCommand({ UP,DOWN,LEFT,RIGHT,ESC,OPEN_BACKPACK,POKEMON_LIST,OPEN_WORLD_MAP });
+		char cmd = command.GetCommand({ UP,DOWN,LEFT,RIGHT,ESC,OPEN_BACKPACK,POKEMON_LIST,OPEN_WORLD_MAP,COMMAND});
 		if (cmd == ESC)
 		{
 			gameSenceStack.push_back(SETTING);
@@ -378,6 +433,11 @@ void Game::ActOnMap()
             gameSenceStack.push_back(WORLD_MAP);
             break;
         }
+		else if (cmd == COMMAND)
+		{
+            gameSenceStack.push_back(DEBUG);
+            break;
+		}
 		else
 		{
             int newX = playerX;
@@ -399,7 +459,6 @@ void Game::ActOnMap()
                 playerY = newY;
                 GotoXY(pos.first + playerX, pos.second + playerY);
                 Text("@", MAGENTA).Print();
-				soundPlayer.Play_Sound(SoundPlayer::SOUND_CHOOSE);
             }
             else if (block.type == Map::WALL)
             {
@@ -439,5 +498,26 @@ void Game::ActOnMap()
 
 void Game::UseProp(Prop* prop)
 {
+}
+
+void Game::ChangeMusic()
+{
+	SoundPlayer::SoundID BGM;
+	if (currentMap == nullptr) return;
+	int mapID = currentMap->getMapID();
+	switch (mapID)
+	{
+    	case 1: BGM = SoundPlayer::MUSIC_ZhenXinZhen; break; 
+    	case 2: BGM = SoundPlayer::MUSIC_ChangPanShi; break; 
+    	case 3: BGM = SoundPlayer::MUSIC_ShenHuiShi; break; 
+    	case 4: BGM = SoundPlayer::MUSIC_HuaTianShi; break; 
+    	case 5: BGM = SoundPlayer::MUSIC_CaiHongShi; break; 
+    	case 6: BGM = SoundPlayer::MUSIC_HongLianDao; break; 
+    	case 7: BGM = SoundPlayer::MUSIC_ZiYuanZhen; break; 
+    	case 8: BGM = SoundPlayer::MUSIC_HuangJinShi; break; 
+    	case 9: BGM = SoundPlayer::MUSIC_QianHongShi; break; 
+		default: BGM = SoundPlayer::MUSIC_YeWai; break;
+	}
+    soundPlayer.PlayMusic(BGM);
 }
 

@@ -151,19 +151,61 @@ int Command::ChooseCount(int max)
         }
     }
 }
-
+using namespace std;
 ChooseList::ChooseList(vector<Text> list)
 {
-    this->list = list;
+    maxstrlen = 0;
+    vector<Text> listNew = list;
+    for (int i = 0; i < list.size(); i++)
+    {
+        int len = list[i].GetTexts()[0].first.size();
+        if (len > maxstrlen) maxstrlen = len;
+    }
+    for (int i = 0; i < list.size(); i++)
+    {
+        Text t = list[i];
+        vector<pair<string, pair<Color, Color>>> texts = t.GetTexts();
+        for (int j = 0; j < texts.size(); j++)
+        {
+            //½«×Ö·û´®³¤¶È²¹Æë
+            for (int k = texts[j].first.size(); k < maxstrlen; k++)
+                texts[j].first += " ";
+            texts[j].first += "\n";
+        }
+        Text tNew(texts);
+        listNew.push_back(tNew);
+    }
+    this->list = listNew;
     startLine = -1;
 }
 
 ChooseList::ChooseList(vector<Text> list, int showMax)
 {
-    this->list = list;
+    maxstrlen = 0;
+    vector<Text> listNew;
+    for (int i = 0; i < list.size(); i++)
+    {
+        int len = list[i].GetTexts()[0].first.size();
+        if (len > maxstrlen) maxstrlen = len;
+    }
+    for (int i = 0; i < list.size(); i++)
+    {
+        Text t = list[i];
+        vector<pair<string, pair<Color, Color>>> texts = t.GetTexts();
+        for (int j = 0; j < texts.size(); j++)
+        {
+            //½«×Ö·û´®³¤¶È²¹Æë
+            for (int k = texts[j].first.size(); k < maxstrlen; k++)
+                texts[j].first += " ";
+            texts[j].first += "\n";
+        }
+        Text tNew(texts);
+        listNew.push_back(tNew);
+    }
+    this->list = listNew;
+    startLine = -1;
     if (showMax > list.size())
         showMax = list.size();
-    startLine = -1;
     this->showMax = showMax;
 }
 
@@ -236,13 +278,23 @@ void ChooseList::ShowList()
         {
             list[i].Print();
         }
-        Text("¨‹                                 \n", Color::YELLOW).Print();
+        Text("¨‹", Color::YELLOW).Print();
+        string str = "";
+        for (int i = 0; i < maxstrlen; i++)
+            str += " ";
+        str += "\n";
+        Text(str).Print();
     }
     else if (chooseNow > n - 1 - showMax / 2)
     {
         showStart = n - showMax -1;
         showEnd = n-1;
-        Text("¡ø                                 \n", Color::YELLOW).Print();
+        Text("¡ø", Color::YELLOW).Print();
+        string str = "";
+        for (int i = 0; i < maxstrlen; i++)
+            str += " ";
+        str += "\n";
+        Text(str).Print();
         for (int i = showStart; i <= showEnd; i++)
         {
             list[i].Print();
@@ -252,12 +304,22 @@ void ChooseList::ShowList()
     {
         showStart = chooseNow - showMax / 2;
         showEnd = chooseNow + showMax / 2;
-        Text("¡ø                                 \n", Color::YELLOW).Print();
+        Text("¡ø", Color::YELLOW).Print();
+        string str = "";
+        for (int i = 0; i < maxstrlen; i++)
+            str += " ";
+        str += "\n";
+        Text(str).Print();
         for (int i = showStart; i <= showEnd; i++)
         {
             list[i].Print();
         }
-        Text("¨‹                                 \n", Color::YELLOW).Print();
+        Text("¨‹", Color::YELLOW).Print();
+        str = "";
+        for (int i = 0; i < maxstrlen; i++)
+            str += " ";
+        str += "\n";
+        Text(str).Print();
     }
 
 }

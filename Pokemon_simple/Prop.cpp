@@ -21,15 +21,16 @@ Prop::Prop(int ID)
 	this->ID = ID;
 	name = data[1];
 	description = data[2];
-	vector<int> temp(4);
-	for (int i = 3; i < 6; ++i) {
+	vector<int> temp;
+	for (int i = 3; i <= 7; ++i) {
 		temp.push_back(stoi(data[i]));
 	}
 	type = (PROP_TYPE)(temp[0]);
-	num = temp[1];
-	price = temp[2];
-	sellPrice = temp[3];
-	vector<string>tempEffect = Split(data[7], '/');
+	price = temp[1];
+	sellPrice = temp[2];
+	canUseInBattle = temp[4];
+    canUseInField = temp[3];
+	vector<string>tempEffect = Split(data[8], '/');
 	for (int i = 0; i < tempEffect.size(); ++i)
 		effectPara.push_back(stoi(tempEffect[i]));
 }

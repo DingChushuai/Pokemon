@@ -21,15 +21,13 @@ bool SoundPlayer::Play_Sound(SoundID soundID)
 	if (forbidMusic)
 		return false;
 	string path = MUSIC_PATH[soundID];
-	// 将窄字符字符串转换为宽字符字符串
 	size_t pathLength = path.length() + 1;
 	wchar_t* widePath = new wchar_t[pathLength];
 	errno_t err = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), -1, widePath, (int)pathLength);
 	if (err == 0) {
 		delete[] widePath;
-		return false; // 转换失败
+		return false;
 	}
-	// 播放音效
 	BOOL success = PlaySound(widePath, NULL, SND_FILENAME | SND_ASYNC);
 	if (!success) {
 		delete[] widePath;
@@ -47,25 +45,34 @@ bool SoundPlayer::PlayMusic(SoundID soundID)
 	背景音乐应当是循环播放的, 直到调用stopMusic函数, 或者使用playMusic播放其他音乐
 	*/
 	if (forbidMusic)
+	{
+		mciSendString(L"stop bgm", NULL, 0, 0);
+		mciSendString(L"close bgm", NULL, 0, 0);
+		musicNow = MUSIC_NONE;
 		return false;
+	}
 	if (musicNow ==soundID)
         return true;
-	if (musicNow == MUSIC_NONE)
+	mciSendString(L"stop bgm", NULL, 0, 0);
+	mciSendString(L"close bgm", NULL, 0, 0);
+	if (soundID == MUSIC_NONE)
 	{
-		PlaySound(NULL, NULL, SND_ASYNC | SND_FILENAME);
-	}
-	musicNow = soundID;
-    string path = MUSIC_PATH[soundID];
-	size_t pathLength = path.length() + 1;
-	wchar_t* widePath = new wchar_t[pathLength];
-	errno_t err = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), -1, widePath, (int)pathLength);
-	if (err == 0) {
-		delete[] widePath;
 		return false;
 	}
-	bool success = PlaySound(widePath, NULL, SND_FILENAME | SND_LOOP | SND_ASYNC) != NULL;
-	delete[] widePath;
-	return success;
+	string path = MUSIC_PATH[soundID];
+	wstring widePath(path.begin(), path.end());
+	wstring command;
+	command += L"open ";
+	command += widePath;
+	command += L" type wave alias bgm";
+	command = L"open " + widePath + L" type mpegvideo alias bgm"; 
+	MCIERROR mcErr = mciSendString(command.c_str(), NULL, 0, 0);
+	if (mcErr != 0) {
+		return false;
+	}
+	mciSendString(L"play bgm repeat", NULL, 0, 0);
+	musicNow = soundID;
+	return true;
 }
 
 bool SoundPlayer::StopMusic()
@@ -81,71 +88,4 @@ bool SoundPlayer::StopMusic()
 		PlayMusic(musicNow);
 		return true;
 	}
-}
-
-void SoundPlayer::AdjustMusic(GameSence gameSence)
-{
-	if (forbidMusic)
-		return;
-	SoundID BGM;
-	switch (gameSence)
-	{
-	case START_MENU:
-		//以下BGM具体参数待补充
-		BGM = MUSIC_NONE;
-		break;
-	case GAME:
-		BGM = MUSIC_NONE;
-		break;
-	case SETTING:
-		BGM = MUSIC_NONE;
-		break;
-	case POKEMON_LIB:
-		BGM = MUSIC_NONE;
-		break;
-	case POKEMON_INFO:
-		BGM = MUSIC_NONE;
-		break;
-	case BACKPACK:
-		BGM = MUSIC_NONE;
-		break;
-	case POKEMON_CENTER:
-		BGM = MUSIC_NONE;
-		break;
-	case SHOP:case SHOOSE_BUY_OR_SELL:case BUY_ITEM:case SELL_POKEMON:case SELL_ITEM:
-		BGM = MUSIC_NONE;
-		break;
-	case COMBAT:
-		BGM = MUSIC_NONE;
-		break;
-	case DEBUG:
-		BGM = MUSIC_NONE;
-		break;
-	default:
-		break;
-	}
-	StopMusic();
-	PlayMusic(BGM);
-	if (gameSence == SHOOSE_BUY_OR_SELL or gameSence== BUY_ITEM 
-		or gameSence== SELL_POKEMON or gameSence== SELL_ITEM) {
-		switch (gameSence)
-		{
-		case SHOOSE_BUY_OR_SELL:
-			BGM = MUSIC_NONE;
-			break;
-		case BUY_ITEM:
-			BGM = MUSIC_NONE;
-			break;
-		case SELL_POKEMON:
-			BGM = MUSIC_NONE;
-			break;
-		case SELL_ITEM:
-			BGM = MUSIC_NONE;
-			break;
-		default:
-			break;
-		}
-		Play_Sound(BGM);
-	}
-	return;
 }

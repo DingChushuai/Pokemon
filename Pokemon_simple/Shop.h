@@ -3,7 +3,7 @@
 class Shop
 {
 private:
-    Backpack backpack;
+    Backpack shop;
 public:
     Shop();
     vector<Text> GetPropsInShop();

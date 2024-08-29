@@ -15,6 +15,7 @@ public:
     Text();
     Text(string str, Color textColor = None, Color backColor = None);
     Text(const Text& other);
+    Text(vector<pair<string, pair<Color, Color>>> texts);
     void SetColor(Color textColor, Color backColor);
     void Add(string str, Color textColor = None, Color backColor = None);
     vector<pair<string, pair<Color, Color>>> GetTexts();

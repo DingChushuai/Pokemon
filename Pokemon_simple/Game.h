@@ -42,6 +42,7 @@ private:
     void Save();
     void ActOnMap();
     void UseProp(Prop* prop);
+    void ChangeMusic();
 
 };
 

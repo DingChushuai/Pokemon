@@ -28,6 +28,9 @@
     <Filter Include="源文件\Finished">
       <UniqueIdentifier>{96609d84-d586-48db-b59d-63c2ac59387d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Finished">
+      <UniqueIdentifier>{e49f136f-a535-4acf-9628-e1cd547f0718}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pokemon_simple.cpp">
@@ -37,9 +40,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundPlayer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
@@ -77,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="Combat.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundPlayer.cpp">
+      <Filter>源文件\Finished</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,11 +125,11 @@
     <ClInclude Include="SceneDrawer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SoundPlayer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundPlayer.h">
+      <Filter>头文件\Finished</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
