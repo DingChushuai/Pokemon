@@ -1,4 +1,5 @@
 #include "NPC.h"
+#pragma once
 
 NPC::NPC(int id)
 {

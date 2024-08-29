@@ -20,7 +20,8 @@ const enum GameSence
     SELL_POKEMON,
     SELL_ITEM,
     COMBAT,         //战斗界面
-    DEBUG           //调试界面
+    DEBUG,           //调试界面
+    WORLD_MAP 
 };
 #endif
 
@@ -91,6 +92,22 @@ inline void GotoXY(int x, int y) {
 inline void ClearScreen()
 {
     system("cls");
+}
+
+inline void HideCursor() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    cursorInfo.dwSize = 100; // 光标的百分比大小
+    cursorInfo.bVisible = FALSE; // 光标不可见
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+}
+
+inline  void ShowCursor() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    cursorInfo.dwSize = 100;
+    cursorInfo.bVisible = TRUE; // 光标可见
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 
 #endif

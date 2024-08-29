@@ -5,6 +5,7 @@
 
 class Map
 {
+public:
     enum BlockType
     {
         EMPTY,      //可以行走的道路
@@ -21,7 +22,7 @@ class Map
         char symbol;
         BlockType type;
     };
-public:
+
     Map(int mapID);
     ~Map();
     int getMapID();
@@ -35,6 +36,7 @@ public:
 
 private:
     int mapID;
+    string mapName;
     int mapWidth;
     int mapHeight;
     vector<vector<MapBlock>> mapBlocks;

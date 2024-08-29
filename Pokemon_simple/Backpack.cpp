@@ -1,3 +1,4 @@
+#pragma once
 #include "Backpack.h"
 #include<fstream>
 #include<vector>

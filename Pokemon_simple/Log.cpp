@@ -1,4 +1,5 @@
 #include "Log.h"
+#pragma once
 
 Log::Log(int maxLog)
 {

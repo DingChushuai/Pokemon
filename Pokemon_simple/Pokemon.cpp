@@ -1,4 +1,5 @@
 #include "Pokemon.h"
+#pragma once
 
 Pokemon::Pokemon(int ID, int level)
 {

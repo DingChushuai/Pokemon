@@ -1,4 +1,5 @@
 #include "PokemonLib.h"
+#pragma once
 
 PokemonLib::PokemonLib()
 {

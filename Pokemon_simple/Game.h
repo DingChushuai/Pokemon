@@ -28,7 +28,7 @@ public:
     SceneDrawer sceneDrawer;
     vector<GameSence> gameSenceStack;
     vector<NPC> npcs;
-    vector<Map> maps;
+    vector<Map*> maps;
     Map* currentMap;
     Combat combat;
     PokemonLib pokemonLib;
