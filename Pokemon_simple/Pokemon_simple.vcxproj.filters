@@ -136,6 +136,7 @@
     <None Include="Backpack_State.csv">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="Pokemon_Info.csv" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="gamebar.txt">

@@ -148,6 +148,7 @@
     <None Include="Backpack_State.csv" />
     <None Include="NPC_Info.csv" />
     <None Include="NPC_State.csv" />
+    <None Include="Pokemon_Info.csv" />
     <None Include="Prop_info.csv" />
     <None Include="README.md" />
     <None Include="Skill_Info.csv" />
