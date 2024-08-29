@@ -13,8 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\完成">
-      <UniqueIdentifier>{7ad72ddd-c1da-409b-8868-c8d072e2a96a}</UniqueIdentifier>
+    <Filter Include="资源文件\infos">
+      <UniqueIdentifier>{a9b90a64-535b-49d8-940f-28ac6602ffe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\maps">
+      <UniqueIdentifier>{4a3276ed-fef3-4b04-8cf1-1e496e6a7d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\music">
+      <UniqueIdentifier>{f104e6c9-2da1-44bf-a1b2-e159b1260cc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\states">
+      <UniqueIdentifier>{7a802fe6-ff76-4c3b-9f4c-98470674c645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Finished">
+      <UniqueIdentifier>{96609d84-d586-48db-b59d-63c2ac59387d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,23 +133,23 @@
     <None Include="README.md">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="NPC_Info.csv">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="NPC_State.csv">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="Prop_info.csv">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="Skill_Info.csv">
-      <Filter>资源文件</Filter>
-    </None>
     <None Include="Backpack_State.csv">
-      <Filter>资源文件</Filter>
+      <Filter>资源文件\states</Filter>
+    </None>
+    <None Include="NPC_Info.csv">
+      <Filter>资源文件\infos</Filter>
     </None>
     <None Include="Pokemon_Info.csv">
-      <Filter>资源文件</Filter>
+      <Filter>资源文件\infos</Filter>
+    </None>
+    <None Include="Skill_Info.csv">
+      <Filter>资源文件\infos</Filter>
+    </None>
+    <None Include="Prop_info.csv">
+      <Filter>资源文件\infos</Filter>
+    </None>
+    <None Include="NPC_State.csv">
+      <Filter>资源文件\states</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +157,69 @@
       <Filter>资源文件</Filter>
     </Text>
     <Text Include="map_1.txt">
-      <Filter>资源文件</Filter>
+      <Filter>资源文件\maps</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="music\CaiHongShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\ChangPanShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\choose.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\DuiZhan.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\heal.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\hit_1.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\hit_2.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\hit_3.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\HongLianDao.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\HuangJinShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\HuaTianShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\JinHua.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\Lose.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\QianHongShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\ShenHuiShi.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\Win.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\YeSheng.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\YeWai.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\ZhenXinZhen.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
+    <Media Include="music\ZiYuanZhen.wav">
+      <Filter>资源文件\music</Filter>
+    </Media>
   </ItemGroup>
 </Project>

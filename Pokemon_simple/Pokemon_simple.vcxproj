@@ -175,6 +175,28 @@
     <Text Include="gamebar.txt" />
     <Text Include="map_1.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="music\CaiHongShi.wav" />
+    <Media Include="music\ChangPanShi.wav" />
+    <Media Include="music\choose.wav" />
+    <Media Include="music\DuiZhan.wav" />
+    <Media Include="music\heal.wav" />
+    <Media Include="music\hit_1.wav" />
+    <Media Include="music\hit_2.wav" />
+    <Media Include="music\hit_3.wav" />
+    <Media Include="music\HongLianDao.wav" />
+    <Media Include="music\HuangJinShi.wav" />
+    <Media Include="music\HuaTianShi.wav" />
+    <Media Include="music\JinHua.wav" />
+    <Media Include="music\Lose.wav" />
+    <Media Include="music\QianHongShi.wav" />
+    <Media Include="music\ShenHuiShi.wav" />
+    <Media Include="music\Win.wav" />
+    <Media Include="music\YeSheng.wav" />
+    <Media Include="music\YeWai.wav" />
+    <Media Include="music\ZhenXinZhen.wav" />
+    <Media Include="music\ZiYuanZhen.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

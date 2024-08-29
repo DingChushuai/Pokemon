@@ -7,37 +7,6 @@
 ## 说明文件
 	UML图等文件
 
-## 项目进程
-	所有需要补充的代码实现的地方将在底下标出
-	多人协作时, 请更改对应任务的状态标记, 在上传代码前, 请先** 同步任务板的状态 **, 以免发生冲突
-	** 不要删除我提供的注释 **
-	以下解释为任务状态标记
-	- (T,score) 表示TODO, 表示该任务需要完成, score为任务难度评分(1-5)
-	- (F) 表示Finish, 表示该任务已完成
-	- (P,name) 表示Processing, 表示该任务正在处理中, name为处理该任务的人名(可以使用任何喜欢的标记名称)
-	- (?,name) 表示任务遇到问题, 或者需要讨论
-	- (D) 表示Discard, 表示该任务被废弃
-
-## 代码任务
-	0. (F,2) 完成tools.h 里的Split函数, 用于字符串分割, 读取文件时需要用到
-	1. (F,2) 完成Text类的SetColor,Print函数, 用于控制台输出颜色, 需要了解彩色控制台输出原理
-	2. (T,1) 补充SoundID和音乐路径的声明, 需要资源组提供内容后完成
-	3. (T,4) SoundPlayer类的三个函数, 需要调用系统的声音播放库, 实现播放音乐, 播放音效, 暂停音乐, 需要查阅相关资料
-    4. (T,2) 完成Prop类的构造函数
-    5. (T,3) 完成Backpack类的各个功能函数
-    6. (T,2) 完成Map类的构造函数和getExit函数
-	7. (T,4) 完成tools内的各个函数, 需要了解相关算法和资料
-    8. (T,5) 完成NPC类的各个功能函数
-	9. (T,3) 完成SceneDrawer类的各个场景的绘制, 场景较多, 可以多人共同完成
-
-
-## 资源收集任务
-	** 所有包含ID的文件, ID必须从1开始, 按照顺序递增, 保证行序号和ID一致 **
-	** 所有包含文字描述的文件, 必须使用UTF-8编码, 描述中不能有"," ,以防出现错误的分隔符, 可以使用全角符号"，"代替 **
-	音乐资源: (T,2) 需要至少收集到: 主要背景音乐, 战斗背景音乐, 打击音效
-					还可以收集: 各个地图的背景音乐, 改变选择器的音效, 胜利音效, 失败音效, 捕捉音效, 等等
-	gamebar: (T,1) 游戏菜单界面的标题, 使用文本化的方式描述图片, 可以是大字标题
-
 ## 资源文件具体格式
 	统一存放在resources文件夹下
 	cd ./resources
@@ -109,63 +78,13 @@
 	接下来的y行: 地图每一格的颜色(颜色数字)
 	接下来的y行: 地图每一格的类型(数字), 每一项以逗号分隔
 
-	//颜色数字
-	const enum Color
-    {
-        None = 0,	//控制台默认输出应该是白色
-        RED,
-        GREEN,
-        BLUE,
-        YELLOW,
-        CYAN,		//浅蓝色
-        MAGENTA,	//紫色
-		GRAY,		//灰色
-    };
-
-	地图方格类型:
-	 enum BlockType
-    {
-        EMPTY = 0,  //可以行走的道路
-        WALL,       //障碍物
-        GRASS,      //草地,可以行走,可能遇到野生的宝可梦
-        EXIT,       //通往其他地图的出口
-        SHOP,       //商店
-        HOSPITAL,   //医院,可以回复宝可梦体力
-        POKEMON_CENTER, //宝可梦中心,可以交换仓库中的宝可梦
-    };
-
 ### Skill_Info.csv具体格式
 	格式为(每一项以逗号分隔):
     Skill_ID,
 	Skill_Name,
 	Skill_Description,
-	TypeID:
-		enum Type {
-		NORMAL = 0,
-		FIGHTING, //格斗
-		FLYING,   //飞行
-		POISON,   //毒
-		GROUND,   //地面
-		ROCK,     //岩石
-		BUG,      //虫
-		GHOST,    //幽灵
-		STEEL,    //钢
-		FIRE,     //火
-		WATER,    //水
-		GRASS,    //草
-		ELECTRIC, //电
-		PSYCHIC,  //超能力
-		ICE,      //冰
-		DRAGON,   //龙
-		DARK,     //恶
-		FAIRY,    //妖精
-		};
+	TypeID:	
     Skill_Type
-		const enum SkillType{
-			PHYSICAL=0,     //物理
-			SPECIAL,        //特殊
-			CHANGE,         //变化
-		};
 	power, 
 	accuracy, 
 	pp, 
@@ -260,8 +179,6 @@
 	统一存放在save文件夹下
 	cd ./save
 	./NPC_State.csv	(记录存档时NPC的信息)
-
-
 
 ### NPC_State.csv具体格式
 	格式为(每一项以逗号分隔):

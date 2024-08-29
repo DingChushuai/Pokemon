@@ -222,6 +222,7 @@ void ChooseList::ShowList()
             GotoXY(0, startLine + chooseNow + 1);
             list[chooseNow + 1].Print();
         }
+        GotoXY(pos.first, pos.second);
         return;
     }
 

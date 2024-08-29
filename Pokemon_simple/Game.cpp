@@ -65,7 +65,7 @@ void Game::Run()
 				if (choice == 1)
 				{
 					Save();
-					Text("游戏已保存", GREEN, CYAN).Print();
+					Text("游戏已保存", GREEN, GRAY).Print();
 					log.AddLog(Text("当前进度已保存!", GREEN));
 					command.Pause();
 				}
@@ -328,6 +328,7 @@ void Game::Init()
 	inCombat = false;
 	Map* map1= new Map(1);
 	currentMap = map1;
+	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
 }
 
 void Game::Load()
@@ -398,6 +399,7 @@ void Game::ActOnMap()
                 playerY = newY;
                 GotoXY(pos.first + playerX, pos.second + playerY);
                 Text("@", MAGENTA).Print();
+				soundPlayer.Play_Sound(SoundPlayer::SOUND_CHOOSE);
             }
             else if (block.type == Map::WALL)
             {
