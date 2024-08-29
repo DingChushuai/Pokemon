@@ -1,4 +1,5 @@
 #include "SceneDrawer.h"
+#pragma once
 
 void SceneDrawer::draw(GameSence gs, int money, Map* map, Log* log, Combat* combat, Pokemon* pokemon)
 {
