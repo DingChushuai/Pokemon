@@ -49,8 +49,12 @@ const enum Color
 #define  BACKPACK_STATE_PATH "Backpack_State.csv"
 #define  GAME_STATE_PATH "Game_State.csv"
 
+#define  WORLD_MAP_PATH "worldmap.txt"
+#define  GAMEBAR_PATH "gamebar.txt"
+
 #define PROPS_COUNT 56
 #define NPCS_COUNT 6
+#define MAX_POKEMON_INGAME 6
 
 #pragma once
 #include <string>

@@ -92,9 +92,6 @@
     <ClInclude Include="Pokemon.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PokemonLib.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Combat.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -129,6 +126,9 @@
       <Filter>头文件\Finished</Filter>
     </ClInclude>
     <ClInclude Include="tools.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="PokemonLib.h">
       <Filter>头文件\Finished</Filter>
     </ClInclude>
   </ItemGroup>

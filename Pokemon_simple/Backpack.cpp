@@ -30,6 +30,15 @@ void Backpack::Load()
 
 void Backpack::AddProp(Prop* prop)
 {
+    for (auto it : props)
+    {
+        if (it->GetID() == prop->GetID())
+        {
+            it->SetNum(it->GetNum() + prop->GetNum());
+            delete prop;
+            return;
+        }
+    }
     props.push_back(prop);
 }
 

@@ -64,7 +64,6 @@ public:
     Pokemon(const Pokemon& other);  //复制构造函数, 用于复制宝可梦到战斗中
 
     ~Pokemon();
-    void Print(); //打印宝可梦信息
     void PrintDetail(); //打印宝可梦详细信息
     int GetSellPrice(); //获取出售价格
 private:
@@ -103,7 +102,6 @@ private:
     }basicValue; //基础点数
     int growthRate; //成长速度
     int basicExperience; //基础经验
-
 };
 
 #endif // !POKEMON_H

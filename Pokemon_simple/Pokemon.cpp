@@ -13,11 +13,6 @@ Pokemon::~Pokemon()
 {
 }
 
-
-void Pokemon::Print()
-{
-}
-
 void Pokemon::PrintDetail()
 {
 }

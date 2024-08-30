@@ -12,7 +12,6 @@
 
 class Game
 {
-    const int MAX_POKEMON_INGAME = 6;
 public:
     Game(); 
     ~Game() {};
@@ -38,9 +37,12 @@ private:
     void Init();
     void Load();
     void Save();
+    void DrawTitle();
+    void DrawWorldMap();
     void ActOnMap();
     void UseProp(Prop* prop);
     void ChangeMusic();
     bool ChangeNPCState(NPC* npc);  //尝试改变NPC状态，如果成功返回true
+    void StartCombat();
 };
 

@@ -40,6 +40,7 @@ Prop::Prop(const Prop& prop)
 	name = prop.name;
 	description = prop.description;
 	num = prop.num;
+    type = prop.type;
 	price = prop.price;
 	sellPrice = prop.sellPrice;
 	effectPara = prop.effectPara;

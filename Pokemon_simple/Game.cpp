@@ -1,5 +1,6 @@
 #include "Game.h"
 #pragma once
+#include <fstream>
 
 Game::Game()
 {
@@ -25,6 +26,7 @@ void Game::Run()
 		{
 			case START_MENU:
 			{
+				DrawTitle();
 				vector<Text> Menu;
 				Menu.push_back(Text("1. 开始新游戏"));
 				Menu.push_back(Text("2. 加载游戏"));
@@ -103,6 +105,8 @@ void Game::Run()
 			case POKEMON_LIB:
 			{
 				{
+					Text("\n你上阵中的宝可梦：\n").Print();
+					Text("\n选择并查看宝可梦的详细信息, ESC退出\n", RED, GRAY).Print();
 					vector<Text> pokemonsInGame = pokemonLib.GetPokemonInGameInfo();
 					if (pokemonsInGame.size() == 0)
 					{
@@ -110,11 +114,10 @@ void Game::Run()
                         command.Pause();
                         gameSenceStack.pop_back();
                         break;
-
 					}
 					int choice = command.chooseFromList(pokemonsInGame);
                     if (choice == 0) { gameSenceStack.pop_back(); break; }
-					pokemonNow = pokemonLib.GetPokemonInGame(choice); 
+					pokemonNow = pokemonLib.GetPokemonInGame(choice);
                     gameSenceStack.push_back(POKEMON_INFO);
 				}
                 break;
@@ -123,6 +126,7 @@ void Game::Run()
             {
 				{
 					pokemonNow->PrintDetail();
+					Text("按任意键返回").Print();
 					command.Pause();
 					gameSenceStack.pop_back();
 				}
@@ -192,26 +196,11 @@ void Game::Run()
 						{
 							int indexInGame = command.chooseFromList(pokemonsIngame);
 							if (indexInGame == 0) { break; }
-							pokemonLib.SwitchPokemon(indexInLib, indexInGame);
-							string pokemonName1 = "[" + pokemonLib.GetPokemonInLib(indexInLib)->name + "]";
-							string pokemonName2 = "[" + pokemonLib.GetPokemonInGame(indexInGame)->name + "]";
-							Text info;
-							info.Add("仓库中的");
-							info.Add(pokemonName1, GREEN);
-							info.Add("已上阵,");
-							info.Add(pokemonName2, RED);
-							info.Add("已进入仓库.\n");
-							log.AddLog(info);
+							log.AddLog(pokemonLib.SwitchPokemon(indexInLib, indexInGame));
 						}
 						else
 						{
-							pokemonLib.AddPokemonToGame(indexInLib);
-							string pokemonName1 = "[" + pokemonLib.GetPokemonInLib(indexInLib)->name + "]";
-							Text info;
-							info.Add("仓库中的");
-							info.Add(pokemonName1, GREEN);
-							info.Add("已上阵.\n");
-							log.AddLog(info);
+							log.AddLog(pokemonLib.AddPokemonToGame(indexInLib));
 						}
 					}
 				}
@@ -257,7 +246,7 @@ void Game::Run()
                 if (count == 0) { gameSenceStack.pop_back(); break; }
                 money -= price * count;
 				Prop buyedProp = shop.BuyProp(choice, count);
-				backpack.AddProp(&buyedProp);
+				backpack.AddProp(new Prop(buyedProp));
 				Text info;
                 info.Add("你购买了");
                 info.Add(buyedProp.GetName(), GREEN);
@@ -359,6 +348,9 @@ void Game::Run()
 			case WORLD_MAP:  
 			{
 				{
+                    Text("这里是世界地图:\n", GREEN).Print();
+                    DrawWorldMap();
+					Text("按任意键返回游戏").Print();
 					command.Pause();
 					gameSenceStack.pop_back();
 				}
@@ -412,6 +404,34 @@ void Game::Save()
 	//储存内容在README.md中有详细说明
 	backpack.Save();
 	pokemonLib.Save();
+}
+
+void Game::DrawTitle()
+{
+	ifstream gamebar(GAMEBAR_PATH);
+	if (gamebar.is_open())
+	{
+		string line;
+		while (getline(gamebar, line))
+		{
+			Text(line, YELLOW).Print();
+			cout << endl;
+		}
+	}
+}
+
+void Game::DrawWorldMap()
+{
+	ifstream worldMap(WORLD_MAP_PATH); 
+	if (worldMap.is_open()) 
+	{
+		string line;
+		while (getline(worldMap, line)) 
+		{
+			Text(line, YELLOW).Print(); 
+			cout << endl;
+		}
+	}
 }
 
 void Game::ActOnMap()
@@ -495,10 +515,22 @@ void Game::ActOnMap()
 				playerY = newY;
 				GotoXY(pos.first + playerX, pos.second + playerY);
 				Text("@", MAGENTA).Print();
+                //TODO:
+				//获取地图的野生宝可梦信息
+				//依次按照概率随机生成一只野生宝可梦
+				//也可能不生成
+                //如果生成,则进入战斗场景,调用combat.InitWildCombat
+				//进入战斗场景更改gameSenceStack
+				break;
 			}
 			else if (block.type == Map::EXIT)
 			{
-
+				//TODO:
+				//查找此出口的对应信息
+				//切换地图,并设置坐标
+				//如果map不在maps中,new一个map,并添加到maps中
+				//打印一条log
+				break;
 			}
 			else if (block.type == Map::SHOP)
 			{
@@ -507,14 +539,15 @@ void Game::ActOnMap()
 			}
 			else if (block.type == Map::HOSPITAL)
 			{
-
+				//TODO:
+                //将玩家当前上阵的所有宝可梦的体力恢复到满值
+				//打印一条log,并刷新log
 			}
 			else if (block.type == Map::POKEMON_CENTER)
 			{
 				gameSenceStack.push_back(POKEMON_CENTER);
                 break;
 			}
-
 		}
 	}
 }
@@ -560,5 +593,11 @@ bool Game::ChangeNPCState(NPC* npc)
     否则返回false
 	*/
 	return false;
+}
+
+void Game::StartCombat() 
+{
+	inCombat = true;
+
 }
 
