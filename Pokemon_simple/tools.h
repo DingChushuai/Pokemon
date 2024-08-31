@@ -42,7 +42,7 @@ const enum Color
 #define POKEMON_INFO_PATH "Pokemon_Info.csv"
 #define PROP_INFO_PATH "Prop_Info.csv"
 #define SKILL_INFO_PATH "Skill_Info.csv"
-#define Battle_Info_PATH "Battle_Info.csv"
+#define BATTLE_INFO_PATH "Battle_Info.csv"
 
 #define  NPC_STATE_PATH "NPC_State.csv"
 #define  POKEMONLIB_STATE_PATH "PokemonLib_State.csv"

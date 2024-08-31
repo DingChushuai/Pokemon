@@ -595,7 +595,7 @@ void Game::UseProp(Prop* prop)
 {
 }
 
-void Game::UseSkill()
+void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
 {
 }
 

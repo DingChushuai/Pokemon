@@ -77,15 +77,19 @@ public:
     int GetSellPrice(); //获取出售价格
     string GetTypeName(int typeID); //获取类型名称
     string GetStatuName(int statuID); //获取异常状态名称
+    bool CanLevelUp(); //是否可以升级
     Text LevelUp(); //升级, 返回升级信息
     Text Evolve(); //进化, 返回进化信息
     int GetBasicExperience(); //获取基础经验
     Text GetExperience(int experience); //获取经验,返回可能的升级或进化信息
     int GetCaptureRate(); //获取捕获率
     void GetBasicValue(Value); //战斗后增加基础点数
+    float GetBuffValue(int buffLevel); //获取能力状态修正倍率
+    void UpdateAttribute(); //更新能力值
 
 private:
     Value GetRandomIndividualValue(); //获取随机个体值
+    int ExperienceOfLevel(int level); 
     int CalculateExperienceToNextLevel(); //计算升级所需经验
     ATTRIBUTE CalculateAttribute(); //计算能力值
     int evolutionLevel; //进化等级

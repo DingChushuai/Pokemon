@@ -39,9 +39,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Pokemon.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SoundPlayer.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
@@ -82,14 +79,14 @@
       <Filter>源文件\TODO</Filter>
     </ClCompile>
     <ClCompile Include="Combat.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\TODO</Filter>
+    </ClCompile>
+    <ClCompile Include="Pokemon.cpp">
+      <Filter>源文件\TODO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Pokemon.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SoundPlayer.h">
@@ -129,6 +126,9 @@
       <Filter>头文件\Finished</Filter>
     </ClInclude>
     <ClInclude Include="Combat.h">
+      <Filter>头文件\Finished</Filter>
+    </ClInclude>
+    <ClInclude Include="Pokemon.h">
       <Filter>头文件\Finished</Filter>
     </ClInclude>
   </ItemGroup>
