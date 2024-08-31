@@ -77,8 +77,9 @@ Text PokemonLib::SwitchPokemon(int indexInLib, int indexInGame)
 {
     Pokemon* p1 = GetPokemonInLib(indexInLib); 
     Pokemon* p2 = GetPokemonInGame(indexInGame); 
-
-
+    Pokemon* temp = p1;
+    pokemonInLib[indexInLib-1] = p2;
+    pokemonInGame[indexInGame-1] = temp;
     string pokemonName1 = "[" + p1->name + "]"; 
     string pokemonName2 = "[" + p2->name + "]"; 
     Text info; 
@@ -93,6 +94,8 @@ Text PokemonLib::SwitchPokemon(int indexInLib, int indexInGame)
 Text PokemonLib::AddPokemonToGame(int indexInLib)
 {
     string pokemonName1 = "[" + GetPokemonInLib(indexInLib)->name + "]"; 
+    pokemonInGame.push_back(GetPokemonInLib(indexInLib));
+    pokemonInLib.erase(pokemonInLib.begin() + indexInLib - 1);
     Text info;
     info.Add("仓库中的");
     info.Add(pokemonName1, GREEN);
@@ -128,8 +131,19 @@ vector<Text> PokemonLib::GetPokemonSellPrice()
 
 void PokemonLib::Save()
 {
+    //TODO:
+    //保存上阵中的宝可梦信息
+    //保存库中的宝可梦信息
+    //储存到PokemonLib_State中:POKEMONLIB_STATE_PATH
+    //具体格式参考README.md
+    //此函数相对麻烦
+    //建议与Load函数一同完成
 }
 
 void PokemonLib::Load()
 {
+    //TODO:
+    //加载宝可梦信息
+    //与Save函数对应
+    //详细信息查看Save函数
 }

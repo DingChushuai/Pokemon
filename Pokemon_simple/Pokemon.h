@@ -38,7 +38,6 @@ public:
         Freeze, //冰冻, 无法使用物理攻击和特殊攻击, 每回合有10%自动解除
         Frostbite   //冻伤, 每回合结束时会损失1/16最大生命值, 且特殊攻击降低50%, 冰属性宝可梦不会被冻伤
     };
-
     const struct ATTRIBUTE {
         //id以1开始计数
         int hp;     //血量
@@ -48,6 +47,16 @@ public:
         int speed;  //速度
         int specialAttack;  //特攻
         int specialDefense; //特防
+    };
+    struct Value
+    {
+        int hp;     //血量
+        int attack; //攻击
+        int defense;//防御
+        int specialAttack;  //特攻
+        int specialDefense; //特防
+        int speed;  //速度
+
     };
     int ID;
     string name;
@@ -64,42 +73,27 @@ public:
     Pokemon(const Pokemon& other);  //复制构造函数, 用于复制宝可梦到战斗中
 
     ~Pokemon();
-    void PrintDetail(); //打印宝可梦详细信息
+    vector<Text> GetDetail(); //获取宝可梦详细信息
     int GetSellPrice(); //获取出售价格
+    string GetTypeName(int typeID); //获取类型名称
+    string GetStatuName(int statuID); //获取异常状态名称
+    Text LevelUp(); //升级, 返回升级信息
+    Text Evolve(); //进化, 返回进化信息
+    int GetBasicExperience(); //获取基础经验
+    Text GetExperience(int experience); //获取经验,返回可能的升级或进化信息
+    int GetCaptureRate(); //获取捕获率
+    void GetBasicValue(Value); //战斗后增加基础点数
+
 private:
+    int GetRandomIndividualValue(); //获取随机个体值
+    int CalculateExperienceToNextLevel(); //计算升级所需经验
+    ATTRIBUTE CalculateAttribute(); //计算能力值
     int evolutionLevel; //进化等级
     int evolutionID;    //进化后的ID
     int captureRate; //捕获率
-    struct EthnicValue
-    {
-        int hp;     //血量
-        int attack; //攻击
-        int defense;//防御
-        int specialAttack;  //特攻
-        int specialDefense; //特防
-        int speed;  //速度
-
-    }ethnicValue; //种族值
-    struct IndividualValue
-    {
-        int hp;     //血量
-        int attack; //攻击
-        int defense;//防御
-        int specialAttack;  //特攻
-        int specialDefense; //特防
-        int speed;  //速度
-
-    }individualValue; //个体值
-    struct BasicValue
-    {
-        int hp;     //血量
-        int attack; //攻击
-        int defense;//防御
-        int specialAttack;  //特攻
-        int specialDefense; //特防
-        int speed;  //速度
-
-    }basicValue; //基础点数
+    Value ethnicValue; //种族值
+    Value individualValue; //个体值
+    Value basicValue; //基础点数
     int growthRate; //成长速度
     int basicExperience; //基础经验
 };

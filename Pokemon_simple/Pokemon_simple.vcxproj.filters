@@ -42,9 +42,6 @@
     <ClCompile Include="Pokemon.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PokemonLib.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Combat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -83,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="Shop.cpp">
       <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="PokemonLib.cpp">
+      <Filter>源文件\TODO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

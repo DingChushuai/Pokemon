@@ -125,7 +125,7 @@ void Game::Run()
             case POKEMON_INFO:
             {
 				{
-					pokemonNow->PrintDetail();
+					command.PrintfList(pokemonNow->GetDetail());
 					Text("按任意键返回").Print();
 					command.Pause();
 					gameSenceStack.pop_back();
@@ -305,11 +305,14 @@ void Game::Run()
 			}
 			case DEBUG:
 			{
+				Text("command list:\n").Print();
+				Text("music: change music now\n").Print();
+                Text("money(m): set money number\n").Print();
+                Text("exit(e): exit debug\n").Print();
 				Text("Debug:\ninput cmd:", RED).Print();
 				string input;
                 cin >> input;
-                if (input == "") { gameSenceStack.pop_back(); break; }
-                if (input == "exit") { gameSenceStack.pop_back(); break; }
+                if (input == "exit"  || input == "e") { gameSenceStack.pop_back(); break; }
 				else if (input == "music")
 				{
                     Text("input music id:", RED).Print();
@@ -325,7 +328,7 @@ void Game::Run()
                     soundPlayer.PlayMusic((SoundPlayer::SoundID)id);
 					command.Pause();
 				}
-				else if (input == "money")
+				else if (input == "money" || input == "m") 
 				{
 					Text("input money to set:", RED).Print();
                     int money;
@@ -436,9 +439,17 @@ void Game::DrawWorldMap()
 
 void Game::ActOnMap()
 {
-	pair<int, int> pos = GetPos();
 	int maxX = currentMap->getMapWidth();
     int maxY = currentMap->getMapHeight();
+	for (auto npc : npcs)
+	{
+		if (npc->mapID == currentMap->getMapID())
+		{
+			Text(string(1, npc->name[0])+" : "+npc->name+"\t", GREEN).Print();
+		}
+	}
+	cout << endl;
+	pair<int, int> pos = GetPos();
 	for (int i = 0; i < maxY; i++)
 	{
 		for (int j = 0; j < maxX; j++)
@@ -450,9 +461,17 @@ void Game::ActOnMap()
 	}
 	pair<int, int> logPos = GetPos();
 	log.ShowLog();
+	for (auto npc : npcs)
+	{
+		if (npc->mapID == currentMap->getMapID())
+		{
+			GotoXY(pos.first + npc->x, pos.second + npc->y);
+            Text(string(1, npc->name[0]),GREEN,GRAY).Print();
+		}
+	}
 	GotoXY(pos.first + playerX, pos.second + playerY);
 	Text("@", MAGENTA).Print();
-    
+	
 	while (true)
 	{
 		char cmd = command.GetCommand({ UP,DOWN,LEFT,RIGHT,ESC,OPEN_BACKPACK,POKEMON_LIST,OPEN_WORLD_MAP,COMMAND});
@@ -494,6 +513,27 @@ void Game::ActOnMap()
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
+			bool isNPC = false;
+			for (auto npc : npcs)
+			{
+				if (npc->mapID == currentMap->getMapID())
+				{
+					if (npc->x == newX && npc->y == newY)
+					{
+						if (ChangeNPCState(npc))
+						{
+                            isNPC = true;
+							Text info;
+							info.Add(npc->name, YELLOW);
+                            info.Add(" : ");
+                            info.Add(npc->GetTalk(), YELLOW);
+							log.AddLog(info);
+                            break;
+						}
+					}
+				}
+			}
+            if (isNPC) break;
 			if (block.type == Map::EMPTY)
 			{
 				GotoXY(pos.first + playerX, pos.second + playerY);
@@ -521,7 +561,6 @@ void Game::ActOnMap()
 				//也可能不生成
                 //如果生成,则进入战斗场景,调用combat.InitWildCombat
 				//进入战斗场景更改gameSenceStack
-				break;
 			}
 			else if (block.type == Map::EXIT)
 			{
