@@ -85,7 +85,7 @@ public:
     void GetBasicValue(Value); //战斗后增加基础点数
 
 private:
-    int GetRandomIndividualValue(); //获取随机个体值
+    Value GetRandomIndividualValue(); //获取随机个体值
     int CalculateExperienceToNextLevel(); //计算升级所需经验
     ATTRIBUTE CalculateAttribute(); //计算能力值
     int evolutionLevel; //进化等级

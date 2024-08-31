@@ -41,6 +41,7 @@ private:
     void DrawWorldMap();
     void ActOnMap();
     void UseProp(Prop* prop);
+    void UseSkill();
     void ChangeMusic();
     bool ChangeNPCState(NPC* npc);  //尝试改变NPC状态，如果成功返回true
     void StartCombat();

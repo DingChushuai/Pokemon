@@ -153,6 +153,34 @@ vector<Prop*> Backpack::GetProps()
     return props;
 }
 
+vector<Prop*> Backpack::GetPropsCanUseInBattle()
+{
+    vector<Prop*> res;
+    for (auto prop : props)
+    {
+        if (prop->IsCanUseInBattle())
+        {
+            res.push_back(prop);
+        }
+    }
+    return res;
+}
+
+vector<Prop*> Backpack::GetPropsCanUseInField()
+{
+    vector<Prop*> res;
+    {
+        for (auto prop : props)
+        {
+            if (prop->IsCanUseInField())
+            {
+                res.push_back(prop);
+            }
+        }
+    }
+    return res;
+}
+
 vector<Text> Backpack::GetPropsInfo()
 {
     //TODO:

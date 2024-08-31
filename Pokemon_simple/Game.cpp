@@ -595,6 +595,10 @@ void Game::UseProp(Prop* prop)
 {
 }
 
+void Game::UseSkill()
+{
+}
+
 void Game::ChangeMusic()
 {
 	SoundPlayer::SoundID BGM;

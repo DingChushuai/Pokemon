@@ -62,9 +62,9 @@ void Pokemon::GetBasicValue(Value)
 {
 }
 
-int Pokemon::GetRandomIndividualValue()
+Pokemon::Value Pokemon::GetRandomIndividualValue()
 {
-    return 0;
+    return Value();
 }
 
 int Pokemon::CalculateExperienceToNextLevel()
