@@ -33,12 +33,34 @@ Map::Map(int mapID)
 		texts.push_back(text);
 	}
 	getline(file, line);
-
-	//TODO: 将出口信息存入exits
+	
+	vector<string> exitInfos = Split(line, ',');
+	for (const auto& exitInfo : exitInfos)
+	{
+		vector<string> coordinates = Split(exitInfo, '/');
+		if (coordinates.size() == 5)
+		{
+			vector<int> exit = {stoi(coordinates[0]),  stoi(coordinates[1]), stoi(coordinates[2]), stoi(coordinates[3]),  stoi(coordinates[4])};
+			exits.push_back(exit);
+		}
+	}
+	
 
 	getline(file, line);
 
-	//TODO: 将野生宝可梦信息存入wildPokemon
+	
+	vector<string> pokemonInfos = Split(line, ',');
+	for (const auto& pokemonInfo : pokemonInfos)
+	{
+		vector<string> info = Split(pokemonInfo, '/');
+		if (info.size() == 3)
+		{
+			vector<int> wildPokemonInfo = {stoi(info[0]),stoi(info[1]), stoi(info[2])    
+			};
+			wildPokemon.push_back(wildPokemonInfo);
+		}
+	}
+
 
 	for (int i = 0; i < mapHeight; i++) 
 	{

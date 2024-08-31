@@ -21,10 +21,23 @@ Pokemon::Pokemon(int ID, int level)
 
 Pokemon::Pokemon(const Pokemon& other)
 {
-    //TODO:
-    //拷贝构造函数
-    //拷贝其他宝可梦的所有属性
-    //注意: 不拷贝Buff
+    ID = other.ID;
+    name = other.name;
+    type = other.type;
+    level = other.level;
+    experience = other.experience;
+    experienceToNextLevel = other.experienceToNextLevel;
+    attribute = other.attribute;
+    statu = other.statu; 
+    skills = other.skills;
+    evolutionLevel = other.evolutionLevel;
+    evolutionID = other.evolutionID;
+    captureRate = other.captureRate;
+    ethnicValue = other.ethnicValue;
+    individualValue = other.individualValue;
+    basicValue = other.basicValue;
+    growthRate = other.growthRate;
+    basicExperience = other.basicExperience;
 }
 
 Pokemon::~Pokemon()
