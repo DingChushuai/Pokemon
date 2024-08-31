@@ -62,7 +62,7 @@ Prop* Backpack::GetProp_(int id)
 
 Prop* Backpack::GetPropFromIndex(int index)
 {
-    if (index >= 0 && index < props.size()) {
+    if (index >= 0 && index <= props.size()) {
         return props[index-1];
     }
     return nullptr;
