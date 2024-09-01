@@ -120,10 +120,14 @@ Map::BlockType Map::getBlockType(int x, int y)
 
 vector<int> Map::getExit(int x, int y)
 {
-	//TODO:
-	//在所有exits中寻找(x,y)的出口信息,并返回出口信息
-	//tips:exits[i]前两项为x,y, 后三项为地图ID,出口坐标
-    return vector<int>();
+	for (const auto& exit : exits)
+	{ 
+		if (exit[0] == x && exit[1] == y)
+		{
+			return { exit[2], exit[3], exit[4] };
+		}
+	}
+	return vector<int>();
 }
 
 vector<Text> Map::getTexts()
