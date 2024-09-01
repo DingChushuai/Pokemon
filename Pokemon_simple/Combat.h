@@ -27,7 +27,6 @@ public:
     vector<vector<float>> damageTable;  //属性相克表,构造函数中初始化
     bool lastCombatWin; //上一次战斗是否胜利
     Log combatLog;  //战斗日志,战斗完成后清除
-private:
     bool isTrainer;
     int escapeFailedTimes; //逃跑失败次数 
     vector<pair<Pokemon*,Pokemon*>> beaten; //我方宝可梦战胜的敌方宝可梦, 用于计算战斗经验

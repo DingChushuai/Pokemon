@@ -809,6 +809,12 @@ void Game::StartCombat()
 			if (enamyHit)
 			{
 				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+				if (combat.enemyNow->attribute.hp == 0)
+				{
+					combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
+					combat.lastCombatWin= true;
+                    return;
+				}
 			}
 			else
 			{
@@ -863,6 +869,82 @@ void Game::StartCombat()
                 info.Add("成功逃脱了战斗!");
                 log.AddLog(info);
 				return;
+			}
+			else
+			{
+                Text info;
+                info.Add("你的");
+                info.Add(combat.pokemonNow->name, GREEN);
+                info.Add("试图逃脱战斗，但是");
+                info.Add("失败了!", RED);
+                log.AddLog(info);
+				if (enamyHit)
+				{
+					UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+				}
+				else
+				{
+					Text info;
+					info.Add("对方");
+					info.Add(combat.enemyNow->name, GREEN);
+					info.Add("使用了");
+					info.Add(enamy_skill->skillName, GREEN);
+					info.Add("但是被你的");
+					info.Add(combat.pokemonNow->name, GREEN);
+					info.Add("躲过", RED);
+					info.Add("了!");
+					combat.combatLog.AddLog(info);
+				}
+			}
+		}
+		//结算状态
+		if (combat.pokemonNow->attribute.hp <= 0)
+		{
+			combat.beaten.push_back({ combat.enemyNow, combat.pokemonNow });
+			vector<Pokemon*> pokemonAlive = combat.pokemonAvailable();
+			if (pokemonAlive.size() == 0)
+			{
+               combat.lastCombatWin = false;
+               	return;
+			}
+			else
+			{
+				Text("请选择你要切换的宝可梦:\n").Print();
+				int choose_pokemon = 0;
+				do {
+					choose_pokemon = command.chooseFromList(combat.PokemonAvailableText());
+					combat.ChangePokemon(pokemonAlive[choose_pokemon - 1]);
+					Text info;
+                    info.Add("你的");
+                    info.Add(combat.pokemonNow->name, GREEN);
+                    info.Add("被");
+                    info.Add(myPokemon->name, GREEN);
+                    info.Add("替换了!");
+                    combat.combatLog.AddLog(info);
+				} while (!choose_pokemon);
+			}
+		}
+		if (combat.enemyNow->attribute.hp <= 0)
+		{
+            combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
+			vector<Pokemon*> enemyPokemonAlive = combat.enemyAvailable();
+			if (enemyPokemonAlive.size() == 0)
+			{
+                combat.lastCombatWin = true;
+                return;
+			}
+			else
+			{
+				Text info;
+                info.Add("对方");
+                info.Add(combat.enemyNow->name, GREEN);
+                info.Add("被击败了!");
+                combat.combatLog.AddLog(info);
+                combat.enemyNow = enemyPokemonAlive[rand() % enemyPokemonAlive.size()];
+                info.Add("对方");
+                info.Add("派出了");
+                info.Add(combat.enemyNow->name, GREEN);
+                combat.combatLog.AddLog(info);
 			}
 		}
 	}
