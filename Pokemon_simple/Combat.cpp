@@ -168,6 +168,14 @@ vector<Text> Combat::ShowPokemonInfo()
 	return vector<Text>();
 }
 
+vector<Text> Combat::ShowPokemonSkill()
+{
+	//TODO:
+    //显示当前宝可梦的技能
+	//包括技能名称,属性,类型,威力,pp
+	return vector<Text>();
+}
+
 bool Combat::IsTrainerBattle()
 {
 	return isTrainer;
@@ -192,10 +200,16 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 
 void Combat::EndCombat()
 {
-	//TODO:
-	//将所有变量状态重置
+	myPokemons.clear();
+	enemyPokemons.clear();
+	pokemonNow = nullptr;
+	enemyNow = nullptr;
+	isTrainer = false;
+	escapeFailedTimes = 0;
+	beaten.clear();
+	combatLog.clearLog();
+	//To do:
 	//将经验和获得的基础点数分配给对应宝可梦
 	//添加战斗记录(获取经验)
 	//回传宝可梦的血量,状态,技能pp,基础点数
-	//(函数外)在战斗结束后,更新宝可梦的经验,等级
 }

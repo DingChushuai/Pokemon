@@ -19,6 +19,7 @@ public:
     Text ChangePokemon(Pokemon* pokemon);
     bool TryToEscape();
     vector<Text> ShowPokemonInfo(); //显示敌我方宝可梦信息
+    vector<Text> ShowPokemonSkill();
     bool IsTrainerBattle();
     bool IsWildBattle();
     int GetExperienceFromBattle(Pokemon* beatenPokemon);

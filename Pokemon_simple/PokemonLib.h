@@ -3,9 +3,9 @@
 
 class PokemonLib
 {
+public:
 	vector<Pokemon*> pokemonInGame;	//上阵的宝可梦
 	vector<Pokemon*> pokemonInLib;	//宝可梦背包
-public:
 	PokemonLib();
 	~PokemonLib();
     Text AddPokemon(Pokemon* p);

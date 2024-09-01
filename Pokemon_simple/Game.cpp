@@ -300,6 +300,21 @@ void Game::Run()
 			}
 			case COMBAT:
 			{
+				if (pokemonLib.pokemonInGame.size() == 0)
+				{
+                    log.AddLog(Text("你没有可以战斗的宝可梦了，无法触发战斗!", RED));
+					gameSenceStack.pop_back();
+                    break;
+				}
+				StartCombat();
+				combat.EndCombat();
+				for (auto& pokemon : pokemonLib.pokemonInGame)
+				{
+					if (pokemon->CanLevelUp())
+					{
+						log.AddLog(pokemon->LevelUp());
+					}
+				}
 				gameSenceStack.pop_back();
 				break;
 			}
@@ -641,6 +656,215 @@ bool Game::ChangeNPCState(NPC* npc)
 void Game::StartCombat() 
 {
 	inCombat = true;
+	vector<Text> choose;
+    choose.push_back(Text("1. 使用技能"));
+    choose.push_back(Text("2. 使用道具"));
+    choose.push_back(Text("3. 交换上阵"));
+    choose.push_back(Text("4. 逃离战斗"));
+	while (inCombat)
+	{
+		command.PrintfList(combat.ShowPokemonInfo());
+		combat.combatLog.ShowLog();
+		int choice = command.chooseFromList(choose);
+		int pokemon_id;
+		Pokemon* myPokemon;
+		Prop* myProp;
+		Skill* mySkill;
+		if (choice == 0)
+		{
+			continue;
+		}
+		else if (choice == 1)
+		{
+			Text("请选择要使用的技能:\n").Print();
+			int skill_id = command.chooseFromList(combat.ShowPokemonSkill());
+            if (skill_id == 0) continue;
+			else
+			{
+				mySkill = &combat.pokemonNow->skills[skill_id - 1];
+				if (mySkill->PP == 0)
+				{
+                    Text("技能PP不足,无法使用!",RED).Print();
+					command.Pause();
+                    continue;
+				}
+			}
+		}
+		else if (choice == 2)
+		{
+            Text("请选择要使用的道具:\n").Print();
+			vector<Prop*> props = backpack.GetPropsCanUseInBattle();
+			vector<Text> propList;
+			for (auto prop : props)
+			{
+				propList.push_back(Text(prop->GetName() + " x" + to_string(prop->GetNum()) + prop->GetDescription())); 
+			}
+            int prop_id = command.chooseFromList(propList);
+            if (prop_id == 0) continue;
+			else
+			{
+                myProp = props[prop_id - 1];
+			}
+		}
+		else if (choice == 3)
+		{
+			vector<Pokemon*> pokemons = combat.pokemonAvailable();
+			if (pokemons.size() == 0)
+			{
+                Text("没有可用的宝可梦,无法交换").Print();
+                continue;
+			}
+			else
+			{
+                Text("请选择要交换的宝可梦:\n").Print();
+                pokemon_id = command.chooseFromList(combat.PokemonAvailableText());
+                if (pokemon_id == 0) continue;
+				else
+				{
+                    myPokemon = pokemons[pokemon_id - 1];
+				}
+			}
+		}
+		Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
+		int myFirst = mySkill->priority - enamy_skill->priority;
+		if (myFirst == 0)
+		{
+			
+			myFirst = combat.pokemonNow->attribute.speed* combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.speed) - combat.enemyNow->attribute.speed;
+			if (myFirst == 0)
+			{
+				myFirst = rand() % 2;
+			}
+		}
+		bool myHit, enamyHit;
+		int myHitRate, enamyHitRate;
+		myHitRate = mySkill->accuracy * combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.accuracy) / combat.enemyNow->GetBuffValue(combat.enemyNow->buff.evasion);
+        enamyHitRate = enamy_skill->accuracy * combat.enemyNow->GetBuffValue(combat.enemyNow->buff.accuracy) / combat.pokemonNow-> GetBuffValue(combat.pokemonNow->buff.evasion);
+		myHit = rand() % 100 < myHitRate;
+        enamyHit = rand() % 100 < enamyHitRate;
+		if (mySkill->mustHit) myHit = true;
+        if (enamy_skill->mustHit) enamyHit = true;
+		if (choice == 1)
+		{
+			if(myHit)
+			{
+				if (myFirst > 0) UseSkill(mySkill, combat.pokemonNow, combat.enemyNow);
+				if (combat.enemyNow->attribute.hp > 0)
+				{
+					if (enamyHit)
+					{
+						UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+					}
+					else
+					{
+						Text info;
+						info.Add("对方");
+						info.Add(combat.enemyNow->name, GREEN);
+						info.Add("使用了");
+						info.Add(enamy_skill->skillName, GREEN);
+						info.Add("但是被你的");
+						info.Add(combat.pokemonNow->name, GREEN);
+						info.Add("躲过", RED);
+						info.Add("了!");
+						combat.combatLog.AddLog(info);
+					}
+				}
+			}
+			else
+			{
+				mySkill->PP--;
+				Text info;
+				info.Add("你的");
+				info.Add(combat.pokemonNow->name, GREEN);
+                info.Add("使用了");
+                info.Add(mySkill->skillName, GREEN);
+                info.Add("但是被对方");
+                info.Add(combat.enemyNow->name, GREEN);
+                info.Add("躲过",RED);
+				info.Add("了!");
+				combat.combatLog.AddLog(info);
+				if (enamyHit)
+				{
+                    UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+				}
+				else
+				{
+                    Text info;
+                    info.Add("对方");
+                    info.Add(combat.enemyNow->name, GREEN);
+                    info.Add("使用了");
+                    info.Add(enamy_skill->skillName, GREEN);
+                    info.Add("但是被你的");
+                    info.Add(combat.pokemonNow->name, GREEN);
+                    info.Add("躲过",RED);
+                    info.Add("了!");
+					combat.combatLog.AddLog(info);
+				}
+			}
+		}
+		else if (choice == 2)
+		{
+			//使用道具
+			UseProp(myProp);
+			if (enamyHit)
+			{
+				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+			}
+			else
+			{
+				Text info;
+				info.Add("对方");
+				info.Add(combat.enemyNow->name, GREEN);
+				info.Add("使用了");
+				info.Add(enamy_skill->skillName, GREEN);
+				info.Add("但是被你的");
+				info.Add(combat.pokemonNow->name, GREEN);
+				info.Add("躲过", RED);
+				info.Add("了!");
+				combat.combatLog.AddLog(info);
+			}
 
+		}
+		else if (choice == 3)
+		{
+			Text info;
+            info.Add("你的");
+            info.Add(combat.pokemonNow->name, GREEN);
+            info.Add("被");
+            info.Add(myPokemon->name, GREEN);
+            info.Add("替换了!");
+			combat.ChangePokemon(myPokemon);
+            combat.combatLog.AddLog(info);
+			if (enamyHit)
+			{
+				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+			}
+			else
+			{
+				Text info;
+				info.Add("对方");
+				info.Add(combat.enemyNow->name, GREEN);
+				info.Add("使用了");
+				info.Add(enamy_skill->skillName, GREEN);
+				info.Add("但是被你的");
+				info.Add(combat.pokemonNow->name, GREEN);
+				info.Add("躲过", RED);
+				info.Add("了!");
+				combat.combatLog.AddLog(info);
+			}
+		}
+		else if (choice == 4)
+		{
+			if (combat.TryToEscape())
+			{
+                Text info;
+                info.Add("你的");
+                info.Add(combat.pokemonNow->name, GREEN);
+                info.Add("成功逃脱了战斗!");
+                log.AddLog(info);
+				return;
+			}
+		}
+	}
 }
 
