@@ -192,8 +192,15 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 
 void Combat::EndCombat()
 {
-	//TODO:
-	//将所有变量状态重置
+	myPokemons.clear();
+	enemyPokemons.clear();
+	pokemonNow = nullptr;
+	enemyNow = nullptr;
+	isTrainer = false;
+	escapeFailedTimes = 0;
+	beaten.clear();
+	combatLog.clearLog();
+	//To do:
 	//将经验和获得的基础点数分配给对应宝可梦
 	//添加战斗记录(获取经验)
 	//回传宝可梦的血量,状态,技能pp,基础点数
