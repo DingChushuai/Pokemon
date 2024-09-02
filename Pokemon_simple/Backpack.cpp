@@ -183,28 +183,63 @@ vector<Prop*> Backpack::GetPropsCanUseInField()
 
 vector<Text> Backpack::GetPropsInfo()
 {
-    //TODO:
-    //返回道具信息: 名称,数量,描述
-    //可参考Shop::GetPropsInShop()的写法
-    return vector<Text>();
+    vector<Text> infoTexts;
+    vector<Prop*> backpackProps = props; 
+    for (int i = 0; i < backpackProps.size(); i++)
+    {
+        string s;
+        s += backpackProps[i]->GetName();
+        while (s.length() < 14)
+            s += " ";
+        s += to_string(backpackProps[i]->GetNum());
+        while (s.length() < 20)
+            s += " ";
+        s += backpackProps[i]->GetDescription();
+        infoTexts.push_back(Text(s));
+    }
+    return infoTexts;
 }
 
 vector<Text> Backpack::GetPropsSellPrice()
 {
-    //TODO:
-    //返回道具信息: 名称,出售售价,描述
-    //只返回可出售的道具(即售价大于0的道具)
-    //可参考Shop::GetPropsInShop()的写法
-    return vector<Text>();
+    vector<Text> sellPrices;
+    for (int i = 0; i < props.size(); i++)
+    {
+        if (props[i]->GetSellPrice() > 0)
+        {
+            string s;
+            s += props[i]->GetName();
+            while (s.length() < 14)
+                s += " ";
+            s += to_string(props[i]->GetSellPrice());
+            while (s.length() < 20)
+                s += " ";
+            s += props[i]->GetDescription();
+            sellPrices.push_back(Text(s));
+        }
+    }
+    return sellPrices;
 }
 
 vector<Text> Backpack::GetPropsBuyPrice()
 {
-    //TODO:
-    //返回道具信息: 名称,购买售价,描述
-    //只返回可购买的道具(即售价小于0的道具)
-    //和GetPropsSellPrice()几乎完全相同
-    return vector<Text>();
+    vector<Text> buyPrices;
+    for (int i = 0; i < props.size(); i++)
+    {
+        if (props[i]->GetPrice() < 0) 
+        {
+            string s;
+            s += props[i]->GetName();
+            while (s.length() < 14)
+                s += " ";
+            s += to_string(props[i]->GetPrice());
+            while (s.length() < 20)
+                s += " ";
+            s += props[i]->GetDescription();
+            buyPrices.push_back(Text(s));
+        }
+    }
+    return buyPrices;
 }
 
 void Backpack::Save()
