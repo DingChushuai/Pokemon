@@ -51,17 +51,11 @@
     <ClCompile Include="Log.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>源文件\TODO</Filter>
-    </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
     <ClCompile Include="Prop.cpp">
       <Filter>源文件\Finished</Filter>
-    </ClCompile>
-    <ClCompile Include="Backpack.cpp">
-      <Filter>源文件\TODO</Filter>
     </ClCompile>
     <ClCompile Include="Command.cpp">
       <Filter>源文件\Finished</Filter>
@@ -83,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="Pokemon.cpp">
       <Filter>源文件\TODO</Filter>
+    </ClCompile>
+    <ClCompile Include="Backpack.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>源文件\Finished</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

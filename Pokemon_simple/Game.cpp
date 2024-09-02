@@ -667,9 +667,9 @@ void Game::StartCombat()
 		combat.combatLog.ShowLog();
 		int choice = command.chooseFromList(choose);
 		int pokemon_id;
-		Pokemon* myPokemon;
-		Prop* myProp;
-		Skill* mySkill;
+		Pokemon* myPokemon = nullptr;
+		Prop* myProp = nullptr;
+		Skill* mySkill = nullptr;
 		if (choice == 0)
 		{
 			continue;
