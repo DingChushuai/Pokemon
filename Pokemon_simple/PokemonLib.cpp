@@ -255,7 +255,7 @@ void PokemonLib::Load()
            
 
          //   load.push_back(a); 
-         
+        count++;
         if (count > 6)     pokemonInLib.push_back(a);
         else  pokemonInGame.push_back(a);
       
