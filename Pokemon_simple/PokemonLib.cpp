@@ -141,7 +141,6 @@ vector<Text> PokemonLib::GetPokemonInLibInfo()
     return infos;
 }
 
-
 vector<Text> PokemonLib::GetPokemonSellPrice()
 {
     vector<Text> info;
