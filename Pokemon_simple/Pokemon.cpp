@@ -62,7 +62,7 @@ Pokemon::Pokemon(int ID, int level)
             random_device rd;
             mt19937 g(rd());
             shuffle(skill.begin(), skill.end(), g);
-            vector<int>result(skill.begin(), skill.end() + 4);
+            vector<int>result(skill.begin(), skill.begin() + 4);
             for (int k = 0; k < result.size(); k++)
             {
                 Skill* a = new Skill(result[i]);
