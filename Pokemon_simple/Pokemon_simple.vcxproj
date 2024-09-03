@@ -175,7 +175,10 @@
   <ItemGroup>
     <Text Include="gamebar.txt" />
     <Text Include="Game_State.txt" />
+    <Text Include="map_0.txt" />
     <Text Include="map_1.txt" />
+    <Text Include="map_2.txt" />
+    <Text Include="map_3.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="music\CaiHongShi.wav" />

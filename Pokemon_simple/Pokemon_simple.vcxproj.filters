@@ -162,7 +162,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="map_1.txt">
+    <Text Include="map_0.txt">
       <Filter>资源文件\maps</Filter>
     </Text>
     <Text Include="gamebar.txt">
@@ -171,6 +171,13 @@
     <Text Include="Game_State.txt">
       <Filter>资源文件\states</Filter>
     </Text>
+    <Text Include="map_1.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_2.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_3.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="music\CaiHongShi.wav">
