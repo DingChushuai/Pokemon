@@ -184,7 +184,7 @@ vector<Prop*> Backpack::GetPropsCanUseInField()
 vector<Text> Backpack::GetPropsInfo()
 {
     vector<Text> infoTexts;
-    vector<Prop*> backpackProps = props; 
+    vector<Prop*> backpackProps = props;
     for (int i = 0; i < backpackProps.size(); i++)
     {
         string s;
@@ -198,6 +198,7 @@ vector<Text> Backpack::GetPropsInfo()
         infoTexts.push_back(Text(s));
     }
     return infoTexts;
+}
 vector<Text> Backpack::GetPropsSellPrice()
 {
     vector<Text> sellPrices;

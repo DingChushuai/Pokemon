@@ -397,9 +397,9 @@ void Game::Init()
     playerY = 8;
 	money = 0;
 	inCombat = false;
-	Map* map1= new Map(1);
-	currentMap = map1;
-	maps.push_back(map1);
+	Map* map0= new Map(0);
+	currentMap = map0;
+	maps.push_back(map0);
 
 	//TODO: 从NPC_Info.txt读取所有NPC信息,数量为NPCS_COUNT
 	//使用 new 创建新的对象, 构造函数使用NPC(int id);
@@ -534,10 +534,10 @@ void Game::ActOnMap()
             int newY = playerY;
             switch (cmd)
             {
-            case UP: if(newY>=0) newY--; break;
-            case DOWN:if(newY<maxY) newY++; break;
-            case LEFT:if(newX>=0) newX--; break; 
-            case RIGHT:if(newX<maxX) newX++; break; 
+            case UP: if(newY>0) newY--; break;
+            case DOWN:if(newY<maxY-1) newY++; break;
+            case LEFT:if(newX>0) newX--; break; 
+            case RIGHT:if(newX<maxX-1) newX++; break; 
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
@@ -597,6 +597,24 @@ void Game::ActOnMap()
 				//切换地图,并设置坐标
 				//如果map不在maps中,new一个map,并添加到maps中
 				//打印一条log
+				vector<int> newMap = currentMap->getExit(newX, newY);
+				for (auto map : maps)
+				{
+					if (map->getMapID() == newMap[0])
+					{
+                        currentMap = map;
+                        playerX = newMap[1];
+                        playerY = newMap[2];
+                        break;
+					}
+				}
+				if (currentMap->getMapID() != newMap[0])
+				{
+                    currentMap = new Map(newMap[0]);
+                    maps.push_back(currentMap);
+                    playerX = newMap[1];
+                    playerY = newMap[2];
+				}
 				break;
 			}
 			else if (block.type == Map::SHOP)
