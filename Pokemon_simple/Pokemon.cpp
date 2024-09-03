@@ -179,7 +179,7 @@ bool Pokemon::CanLevelUp()
 
 Text Pokemon::LevelUp()
 {
-    if (CanLevelUp)
+    if (CanLevelUp())
         level++;
 
     //TODO:
