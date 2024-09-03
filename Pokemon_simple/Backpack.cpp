@@ -183,24 +183,11 @@ vector<Prop*> Backpack::GetPropsCanUseInField()
 
 vector<Text> Backpack::GetPropsInfo()
 {   
-    vector<Text> props;
-    vector<Prop*> Props = GetProps();
-    for (int i = 0; i < Props.size(); i++)
-    {
-        string s;
-        s += Props[i]->GetName();
-        while (s.length() < 14)
-            s += " ";
-        s += to_string(Props[i]->GetNum());
-        while (s.length() < 20)
-            s += " ";
-        s += Props[i]->GetDescription();
-        props.push_back(Text(s));
-    }
+ 
     //TODO:
     //返回道具信息: 名称,数量,描述
     //可参考Shop::GetPropsInShop()的写法
-    return props;
+    return vector<Text>();
 }
 
 vector<Text> Backpack::GetPropsSellPrice()
