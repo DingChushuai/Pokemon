@@ -261,6 +261,12 @@ void Game::Run()
             case SELL_ITEM:
 			{
 				vector<Text> props = backpack.GetPropsSellPrice();
+				if (props.size() == 0)
+				{
+					Text("\n你的背包中没有道具，请先去获取一些道具吧!\n", RED).Print();
+                    command.Pause();
+                    gameSenceStack.pop_back();
+                    break;				}
                 int choice = command.chooseFromList(props,10);
                 if (choice == 0) { gameSenceStack.pop_back(); break; }
 				Prop* prop = backpack.GetPropFromIndex(choice);
@@ -283,6 +289,13 @@ void Game::Run()
 			case SELL_POKEMON:
 			{
                 vector<Text> pokemonNames = pokemonLib.GetPokemonSellPrice();
+				if (pokemonNames.size() == 0)
+				{
+                    Text("\n你的仓库中没有宝可梦，请先去抓一些宝可梦吧!\n", RED).Print();
+                    command.Pause();
+                    gameSenceStack.pop_back();
+                    break;
+				}
                 int choice = command.chooseFromList(pokemonNames,10);
                 if (choice == 0) { gameSenceStack.pop_back(); break; }
                 Pokemon* pokemon = pokemonLib.GetPokemonInLib(choice);
