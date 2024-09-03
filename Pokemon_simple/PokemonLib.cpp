@@ -181,13 +181,48 @@ void PokemonLib::Save()
             
             for (int j = 0; j < pokemonInGame[i]->skills.size(); j++)
             {
-               
+                ofs << pokemonInGame[i]->skills[j].skillID << "|" << pokemonInGame[i]->skills[j].skillName << "|" << pokemonInGame[i]->skills[j].skillDescription << "|" << pokemonInGame[i]->skills[j].type << "|"
+                    << pokemonInGame[i]->skills[j].skillType << "|" << pokemonInGame[i]->skills[j].power << "|" << pokemonInGame[i]->skills[j].accuracy << "|" << pokemonInGame[i]->skills[j].PP << "|" << pokemonInGame[i]->skills[j].maxPP << "|"
+                    << pokemonInGame[i]->skills[j].skillEffect << "|";
+                       for (int k = 0; k < pokemonInGame[i]->skills[j].effectParam.size(); k++)
+                       {
+                           ofs<<pokemonInGame[i]->skills[j].effectParam[k]<<"/";
+                       }        
+                       ofs << "|" << pokemonInGame[i]->skills[j].mustHit << "|" << pokemonInGame[i]->skills[j].priority;
             }
+            ofs << endl;
+    }
+    for (int i = 0; i < pokemonInLib.size(); i++)
+    {
+        ofs << pokemonInLib[i]->ID << "," << pokemonInLib[i]->name << "," << pokemonInLib[i]->type.first << "," << pokemonInLib[i]->type.second << "," << pokemonInLib[i]->level
+            << "," << pokemonInLib[i]->experience << "," << pokemonInLib[i]->experienceToNextLevel << "," << pokemonInLib[i]->statu << ","
+            << pokemonInLib[i]->attribute.hp << "/" << pokemonInLib[i]->attribute.maxHp << "/" << pokemonInLib[i]->attribute.attack << "/" << pokemonInLib[i]->attribute.defense
+            << "/" << pokemonInLib[i]->attribute.speed << "/" << pokemonInLib[i]->attribute.specialAttack << "/" << pokemonInLib[i]->attribute.specialDefense << "/" << pokemonInLib[i]->attribute.speed
+            << "," << pokemonInLib[i]->evolutionLevel << "," << pokemonInLib[i]->evolutionID << "," << pokemonInLib[i]->captureRate << "," << pokemonInLib[i]->growthRate << ","
+            << pokemonInLib[i]->basicExperience << ","
+            << pokemonInLib[i]->ethnicValue.hp << "/" << pokemonInLib[i]->ethnicValue.attack << "/" << pokemonInLib[i]->ethnicValue.defense << "/" << pokemonInLib[i]->ethnicValue.specialAttack << "/"
+            << pokemonInLib[i]->ethnicValue.specialDefense << "/" << pokemonInLib[i]->ethnicValue.speed << ","
+            << pokemonInLib[i]->individualValue.hp << "/" << pokemonInLib[i]->individualValue.attack << "/" << pokemonInLib[i]->individualValue.defense << "/" << pokemonInLib[i]->individualValue.specialAttack << "/"
+            << pokemonInLib[i]->individualValue.specialDefense << "/" << pokemonInLib[i]->individualValue.speed << ","
+            << pokemonInLib[i]->basicValue.hp << "/" << pokemonInLib[i]->basicValue.attack << "/" << pokemonInLib[i]->basicValue.defense << "/" << pokemonInLib[i]->basicValue.specialAttack << "/"
+            << pokemonInLib[i]->basicValue.specialDefense << "/" << pokemonInLib[i]->basicValue.speed << ",";
 
+        for (int j = 0; j < pokemonInLib[i]->skills.size(); j++)
+        {
+            ofs << pokemonInLib[i]->skills[j].skillID << "|" << pokemonInLib[i]->skills[j].skillName << "|" << pokemonInLib[i]->skills[j].skillDescription << "|" << pokemonInLib[i]->skills[j].type << "|"
+                << pokemonInLib[i]->skills[j].skillType << "|" << pokemonInLib[i]->skills[j].power << "|" << pokemonInLib[i]->skills[j].accuracy << "|" << pokemonInLib[i]->skills[j].PP << "|" << pokemonInLib[i]->skills[j].maxPP << "|"
+                << pokemonInLib[i]->skills[j].skillEffect << "|";
+            for (int k = 0; k < pokemonInLib[i]->skills[j].effectParam.size(); k++)
+            {
+                ofs << pokemonInLib[i]->skills[j].effectParam[k] << "\\";
+            }
+            ofs << "|" << pokemonInLib[i]->skills[j].mustHit << "|" << pokemonInLib[i]->skills[j].priority;
+        }
 
-
+        ofs << endl;
 
     }
+    ofs.close();
         //TODO:
     //保存上阵中的宝可梦信息
     //保存库中的宝可梦信息
@@ -199,8 +234,32 @@ void PokemonLib::Save()
 
 void PokemonLib::Load()
 {
+    int count = 0;
     ifstream ifs;
     ifs.open(POKEMONLIB_STATE_PATH, ios::in);
+    string rea;
+    vector<string>data;
+  //  vector<Pokemon*>load;
+    while (getline(ifs, rea))
+    {
+        data = Split(rea, ',');
+        Pokemon* a = new Pokemon;
+        a->ID = stoi(data[0]);
+        a->name = data[1];
+        a->type.first =(Type)stoi( data[2]);
+        a->type.second = (Type)stoi(data[3]);
+        a->level = stoi(data[4]);
+        a->experience = stoi(data[5]);
+        a->experienceToNextLevel = stoi(data[6]);
+     //   a->statu =(data[7]);
+           
+
+         //   load.push_back(a); 
+         
+        if (count > 6)     pokemonInLib.push_back(a);
+        else  pokemonInGame.push_back(a);
+      
+    }
     //TODO:
     //加载宝可梦信息
     //与Save函数对应
