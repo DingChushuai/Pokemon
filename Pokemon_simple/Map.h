@@ -33,6 +33,7 @@ public:
     vector<int> getExit(int x, int y);  //返回出口信息(出口地图ID/出口地图X坐标/出口地图Y坐标),如果没有出口则返回空向量
     vector<Text> getTexts();            //返回地图上的文字信息
     vector<vector<int>> getWildPokemon();   //返回地图上的野生宝可梦信息(宝可梦ID/宝可梦出现的等级/宝可梦出现的概率)
+    string getMapName();
 
 private:
     int mapID;

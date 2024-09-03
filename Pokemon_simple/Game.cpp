@@ -597,12 +597,19 @@ void Game::ActOnMap()
 				//切换地图,并设置坐标
 				//如果map不在maps中,new一个map,并添加到maps中
 				//打印一条log
+				Text info;
+                info.Add("你离开了");
+                info.Add(currentMap->getMapName(), YELLOW);
+                info.Add("来到了");
+                
 				vector<int> newMap = currentMap->getExit(newX, newY);
 				for (auto map : maps)
 				{
 					if (map->getMapID() == newMap[0])
 					{
                         currentMap = map;
+						info.Add(currentMap->getMapName(), YELLOW);
+                        log.AddLog(info);
                         playerX = newMap[1];
                         playerY = newMap[2];
                         break;
@@ -611,6 +618,8 @@ void Game::ActOnMap()
 				if (currentMap->getMapID() != newMap[0])
 				{
                     currentMap = new Map(newMap[0]);
+					info.Add(currentMap->getMapName(), YELLOW);
+                    log.AddLog(info);
                     maps.push_back(currentMap);
                     playerX = newMap[1];
                     playerY = newMap[2];

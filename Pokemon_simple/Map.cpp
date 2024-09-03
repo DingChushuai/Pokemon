@@ -140,3 +140,8 @@ vector<vector<int>> Map::getWildPokemon()
 	return wildPokemon;
 }
 
+string Map::getMapName()
+{
+	return mapName;
+}
+
