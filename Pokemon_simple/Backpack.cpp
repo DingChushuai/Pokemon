@@ -198,8 +198,6 @@ vector<Text> Backpack::GetPropsInfo()
         infoTexts.push_back(Text(s));
     }
     return infoTexts;
-}
-
 vector<Text> Backpack::GetPropsSellPrice()
 {
     vector<Text> sellPrices;
