@@ -657,7 +657,47 @@ void Game::ActOnMap()
 
 void Game::UseProp(Prop* prop)
 {
+	/*
+		EREASE_STATUS,  //消除自身状态(PokemonStatu(0表示可以消除任何状态))
+		CHANGE_POKEMON_ATTRBUTE,  //改变宝可梦属性(ATTRIBUTE,改变值,...)  //在野外使用为永久改变,在战斗中使用为临时改变
+		CHANGE_SKILL_ATTRIBUTE,  //改变技能属性(改变条件,条件参数,技能属性,改变值,技能属性,改变值...)
+		* 改变条件,条件参数:
+		* 0.无条件(参数无效)
+		* 1.技能类型(SkillType)
+		* 2.技能属性(Type)
+		技能属性id:
+		1.power;              //威力
+		2.accuracy;           //命中
+		3.PP;                 //pp
+		4.maxPP;              //最大pp
+		
+		BUFF,   //改变能力状态修正值(能力状态修正值,改变值,...)  //在战斗中临时改变
+		HEAL,  //回复体力(濒死时是否可用,回复方式(0按百分比,1按具体值),百分比/具体值)
+		GET_SKILL,   //使宝可梦获得技能(技能ID), 生效前需要判断是否合理
+		CAPTURE,    //精灵球类型(捕获率加成,对特定的Type属性的宝可梦,特定捕获率加成)
+		SPECIAL_PROP,  //特殊道具(特殊函数id,函数参数1,函数参数2...)
+	*/
+	switch (prop->GetType())
+	{
+        case 0:
+		{
+            break;
+		}
+        case 1:
+		{
+			if (inCombat)
+			{
+				vector<Pokemon*> pokes = combat.myPokemons;
+				vector<Text> pokemonInfo;
+				for (auto poke : pokes)
+				{
+					pokemonInfo.push_back(Text(poke->name + to_string(poke->attribute.hp) + "/" + to_string(poke->attribute.maxHp) + " HP" + poke->GetStatuName(poke->statu)));
+				}
+				int index = command.chooseFromList(pokemonInfo);
 
+			}
+		}
+	}
 }
 
 void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
