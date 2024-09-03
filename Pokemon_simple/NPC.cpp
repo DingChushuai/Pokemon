@@ -5,7 +5,7 @@
 NPC::NPC(int id)
 {
 	ifstream ifs;
-	ifs.open("NPC_NIFO_PATH", ios::in);
+	ifs.open(NPC_INFO_PATH, ios::in);
 	string rea;
 	vector<string>data;
 	vector<string>locate;
