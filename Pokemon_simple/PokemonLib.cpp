@@ -105,28 +105,60 @@ Text PokemonLib::AddPokemonToGame(int indexInLib)
 
 vector<Text> PokemonLib::GetPokemonInGameInfo()
 {
-    //TODO:
-    //返回上阵中的宝可梦的简略信息
-    //包括:名称,血量,状态,经验,等级
-    //血量,经验类似 10/100
-    return vector<Text>();
+    vector<Text> infos;
+    for (auto& po : pokemonInGame)
+    {
+        Text info;
+        info.Add(po->name, BLUE);
+        info.Add(", 血量: ");
+        info.Add(to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp), RED);
+        info.Add(", 状态: " + po->GetStatuName(po->statu));
+        info.Add(", 经验: ");
+        info.Add(to_string(po->experience) + "/" +to_string(po->experienceToNextLevel), GREEN);
+        info.Add(", 等级: " + to_string(po->level));
+
+        infos.push_back(info);
+    }
+    return infos;
 }
 
 vector<Text> PokemonLib::GetPokemonInLibInfo()
 {
-    //TODO:
-    //返回库中的宝可梦的简略信息
-    //包括:名称,血量,状态,经验,等级
-    //血量,经验类似 10/100
-    return vector<Text>();
+    vector<Text> infos;
+    for (auto& po : pokemonInLib)
+    {
+        Text info;
+        info.Add(po->name, BLUE);
+        info.Add(", 血量: ");
+        info.Add(to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp), RED);
+        info.Add(", 状态: " + po->GetStatuName(po->statu));
+        info.Add(", 经验: ");
+        info.Add(to_string(po->experience) + "/" + to_string(po->experienceToNextLevel), GREEN);
+        info.Add(", 等级: " + to_string(po->level));
+
+        infos.push_back(info);
+    }
+    return infos;
 }
+
 
 vector<Text> PokemonLib::GetPokemonSellPrice()
 {
-    //TODO:
-    //返回库中的宝可梦的售卖信息
-    //包括:名称,等级,售卖价格
-    return vector<Text>();
+    vector<Text> info;
+
+    for (auto po : pokemonInLib)
+    {
+        Text sellInfo;
+        sellInfo.Add(po->name, BLUE);
+        sellInfo.Add(", 等级: ");
+        sellInfo.Add(to_string(po->level), MAGENTA);
+        sellInfo.Add(", 售卖价格: ");
+        sellInfo.Add(to_string(po->GetSellPrice()), CYAN);
+        sellInfo.Add("\n");
+        info.push_back(sellInfo);
+        
+    }
+     return info;
 }
 
 void PokemonLib::Save()
