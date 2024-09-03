@@ -11,8 +11,8 @@ struct State
     int ID;
     string stateTalk;
     string stateNotFinishTalk;
-    vector<int> stateAction;    //第一位为动作类型，后面为动作参数
-    int state;
+    vector<int> stateAction;    //第一位为动作类型,后面为动作参数
+    int stateNext;
 };
 
 class NPC
