@@ -110,7 +110,7 @@ void Game::Run()
 					vector<Text> pokemonsInGame = pokemonLib.GetPokemonInGameInfo();
 					if (pokemonsInGame.size() == 0)
 					{
-                        Text("\n你的队伍中没有宝可梦，请先获取一只宝可梦!\n", RED, GRAY).Print();
+                        Text("\n你的队伍中没有宝可梦,请先获取一只宝可梦!\n", RED, GRAY).Print();
                         command.Pause();
                         gameSenceStack.pop_back();
                         break;
@@ -138,7 +138,7 @@ void Game::Run()
 					vector<Text> props = backpack.GetPropsInfo();
                     if (props.size() == 0)
                     {
-                        Text("\n你的背包中没有道具，请先获取一些道具!\n", RED, GRAY).Print();
+                        Text("\n你的背包中没有道具,请先获取一些道具!\n", RED, GRAY).Print();
                         command.Pause();
                         gameSenceStack.pop_back();
                         break;
@@ -164,14 +164,14 @@ void Game::Run()
 					vector<Text> pokemonsInLib = pokemonLib.GetPokemonInLibInfo();
 					if (pokemonsIngame.size() == 0)
 					{
-						Text("\n你的队伍中没有宝可梦，请先获取一只宝可梦!\n", RED, GRAY).Print();
+						Text("\n你的队伍中没有宝可梦,请先获取一只宝可梦!\n", RED, GRAY).Print();
                         command.Pause();
                         gameSenceStack.pop_back();
 						break;
 					}
 					if (pokemonsInLib.size() == 0)
 					{
-						Text("\n你的仓库中没有宝可梦，请获取更多宝可梦后再来看看吧!\n", RED, GRAY).Print();
+						Text("\n你的仓库中没有宝可梦,请获取更多宝可梦后再来看看吧!\n", RED, GRAY).Print();
 						command.Pause();
 						gameSenceStack.pop_back();
 						break;
@@ -236,7 +236,7 @@ void Game::Run()
 				int price = shop.GetPriceOfProp(choice);
 				if (money < price)
 				{
-                    Text("\n你的钱不够了，请先去赚点钱吧!\n", RED).Print();
+                    Text("\n你的钱不够了,请先去赚点钱吧!\n", RED).Print();
 					command.Pause();
                     gameSenceStack.pop_back();
 					break;
@@ -263,7 +263,7 @@ void Game::Run()
 				vector<Text> props = backpack.GetPropsSellPrice();
 				if (props.size() == 0)
 				{
-					Text("\n你的背包中没有道具，请先去获取一些道具吧!\n", RED).Print();
+					Text("\n你的背包中没有道具,请先去获取一些道具吧!\n", RED).Print();
                     command.Pause();
                     gameSenceStack.pop_back();
                     break;				}
@@ -291,7 +291,7 @@ void Game::Run()
                 vector<Text> pokemonNames = pokemonLib.GetPokemonSellPrice();
 				if (pokemonNames.size() == 0)
 				{
-                    Text("\n你的仓库中没有宝可梦，请先去抓一些宝可梦吧!\n", RED).Print();
+                    Text("\n你的仓库中没有宝可梦,请先去抓一些宝可梦吧!\n", RED).Print();
                     command.Pause();
                     gameSenceStack.pop_back();
                     break;
@@ -315,7 +315,7 @@ void Game::Run()
 			{
 				if (pokemonLib.pokemonInGame.size() == 0)
 				{
-                    log.AddLog(Text("你没有可以战斗的宝可梦了，无法触发战斗!", RED));
+                    log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
 					gameSenceStack.pop_back();
                     break;
 				}
@@ -583,26 +583,42 @@ void Game::ActOnMap()
 				playerY = newY;
 				GotoXY(pos.first + playerX, pos.second + playerY);
 				Text("@", MAGENTA).Print();
-                //TODO:
-				//获取地图的野生宝可梦信息
-				//依次按照概率随机生成一只野生宝可梦
-				//也可能不生成
-                //如果生成,则进入战斗场景,调用combat.InitWildCombat
-				//进入战斗场景更改gameSenceStack
+				vector<vector<int>> wilds = currentMap->getWildPokemon();
+				int wild_index = -1;
+				for (int i = 0; i < wilds.size(); i++)
+				{
+					if (rand() % wilds[i][2] == 0)
+					{
+                        wild_index = i;
+                        break;
+					}
+				}
+				if (wild_index != -1)
+				{
+					combat.InitWildCombat(wilds[wild_index][0], wilds[wild_index][1], &pokemonLib);
+                    gameSenceStack.push_back(COMBAT);
+                    break;
+				}
 			}
 			else if (block.type == Map::EXIT)
 			{
-				//TODO:
-				//查找此出口的对应信息
-				//切换地图,并设置坐标
-				//如果map不在maps中,new一个map,并添加到maps中
-				//打印一条log
+				Text info;
+                info.Add("你离开了");
+                info.Add(currentMap->getMapName(), YELLOW);
+                info.Add("来到了");
+                
 				vector<int> newMap = currentMap->getExit(newX, newY);
+				if (newMap.size() == 0)
+				{
+					break;
+				}
 				for (auto map : maps)
 				{
 					if (map->getMapID() == newMap[0])
 					{
                         currentMap = map;
+						info.Add(currentMap->getMapName(), YELLOW);
+                        log.AddLog(info);
                         playerX = newMap[1];
                         playerY = newMap[2];
                         break;
@@ -611,6 +627,8 @@ void Game::ActOnMap()
 				if (currentMap->getMapID() != newMap[0])
 				{
                     currentMap = new Map(newMap[0]);
+					info.Add(currentMap->getMapName(), YELLOW);
+                    log.AddLog(info);
                     maps.push_back(currentMap);
                     playerX = newMap[1];
                     playerY = newMap[2];
@@ -639,6 +657,47 @@ void Game::ActOnMap()
 
 void Game::UseProp(Prop* prop)
 {
+	/*
+		EREASE_STATUS,  //消除自身状态(PokemonStatu(0表示可以消除任何状态))
+		CHANGE_POKEMON_ATTRBUTE,  //改变宝可梦属性(ATTRIBUTE,改变值,...)  //在野外使用为永久改变,在战斗中使用为临时改变
+		CHANGE_SKILL_ATTRIBUTE,  //改变技能属性(改变条件,条件参数,技能属性,改变值,技能属性,改变值...)
+		* 改变条件,条件参数:
+		* 0.无条件(参数无效)
+		* 1.技能类型(SkillType)
+		* 2.技能属性(Type)
+		技能属性id:
+		1.power;              //威力
+		2.accuracy;           //命中
+		3.PP;                 //pp
+		4.maxPP;              //最大pp
+		
+		BUFF,   //改变能力状态修正值(能力状态修正值,改变值,...)  //在战斗中临时改变
+		HEAL,  //回复体力(濒死时是否可用,回复方式(0按百分比,1按具体值),百分比/具体值)
+		GET_SKILL,   //使宝可梦获得技能(技能ID), 生效前需要判断是否合理
+		CAPTURE,    //精灵球类型(捕获率加成,对特定的Type属性的宝可梦,特定捕获率加成)
+		SPECIAL_PROP,  //特殊道具(特殊函数id,函数参数1,函数参数2...)
+	*/
+	switch (prop->GetType())
+	{
+        case 0:
+		{
+            break;
+		}
+        case 1:
+		{
+			if (inCombat)
+			{
+				vector<Pokemon*> pokes = combat.myPokemons;
+				vector<Text> pokemonInfo;
+				for (auto poke : pokes)
+				{
+					pokemonInfo.push_back(Text(poke->name + to_string(poke->attribute.hp) + "/" + to_string(poke->attribute.maxHp) + " HP" + poke->GetStatuName(poke->statu)));
+				}
+				int index = command.chooseFromList(pokemonInfo);
+
+			}
+		}
+	}
 }
 
 void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
@@ -668,19 +727,91 @@ void Game::ChangeMusic()
 
 bool Game::ChangeNPCState(NPC* npc)
 {
-	//TODO:
-	//尝试改变NPC状态，如果成功返回true
-	/*
-	NPC改变的逻辑如下:
-	先获取NPC的当前状态npc.GetState()
-	获取NPC的状态类型stateAction[0]
-	根据NPC的状态类型,和对应的状态参数stateAction[1 ~ n]
-    根据状态类型和对应参数判断是否可以改变NPC状态
-	一共8种可能的改变方式,每一种需要调用不同的类和函数,在README.md中有详细说明
-	如果不清楚其中的某一种应该如何判断,在对应位置写上"//CAN NOT FINISH" 注释,我会补全
-	如果可以改变NPC状态,将npc的state改为stateNext.并且返回true(别忘了可能的移动npc的位置)
-    否则返回false
-	*/
+	State state = npc->GetState();
+	switch (state.stateAction[0])
+	{
+		case 0: 
+		{
+			npc->state = state.stateNext;
+			return true;
+		}
+        case 1:
+		{
+			npc->mapID = state.stateAction[1];
+			npc->x = state.stateAction[2];
+            npc->y = state.stateAction[3];
+			npc->state = state.stateNext;
+            return true;
+		}
+		case 2 :
+		{
+			combat.InitTrainerCombat(state.stateAction[1],&pokemonLib);
+			ClearScreen();
+			StartCombat();
+			if (combat.lastCombatWin)
+			{
+				npc->state = state.stateNext;
+                return true;
+			}
+            return false;
+		}
+		case 3:
+		{
+			for (auto& npc1 : npcs)
+			{
+				if (npc1->ID == state.stateAction[1])
+				{
+					if (npc1->state == state.stateAction[2])
+					{
+                        npc->state = state.stateNext;
+                        return true;
+					}
+				}
+			}
+            return false;
+		}
+        case 4:
+		{
+			if (backpack.GetProp_(state.stateAction[1]))
+			{
+                npc->state = state.stateNext;
+                return true;
+			}
+            return false;
+		}
+        case 5:
+		{
+			if (backpack.GetProp_(state.stateAction[1])->GetNum() >= state.stateAction[2])
+			{
+				backpack.ReduceProp(state.stateAction[1], state.stateAction[2]);
+                npc->state = state.stateNext;
+                return true;
+			}
+            return false;
+		}
+        case 6:
+		{
+			if (pokemonLib.CheckPokemon(state.stateAction[1]))
+			{
+				npc->state = state.stateNext;
+				return true;
+			}
+            return false;
+		}
+        case 7:
+		{
+			Pokemon* pokemon_add = new Pokemon(state.stateAction[1], state.stateAction[2]);
+            pokemonLib.AddPokemon(pokemon_add);
+            npc->state = state.stateNext;
+            return true;
+		}
+        case 8:
+		{
+            backpack.AddProp(state.stateAction[1], state.stateAction[2]);
+            npc->state = state.stateNext;
+            return true;
+		}
+	}
 	return false;
 }
 
@@ -906,7 +1037,7 @@ void Game::StartCombat()
                 Text info;
                 info.Add("你的");
                 info.Add(combat.pokemonNow->name, GREEN);
-                info.Add("试图逃脱战斗，但是");
+                info.Add("试图逃脱战斗,但是");
                 info.Add("失败了!", RED);
                 log.AddLog(info);
 				if (enamyHit)

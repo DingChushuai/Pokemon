@@ -177,7 +177,24 @@
     <Text Include="map_2.txt">
       <Filter>资源文件\maps</Filter>
     </Text>
-    <Text Include="map_3.txt" />
+    <Text Include="map_3.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_4.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_5.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_6.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_7.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="map_8.txt">
+      <Filter>资源文件\maps</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Media Include="music\CaiHongShi.wav">

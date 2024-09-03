@@ -1,6 +1,6 @@
 #include "PokemonLib.h"
 #pragma once
-
+#include<fstream>
 PokemonLib::PokemonLib()
 {
     //do nothing
@@ -141,7 +141,6 @@ vector<Text> PokemonLib::GetPokemonInLibInfo()
     return infos;
 }
 
-
 vector<Text> PokemonLib::GetPokemonSellPrice()
 {
     vector<Text> info;
@@ -163,7 +162,33 @@ vector<Text> PokemonLib::GetPokemonSellPrice()
 
 void PokemonLib::Save()
 {
-    //TODO:
+    ofstream ofs;
+    ofs.open(POKEMONLIB_STATE_PATH, ios::out);
+    for (int i = 0; i < pokemonInGame.size(); i++)
+    {
+        ofs << pokemonInGame[i]->ID << "," << pokemonInGame[i]->name << "," << pokemonInGame[i]->type.first << "," << pokemonInGame[i]->type.second << "," << pokemonInGame[i]->level
+            << "," << pokemonInGame[i]->experience << "," << pokemonInGame[i]->experienceToNextLevel << "," << pokemonInGame[i]->statu << ","
+            << pokemonInGame[i]->attribute.hp << "/" << pokemonInGame[i]->attribute.maxHp << "/" << pokemonInGame[i]->attribute.attack << "/" << pokemonInGame[i]->attribute.defense
+            << "/" << pokemonInGame[i]->attribute.speed << "/" << pokemonInGame[i]->attribute.specialAttack << "/" << pokemonInGame[i]->attribute.specialDefense << "/" << pokemonInGame[i]->attribute.speed
+            << "," << pokemonInGame[i]->evolutionLevel << "," << pokemonInGame[i]->evolutionID << "," << pokemonInGame[i]->captureRate << "," << pokemonInGame[i]->growthRate << ","
+            << pokemonInGame[i]->basicExperience << ","
+            << pokemonInGame[i]->ethnicValue.hp << "/" << pokemonInGame[i]->ethnicValue.attack << "/" << pokemonInGame[i]->ethnicValue.defense << "/" << pokemonInGame[i]->ethnicValue.specialAttack << "/"
+            << pokemonInGame[i]->ethnicValue.specialDefense << "/" << pokemonInGame[i]->ethnicValue.speed << ","
+            << pokemonInGame[i]->individualValue.hp << "/" << pokemonInGame[i]->individualValue.attack << "/" << pokemonInGame[i]->individualValue.defense << "/" << pokemonInGame[i]->individualValue.specialAttack << "/"
+            << pokemonInGame[i]->individualValue.specialDefense << "/" << pokemonInGame[i]->individualValue.speed << ","
+            << pokemonInGame[i]->basicValue.hp << "/" << pokemonInGame[i]->basicValue.attack << "/" << pokemonInGame[i]->basicValue.defense << "/" << pokemonInGame[i]->basicValue.specialAttack << "/"
+            << pokemonInGame[i]->basicValue.specialDefense << "/" << pokemonInGame[i]->basicValue.speed << ",";
+            
+            for (int j = 0; j < pokemonInGame[i]->skills.size(); j++)
+            {
+               
+            }
+
+
+
+
+    }
+        //TODO:
     //保存上阵中的宝可梦信息
     //保存库中的宝可梦信息
     //储存到PokemonLib_State中:POKEMONLIB_STATE_PATH
@@ -174,6 +199,8 @@ void PokemonLib::Save()
 
 void PokemonLib::Load()
 {
+    ifstream ifs;
+    ifs.open(POKEMONLIB_STATE_PATH, ios::in);
     //TODO:
     //加载宝可梦信息
     //与Save函数对应
