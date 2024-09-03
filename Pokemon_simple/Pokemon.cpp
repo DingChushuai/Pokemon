@@ -1,6 +1,8 @@
 #include "Pokemon.h"
 #pragma once
 #include<fstream>
+#include<algorithm>
+#include<random>
 #include"tools.h"
 Pokemon::Pokemon(int ID, int level)
 {
@@ -13,6 +15,11 @@ Pokemon::Pokemon(int ID, int level)
     ifs.open(POKEMON_INFO_PATH, ios::in);
     string rea;
     vector<string> data;
+    vector<string>ethnic;
+    vector<string>fault;
+    vector<int> skill;
+    int j = 0;
+    int l;
     while (getline(ifs, rea))
     {
         data = Split(rea, ',');
@@ -23,7 +30,47 @@ Pokemon::Pokemon(int ID, int level)
             continue;
     }
     name = stoi(data[1]);
-    pair<
+    type.first = (Type)stoi(data[2]);
+    type.second = (Type)stoi(data[3]);
+    growthRate = stoi(data[4]);
+    captureRate = stoi(data[5]);
+    basicExperience = stoi(data[6]);
+    ethnic = Split(data[7], '/');
+    ethnicValue.hp = stoi(ethnic[0]);
+    ethnicValue.attack = stoi(ethnic[1]);
+    ethnicValue.defense = stoi(ethnic[2]);
+    ethnicValue.specialAttack = stoi(ethnic[3]);
+    ethnicValue.specialDefense = stoi(ethnic[4]);
+    ethnicValue.speed = stoi(ethnic[5]);
+    fault = Split(data[8], '/');
+    for (int i = 0; i < fault.size(); i+=2)
+    {
+        l = stoi(fault[i + 1]);
+        if(level>=l) skill[j] = stoi(fault[i]), j++;
+    }
+    if (skill.size() < 4)
+    {
+        for (int i = 0; i < skill.size(); i++)
+        {
+            Skill* a = new Skill(skill[i]);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < skill.size(); i++)
+        {
+            random_device rd;
+            mt19937 g(rd());
+            shuffle(skill.begin(), skill.end(), g);
+            vector<int>result(skill.begin(), skill.end() + 4);
+            for (int k = 0; k < result.size(); k++)
+            {
+                Skill* a = new Skill(result[i]);
+            }
+            
+        }
+    }
+    
     this->level = level;
     experience = 0;
     experienceToNextLevel = CalculateExperienceToNextLevel();
@@ -63,6 +110,7 @@ Pokemon::~Pokemon()
 
 vector<Text> Pokemon::GetDetail()
 {
+    vector<Text> info;
     //TODO:
     //返回宝可梦的详细信息, 几乎包括所有信息
     //以好看的彩色文本形式返回
