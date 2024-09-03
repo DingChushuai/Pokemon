@@ -1,6 +1,7 @@
 #include "Pokemon.h"
 #pragma once
-
+#include<fstream>
+#include"tools.h"
 Pokemon::Pokemon(int ID, int level)
 {
     //TODO:
@@ -8,6 +9,20 @@ Pokemon::Pokemon(int ID, int level)
     //从 POKEMON_INFO_PATH 中读取ID对应的宝可梦信息
     //生成一个随机的等级为level的宝可梦
     //POKEMON_INFO_PATH中没有的信息设定:
+    ifstream ifs;
+    ifs.open(POKEMON_INFO_PATH, ios::in);
+    string rea;
+    vector<string> data;
+    while (getline(ifs, rea))
+    {
+        data = Split(rea, ',');
+        int temp = stoi(data[0]);
+        if (temp == ID)
+            break;
+        else
+            continue;
+    }
+    name = stoi(data[1]);
     this->level = level;
     experience = 0;
     experienceToNextLevel = CalculateExperienceToNextLevel();

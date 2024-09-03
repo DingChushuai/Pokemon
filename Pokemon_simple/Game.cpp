@@ -534,10 +534,10 @@ void Game::ActOnMap()
             int newY = playerY;
             switch (cmd)
             {
-            case UP: if(newY>=0) newY--; break;
-            case DOWN:if(newY<maxY) newY++; break;
-            case LEFT:if(newX>=0) newX--; break; 
-            case RIGHT:if(newX<maxX) newX++; break; 
+            case UP: if(newY>0) newY--; break;
+            case DOWN:if(newY<maxY-1) newY++; break;
+            case LEFT:if(newX>0) newX--; break; 
+            case RIGHT:if(newX<maxX-1) newX++; break; 
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
