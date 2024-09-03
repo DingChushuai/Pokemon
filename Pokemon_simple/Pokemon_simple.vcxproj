@@ -179,6 +179,11 @@
     <Text Include="map_1.txt" />
     <Text Include="map_2.txt" />
     <Text Include="map_3.txt" />
+    <Text Include="map_4.txt" />
+    <Text Include="map_5.txt" />
+    <Text Include="map_6.txt" />
+    <Text Include="map_7.txt" />
+    <Text Include="map_8.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="music\CaiHongShi.wav" />
