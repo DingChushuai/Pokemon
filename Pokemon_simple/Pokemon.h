@@ -56,7 +56,6 @@ public:
         int specialAttack;  //特攻
         int specialDefense; //特防
         int speed;  //速度
-
     };
     int ID;
     string name;
@@ -87,7 +86,7 @@ public:
     float GetBuffValue(int buffLevel); //获取能力状态修正倍率
     void UpdateAttribute(); //更新能力值
 
-private:
+
     Value GetRandomIndividualValue(); //获取随机个体值
     int ExperienceOfLevel(int level); 
     int CalculateExperienceToNextLevel(); //计算升级所需经验
