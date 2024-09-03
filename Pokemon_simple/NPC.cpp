@@ -8,6 +8,7 @@ NPC::NPC(int id)
 	ifs.open("NPC_NIFO_PATH", ios::in);
 	string rea;
 	vector<string>data;
+	vector<string>locate;
 	while (getline(ifs, rea))
 	{
 		data = Split(rea, ',');
@@ -20,10 +21,11 @@ NPC::NPC(int id)
 	ifs.close();
 	this->ID = id;
 	name = data[1];
-	mapID = stoi(data[2]);
-	x = stoi(data[3]);
-	y = stoi(data[4]);
-	state = stoi(data[5]);
+	locate = Split(data[2], '/');
+	mapID = stoi(locate[0]);
+	x = stoi(locate[1]);
+	y = stoi(locate[2]);
+	state = stoi(data[3]);
 	//TODO:
 	//在NPC_NIFO_PATH中查找id对应的NPC
 	//并将npc的各项信息存入到成员变量中
@@ -36,15 +38,14 @@ NPC::NPC(string info)
 	
 	vector<string>data;
 	data = Split(info, ',');
-	int id0, x0, y0, state0;
+	int id0;
 	id0 = stoi(data[0]);
-	x0 = stoi(data[1]);
-	y0 = stoi(data[2]);
-	state0 = stoi(data[3]);
 	NPC* a = new NPC(id0);
-	a->x= x0;
-	a->y = y0;
-	a->state = state0;
+	a->state = stoi(data[1]);
+	a->mapID = stoi(data[2]);
+	a->x = stoi(data[3]);
+	a->y = stoi(data[4]);
+
 		
 	//TODO:
 	//此函数用于读取NPC_State.csv中的一行信息,并生成NPC对象
