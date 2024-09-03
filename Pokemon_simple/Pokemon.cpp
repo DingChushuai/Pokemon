@@ -179,6 +179,9 @@ bool Pokemon::CanLevelUp()
 
 Text Pokemon::LevelUp()
 {
+    if (CanLevelUp)
+        level++;
+
     //TODO:
     //如果宝可梦可以升级, 则升级
     //如果可以学习新技能, 则学习新技能,并选择遗忘旧技能(使用Command类)
