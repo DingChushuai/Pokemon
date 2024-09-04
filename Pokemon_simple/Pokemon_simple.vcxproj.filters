@@ -75,10 +75,10 @@
     <ClCompile Include="Map.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
-    <ClCompile Include="Combat.cpp">
-      <Filter>源文件\TODO</Filter>
-    </ClCompile>
     <ClCompile Include="NPC.cpp">
+      <Filter>源文件\Finished</Filter>
+    </ClCompile>
+    <ClCompile Include="Combat.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
   </ItemGroup>

@@ -82,7 +82,7 @@ public:
     int GetBasicExperience(); //获取基础经验
     Text GetExperience(int experience); //获取经验,返回可能的升级或进化信息
     int GetCaptureRate(); //获取捕获率
-    void GetBasicValue(Value); //战斗后增加基础点数
+    void AddBasicValue(Value); //战斗后增加基础点数
     float GetBuffValue(int buffLevel); //获取能力状态修正倍率
     void UpdateAttribute(); //更新能力值
 

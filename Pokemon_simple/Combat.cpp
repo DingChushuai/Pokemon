@@ -3,12 +3,37 @@
 using namespace std;
 #pragma once
 
+Combat::Combat()
+{
+	damageTable.resize(18, vector<float>(18));
+	for (int i = 0; i < 18; i++)
+	{
+		for (int j = 0; j < 18; j++) damageTable[i][j] = 1.0;
+	}
+	vector<pair<int, int>> x2, xh, x0;
+	x2 = { {1,0},{2,1},{13,1}, {17,1}, {5,2},{12,2} ,{14,2}, {4,3},{13,3},{},{},{} };
+	xh = { {5,1},{6,1}, };
+	x0 = { {7,0},{4,2} };
+	for (pair<int, int> x : x2)
+	{
+		damageTable[x.first][x.second] = 2.0;
+	}
+	for (pair<int, int> x : xh)
+	{
+		damageTable[x.first][x.second] = 0.5;
+	}
+	for (pair<int, int> x : x0)
+	{
+		damageTable[x.first][x.second] = 0.0;
+	}
+}
+
 void Combat::InitWildCombat(int id, int level, PokemonLib* pokemonLib)
 {
 	myPokemons.clear();
     enemyPokemons.clear();
 	this->pokemonLib = pokemonLib;
-	for (int i = 0; i < MAX_POKEMON_INGAME; i++)
+	for (int i = 0; i < pokemonLib->pokemonInGame.size(); i++) 
 	{
 		Pokemon* pokemon = new Pokemon(*pokemonLib->GetPokemonInGame(i + 1));
 		myPokemons.push_back(pokemon);
@@ -117,13 +142,14 @@ vector<Text> Combat::PokemonAvailableText()
 	vector<Text> texts;
 	for (auto& pokemon : available)
 	{
-		Text text;
-		text.Add(pokemon->name, YELLOW);
-		text.Add(" Lv.");
-		text.Add(to_string(pokemon->level), YELLOW);
-		text.Add(" HP:");
-		text.Add(to_string(pokemon->attribute.hp) + "/" + to_string(pokemon->attribute.maxHp), YELLOW);
-		text.Add(pokemon->GetStatuName(pokemon->statu), CYAN);
+		string text;
+		text += pokemon->name;
+		text += " Lv.";
+		text += to_string(pokemon->level);
+		text += " HP:";
+		text += to_string(pokemon->attribute.hp) + "/" + to_string(pokemon->attribute.maxHp);
+		text += pokemon->GetStatuName(pokemon->statu);
+		texts.push_back(Text(text));
 	}
     return texts;
 }
@@ -176,6 +202,7 @@ vector<Text> Combat::ShowPokemonInfo()
 	myPokemonInfo.Add(to_string(pokemonNow->level), YELLOW);
 	myPokemonInfo.Add(" HP:");
 	myPokemonInfo.Add(to_string(pokemonNow->attribute.hp) + "/" + to_string(pokemonNow->attribute.maxHp), YELLOW);
+	myPokemonInfo.Add(" 状态:" + pokemonNow->GetStatuName(pokemonNow->statu) + "\n");
 	texts.push_back(myPokemonInfo);
 
 	Text enemyPokemonInfo;
@@ -185,6 +212,7 @@ vector<Text> Combat::ShowPokemonInfo()
 	enemyPokemonInfo.Add(to_string(enemyNow->level), YELLOW);
 	enemyPokemonInfo.Add(" HP:");
 	enemyPokemonInfo.Add(to_string(enemyNow->attribute.hp) + "/" + to_string(enemyNow->attribute.maxHp), YELLOW);
+	enemyPokemonInfo.Add(" 状态:" + enemyNow->GetStatuName(enemyNow->statu) + "\n");
 	texts.push_back(enemyPokemonInfo);
 
 	return texts;
@@ -193,37 +221,32 @@ vector<Text> Combat::ShowPokemonInfo()
 vector<Text> Combat::ShowPokemonSkill()
 {
 	vector<Text> skillTexts;
-	vector<Skill>& skills = pokemonNow->skills;
 
-	for (Skill& skill : skills)
+	vector<Skill*> skills;
+	for (int i = 0; i < pokemonNow->skills.size(); i++)
 	{
-		Text text;
-		text.Add(skill.skillName, GREEN);
-		text.Add(": ");
-		text.Add("属性: ");
-		text.Add(skill.GetTypeName(skill.skillID), CYAN);
-		text.Add(", ");
-		switch (skill.type)
+		skills.push_back(&pokemonNow->skills[i]);
+	}
+
+	for (Skill* skill : skills)
+	{
+		string info="";
+		info += skill->skillName + "  属性:" + skill->GetTypeName(skill->skillID);
+		info += "  ";
+		switch (skill->type)
 		{
 		case 0:
-			text.Add("类型: 物理", MAGENTA);
+			info += "类型: 物理  ";
 			break;
 		case 1:
-			text.Add("类型: 特殊", MAGENTA);
+			info += "类型: 特殊  ";
 			break;
 		case 2:
-			text.Add("类型: 变化", MAGENTA);
+			info += "类型: 变化  ";
 			break;
 		}
-		text.Add(", ");
-		text.Add("威力:");
-		text.Add(to_string(skill.power), YELLOW);
-		text.Add(", ");
-		text.Add("PP: ");
-		text.Add(to_string(skill.PP), YELLOW);
-
-		// 将Text对象添加到skillTexts向量中
-		skillTexts.push_back(text);
+		info += "威力:" + to_string(skill->power) + "  PP: " + to_string(skill->PP);
+		skillTexts.push_back(Text(info));
 	}
 
 	return skillTexts;
@@ -253,6 +276,23 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 
 void Combat::EndCombat()
 {
+	for (int i = 0; i < beaten.size(); i++)
+	{
+		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
+		combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
+		battleResult.first->AddBasicValue(battleResult.second->basicValue);
+	}
+	for (int i = 0; i < myPokemons.size(); i++)
+	{
+		pokemonLib->pokemonInGame[i]->attribute.hp = myPokemons[i]->attribute.hp;
+		pokemonLib->pokemonInGame[i]->statu = myPokemons[i]->statu;
+		pokemonLib->pokemonInGame[i]->basicValue = myPokemons[i]->basicValue;
+		pokemonLib->pokemonInGame[i]->experience = myPokemons[i]->experience;
+		for (int j = 0; j < myPokemons[i]->skills.size(); j++)
+		{
+            pokemonLib->pokemonInGame[i]->skills[j].PP = myPokemons[i]->skills[j].PP;
+		}
+	}
 	myPokemons.clear();
 	enemyPokemons.clear();
 	pokemonNow = nullptr;
@@ -261,13 +301,4 @@ void Combat::EndCombat()
 	escapeFailedTimes = 0;
 	beaten.clear();
 	combatLog.clearLog();
-	for (int i = 0; i < beaten.size(); i++)
-	{
-		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
-		combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
-
-	}
-	//将经验和获得的基础点数分配给对应宝可梦
-	//添加战斗记录(获取经验)
-	//回传宝可梦的血量,状态,技能pp,基础点数
 }

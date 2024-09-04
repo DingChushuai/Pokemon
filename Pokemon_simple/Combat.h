@@ -4,7 +4,7 @@
 class Combat
 {
 public:
-    Combat() {};
+    Combat();
     ~Combat() {};
     void InitWildCombat(int id, int level,PokemonLib* pokemonLib); 
     void InitTrainerCombat(int battleId, PokemonLib* pokemonLib);

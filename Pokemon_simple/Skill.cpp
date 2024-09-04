@@ -21,8 +21,8 @@ Skill::Skill(int skillID)
     this->skillID = skillID;
     skillName = data[1];
     skillDescription = data[2];
-    vector<int> temp(8);
-    for (int i = 3; i < 10; ++i) {
+    vector<int> temp;
+    for (int i = 3; i <= 10; ++i) {
         temp.push_back(stoi(data[i]));
     }
     type = (Type)(temp[0]);
@@ -38,6 +38,24 @@ Skill::Skill(int skillID)
     for (int i = 0; i < tempEffect.size(); ++i)
         effectParam.push_back(stoi(tempEffect[i]));
 }
+Skill::Skill(const Skill& other)
+{
+    skillID = other.skillID;
+    skillName = other.skillName;
+    skillDescription = other.skillDescription;
+    type = other.type;
+    skillType = other.skillType;
+    power = other.power;
+    accuracy = other.accuracy;
+    maxPP = other.maxPP;
+    PP = other.PP;
+    mustHit = other.mustHit;
+    priority = other.priority;
+    skillEffect = other.skillEffect;
+    effectParam = other.effectParam;
+
+}
+
 string Skill::GetTypeName(int typeID)
 {
     string type = "";

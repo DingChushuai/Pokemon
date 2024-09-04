@@ -87,7 +87,7 @@ Text PokemonLib::SwitchPokemon(int indexInLib, int indexInGame)
     info.Add(pokemonName1, GREEN); 
     info.Add("已上阵,"); 
     info.Add(pokemonName2, RED); 
-    info.Add("已进入仓库.\n");
+    info.Add("已进入仓库.");
     return info;
 }
 
@@ -240,6 +240,5 @@ void PokemonLib::Load()
         count++;
         if (count > 6)     pokemonInLib.push_back(a);
         else  pokemonInGame.push_back(a);
-      
     }
 }

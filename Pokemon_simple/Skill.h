@@ -34,6 +34,7 @@ enum Type {
 
 class Skill
 {
+public:
     const enum SkillType {
         PHYSICAL = 0,     //物理
         SPECIAL,        //特殊
@@ -54,8 +55,9 @@ class Skill
         ATTACK_AND_HEAL,        //攻击并回复(回复值占攻击伤害的百分比,例如50表示回复伤害值的一半血量)
         SPECIAL_EFFECT,               //特殊效果(特殊效果函数ID(如果技能不属于以上所有类型,需要单独设计效果函数))
     };
-public:
+
     Skill(int skillID);     //从技能表读取技能信息
+    Skill(const Skill& other);
     string GetTypeName(int typeID);
     ~Skill() {};
 

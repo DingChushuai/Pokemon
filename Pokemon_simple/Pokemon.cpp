@@ -1,5 +1,6 @@
 #include "Pokemon.h"
 #pragma once
+#include "Command.h"
 #include<fstream>
 #include<algorithm>
 #include<random>
@@ -37,8 +38,8 @@ Pokemon::Pokemon(int ID, int level)
     ethnicValue.attack = stoi(ethnic[1]);
     ethnicValue.defense = stoi(ethnic[2]);
     ethnicValue.specialAttack = stoi(ethnic[3]);
-    ethnicValue.specialDefense = stoi(ethnic[4]);
-    ethnicValue.speed = stoi(ethnic[5]);
+    ethnicValue.specialDefense = stoi(ethnic[4]); 
+    ethnicValue.speed = stoi(ethnic[5]); 
     fault = Split(data[8], '/');
     for (int i = 0; i < fault.size(); i+=2)
     {
@@ -54,20 +55,18 @@ Pokemon::Pokemon(int ID, int level)
     }
     else
     {
-        for (int i = 0; i < skill.size(); i++)
+        random_device rd;
+        mt19937 g(rd());
+        shuffle(skill.begin(), skill.end(), g);
+        vector<int>result(skill.begin(), skill.begin() + 4);
+        for (int k = 0; k < result.size(); k++)
         {
-            random_device rd;
-            mt19937 g(rd());
-            shuffle(skill.begin(), skill.end(), g);
-            vector<int>result(skill.begin(), skill.begin() + 4);
-            for (int k = 0; k < result.size(); k++)
-            {
-                skills.push_back(Skill(result[i]));
-            }
-            
+            skills.push_back(Skill(result[k]));
         }
+
     }
-    
+    evolutionLevel = stoi(data[9]);
+    evolutionID = stoi(data[10]);
     this->level = level;
     experience = 0;
     experienceToNextLevel = CalculateExperienceToNextLevel();
@@ -76,6 +75,7 @@ Pokemon::Pokemon(int ID, int level)
     buff = {0};
     basicValue = { 0 };
     UpdateAttribute();
+    this->attribute.hp = this->attribute.maxHp;
 }
 
 Pokemon::Pokemon(const Pokemon& other)
@@ -107,11 +107,25 @@ Pokemon::~Pokemon()
 vector<Text> Pokemon::GetDetail()
 {
     vector<Text> info;
-    //TODO:
-    //返回宝可梦的详细信息, 几乎包括所有信息
-    //以好看的彩色文本形式返回
-    //不用返回evolutionLevel,evolutionID,captureRate,ethnicValue,growthRate,basicExperience
-    return vector<Text>();
+    info.push_back(Text("宝可梦名称: " + name +"\n"));
+    info.push_back(Text("宝可梦等级: " + to_string(level) + "  "));
+    info.push_back(Text("宝可梦经验: " + to_string(experience) + "/" + to_string(experienceToNextLevel) + "\n"));
+    info.push_back(Text("宝可梦状态: " + GetStatuName(statu) + "\n"));
+    info.push_back(Text("宝可梦类型: " + GetTypeName(type.first) + "  " + GetTypeName(type.second) + "\n"));
+    info.push_back(Text("宝可梦个体值: " + to_string(individualValue.hp) + "/" + to_string(individualValue .attack) + "/" + to_string(individualValue.defense) + "/" + to_string(individualValue.speed) + "/" + to_string(individualValue.specialAttack) + "/" + to_string(individualValue.specialDefense) + "\n"));
+    info.push_back(Text("宝可梦基础值: " + to_string(basicValue.hp) + "/" + to_string(basicValue.attack) + "/" + to_string(basicValue.defense) + "/" + to_string(basicValue.speed) + "/" + to_string(basicValue.specialAttack) + "/" + to_string(basicValue.specialDefense) + "\n")); 
+    info.push_back(Text("宝可梦属性值: " + to_string(attribute.hp) + "/" + to_string(attribute.attack) + "/" + to_string(attribute.defense) + "/" + to_string(attribute.speed) + "/" + to_string(attribute.specialAttack) + "/" + to_string(attribute.specialDefense) + "\n"));   
+    info.push_back(Text("宝可梦技能:\n"));
+    for (int i = 0; i < skills.size(); i++)
+    {
+        info.push_back(Text(skills[i].skillName + "  "));
+        info.push_back(Text("PP: " + to_string(skills[i].PP) + "/" + to_string(skills[i].maxPP) + "  "));
+        info.push_back(Text("威力: " + to_string(skills[i].power) + "  "));
+        info.push_back(Text("命中: " + to_string(skills[i].accuracy) + "  "));
+        info.push_back(Text("类型: " + GetTypeName(skills[i].type) + " \n"));
+        info.push_back(Text("\t"+skills[i].skillDescription + "\n"));
+    }
+    return info;
 }
 
 int Pokemon::GetSellPrice()
@@ -175,32 +189,104 @@ bool Pokemon::CanLevelUp()
 
 Text Pokemon::LevelUp()
 {
-    if (CanLevelUp())
+    Text text; 
+    while (CanLevelUp())
+    {
         level++;
-
-    //TODO:
-    //如果宝可梦可以升级, 则升级
-    //如果可以学习新技能, 则学习新技能,并选择遗忘旧技能(使用Command类)
-    //如果可以进化, 则进化
-    //重新计算升级所需经验值
-    //更新能力值
-    // 回满血,消除状态
-    //返回升级/进化信息
-
-    return Text();
+        if (level == evolutionLevel) text = Evolve();
+        experience -= experienceToNextLevel;
+        experienceToNextLevel = CalculateExperienceToNextLevel();
+        UpdateAttribute();
+        attribute.hp = attribute.maxHp;
+        statu = None;
+    }
+    ifstream ifs; 
+    ifs.open(POKEMON_INFO_PATH, ios::in); 
+    string rea; 
+    vector<string> data; 
+    vector<string>fault; 
+    vector<int> skill; 
+    Command cmd;
+    while (getline(ifs, rea)) 
+    {
+        data = Split(rea, ','); 
+        int temp = stoi(data[0]); 
+        if (temp == ID) 
+            break;
+    }
+    fault = Split(data[8], '/');
+    for (int i = 0; i < fault.size(); i += 2)
+    {
+        if (level== stoi(fault[i + 1])) 
+        {
+            ClearScreen();
+            if (skills.size() < 4)
+            {
+                Skill s(stoi(fault[i])); 
+                text.Add("你的宝可梦");
+                text.Add(name, GREEN);
+                text.Add("学会了");
+                text.Add(s.skillName, YELLOW);
+                text.Add("!");
+                skills.push_back(s);
+            }
+            else
+            {
+                Skill s(stoi(fault[i]));
+                Text("你的宝可梦学习了新技能:" + s.skillName+ "!选择一个技能替换(ESC取消替换)\n").Print();
+                vector<Text> infos;
+                for (int i = 0; i < skills.size(); i++)
+                {
+                    string info = skills[i].skillName + "  PP:" + to_string(skills[i].PP) + "/" + to_string(skills[i].maxPP);
+                    info += "  类型:" + GetTypeName(skills[i].type) + "  威力:" + to_string(skills[i].power) +  " 命中:" + to_string(skills[i].accuracy); 
+                    infos.push_back(Text(info));
+                }
+                int index = cmd.chooseFromList(infos);
+                if (index != 0)
+                {
+                    
+                    text.Add("你的宝可梦");
+                    text.Add(name, GREEN);
+                    text.Add("忘记了");
+                    text.Add(skills[index - 1].skillName, YELLOW);
+                    text.Add("!");
+                    skills[index - 1] = s;
+                    text.Add("你的宝可梦");
+                    text.Add(name, GREEN);
+                    text.Add("学会了");
+                    text.Add(s.skillName, YELLOW);
+                    text.Add("!");
+                }
+            }
+        }
+    }
+    
+    text.Add("你的宝可梦");
+    text.Add(name, GREEN);
+    text.Add("升到");
+    text.Add(to_string(level), YELLOW);
+    text.Add("级了!");
+    return text;
 }
 
 Text Pokemon::Evolve()
 {
-    //TODO:
-    //如果宝可梦可以进化, 则进化
-    //如果可以学习新技能, 则学习新技能,并选择遗忘旧技能(使用Command类)
-    //随机生成一个进化后的宝可梦作为依据,
-    //更改宝可梦的ID, 名称, 类型 等
-    //注意: 更改种族值, 基础经验值,但不更改个体值和基础点数
-    //更新能力值
-    //返回进化信息
-    return Text();
+    Pokemon* sample =new Pokemon(evolutionID,level);
+    string info = "你的宝可梦";
+    info += name;
+    info += "进化成了";
+    info += sample->name;
+    info += "!";
+    ID = sample->ID;
+    name = sample->name;
+    type = sample->type;
+    evolutionID = sample->evolutionID;
+    evolutionLevel = sample->evolutionLevel;
+    basicExperience = sample->basicExperience;
+    growthRate = sample->growthRate;
+    captureRate = sample->captureRate;
+    ethnicValue = sample->ethnicValue;
+    return Text(info,GREEN);
 }
 
 int Pokemon::GetBasicExperience()
@@ -225,7 +311,7 @@ int Pokemon::GetCaptureRate()
     return captureRate; 
 }
 
-void Pokemon::GetBasicValue(Value add)
+void Pokemon::AddBasicValue(Value add)
 {
     basicValue.hp+=add.hp;
     basicValue.attack+=add.attack; 
@@ -233,6 +319,7 @@ void Pokemon::GetBasicValue(Value add)
     basicValue.speed+=add.speed;
     basicValue.specialAttack+=add.specialAttack;
     basicValue.specialDefense+=add.specialDefense;
+    UpdateAttribute();
 }
 
 float Pokemon::GetBuffValue(int buffLevel)
@@ -260,7 +347,6 @@ float Pokemon::GetBuffValue(int buffLevel)
 void Pokemon::UpdateAttribute()
 {
     ATTRIBUTE newAttribute = CalculateAttribute();
-    attribute.hp = newAttribute.hp;
     attribute.maxHp = newAttribute.hp;
     attribute.attack = newAttribute.attack; 
     attribute.defense = newAttribute.defense; 

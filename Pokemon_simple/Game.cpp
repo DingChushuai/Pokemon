@@ -176,8 +176,12 @@ void Game::Run()
 						gameSenceStack.pop_back();
 						break;
 					}
-					command.PrintfList(pokemonsIngame);
-					Text("\n选择一只库中的宝可梦交换或查看详细信息\n", None, GRAY).Print();
+					for (int i = 0; i < pokemonsIngame.size(); i++)
+					{
+						pokemonsIngame[i].Print();
+						cout << endl;
+					}
+					Text("\n选择一只库中的宝可梦交换或查看详细信息\n", YELLOW, GRAY).Print();
 					int indexInLib = command.chooseFromList(pokemonsInLib, 20);
 					if (indexInLib == 0) { gameSenceStack.pop_back(); break; }
 					vector<Text> options;
@@ -328,6 +332,7 @@ void Game::Run()
 						log.AddLog(pokemon->LevelUp());
 					}
 				}
+				command.Pause();
 				gameSenceStack.pop_back();
 				break;
 			}
@@ -336,6 +341,7 @@ void Game::Run()
 				Text("command list:\n").Print();
 				Text("music: change music now\n").Print();
                 Text("money(m): set money number\n").Print();
+				Text("levelup(l): levelup all pokemon\n").Print();
                 Text("exit(e): exit debug\n").Print();
 				Text("Debug:\ninput cmd:", RED).Print();
 				string input;
@@ -374,6 +380,15 @@ void Game::Run()
 					log.AddLog(Text("你的金币数量已更改为: " + to_string(money), YELLOW));
                     command.Pause();
                 }
+				else if (input == "levelup" || input == "l")
+				{
+					for (auto& pokemon : pokemonLib.pokemonInGame)
+					{
+						pokemon->GetExperience(pokemon->experienceToNextLevel);
+						log.AddLog(Text("你的宝可梦" +pokemon->name + "获得了" + to_string(pokemon->experienceToNextLevel) + "经验")); 
+						log.AddLog(pokemon->LevelUp());
+					}
+				}
                 break;
 			}
 			case WORLD_MAP:  
@@ -400,10 +415,6 @@ void Game::Init()
 	Map* map0= new Map(0);
 	currentMap = map0;
 	maps.push_back(map0);
-
-	//TODO: 从NPC_Info.txt读取所有NPC信息,数量为NPCS_COUNT
-	//使用 new 创建新的对象, 构造函数使用NPC(int id);
-	//正常情况下,NPC的id与NPC_Info.txt中的行数对应(从1开始)
 	for (int i = 1; i <= NPCS_COUNT; i++)
 	{
 		NPC* npc = new NPC(i);
@@ -471,6 +482,9 @@ void Game::DrawWorldMap()
 
 void Game::ActOnMap()
 {
+	Text("这里是: " + currentMap->getMapName(), GREEN).Print();
+	Text("\n拥有金币： " + to_string(money), BLUE).Print();
+	cout << endl; 
 	int maxX = currentMap->getMapWidth();
     int maxY = currentMap->getMapHeight();
 	for (auto npc : npcs)
@@ -480,6 +494,8 @@ void Game::ActOnMap()
 			Text(to_string(npc->ID % 10) +" : "+npc->name+"\t", GREEN).Print();
 		}
 	}
+	cout << endl;
+	command.PrintfList(currentMap->getTexts());
 	cout << endl;
 	pair<int, int> pos = GetPos();
 	for (int i = 0; i < maxY; i++)
@@ -498,7 +514,7 @@ void Game::ActOnMap()
 		if (npc->mapID == currentMap->getMapID())
 		{
 			GotoXY(pos.first + npc->x, pos.second + npc->y);
-            Text(to_string(npc->ID%10), GREEN, GRAY).Print();
+            Text(to_string(npc->ID%10), GREEN).Print();
 		}
 	}
 	GotoXY(pos.first + playerX, pos.second + playerY);
@@ -552,9 +568,9 @@ void Game::ActOnMap()
 				{
 					if (npc->x == newX && npc->y == newY)
 					{
+						isNPC = true;
 						if (ChangeNPCState(npc))
 						{
-                            isNPC = true;
 							Text info;
 							info.Add(npc->name, YELLOW);
                             info.Add(" : ");
@@ -600,8 +616,11 @@ void Game::ActOnMap()
 				}
 				if (wild_index != -1)
 				{
-					combat.InitWildCombat(wilds[wild_index][0], wilds[wild_index][1], &pokemonLib);
-                    gameSenceStack.push_back(COMBAT);
+					if (pokemonLib.pokemonInGame.size() > 0)
+					{
+						combat.InitWildCombat(wilds[wild_index][0], wilds[wild_index][1], &pokemonLib);
+						gameSenceStack.push_back(COMBAT);
+					}
                     break;
 				}
 			}
@@ -838,11 +857,99 @@ void Game::UseProp(Prop* prop)
             log.AddLog(info);
             break;
 		}
+		case 7:
+		{
+			Pokemon* poke = combat.enemyNow;
+			if (combat.IsTrainerBattle())
+			{
+				combat.combatLog.AddLog(Text("不能捕捉训练家的宝可梦!", RED));
+                break;
+			}
+			float C = poke->GetCaptureRate();
+			float D = 1.0;
+			vector<int> param = prop->GetEffectPara();
+			D *= param[0];
+			float E = 1.0;
+			if(poke->statu == Pokemon::Sleep || poke->statu == Pokemon::Freeze) E *= 2;
+            if (poke->statu == Pokemon::Burn || poke->statu == Pokemon::Paralysis || poke->statu == Pokemon::Poison) E *= 1.5;
+			int B = (poke->attribute.maxHp * 3 - 2 * poke->attribute.hp) * C / poke->attribute.maxHp * 3 * D * E;
+            if (B > 255) B = 255;
+			bool success = rand() % 256 < B;
+			if (success)
+			{
+                Text info;
+                info.Add("你使用");
+                info.Add(prop->GetName(), YELLOW);
+                info.Add("成功捕捉了");
+                info.Add(poke->name, YELLOW);
+                info.Add("!");
+                log.AddLog(info);
+                combat.combatLog.AddLog(info);
+				pokemonLib.AddPokemon(new Pokemon(*poke));
+				poke->attribute.hp= 0;
+			}
+			else
+			{
+                Text info;
+                info.Add("你使用");
+                info.Add(prop->GetName(), YELLOW);
+                info.Add("失败了!");
+                combat.combatLog.AddLog(info);
+			}
+			backpack.ReduceProp(prop);
+            break;
+		}
 	}
 }
 
 void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
 {
+    if (user->attribute.hp <= 0) return;
+	Type type = skill->type;
+	Type type1, type2;
+	type1 = target->type.first;
+	type2 = target->type.second;
+	float typeEffect = 1.0;
+	if (type1 != Type::NONE) typeEffect *= combat.damageTable[type][type1];
+    if (type2 != Type::NONE) typeEffect *= combat.damageTable[type][type2];
+	if (typeEffect == 0.0)
+	{
+		Text info;
+        info.Add("宝可梦");
+        info.Add(user->name, YELLOW);
+        info.Add("的技能");
+        info.Add(skill->skillName, YELLOW);
+        info.Add("对");
+        info.Add(target->name, YELLOW);
+        info.Add("没有效果!");
+		combat.combatLog.AddLog(info);
+        return;
+	}
+	float damage = 0.0;
+	if(skill->skillType ==Skill::PHYSICAL)
+	damage = (2 * user->level + 10) * user->attribute.attack *user->GetBuffValue(user->buff.attack) * skill->power / (250 * target->attribute.defense * target->GetBuffValue(target->buff.defense)) + 2;
+    else if (skill->skillType == Skill::SPECIAL)
+    damage = (2 * user->level + 10) * user->attribute.specialAttack * user->GetBuffValue(user->buff.specialAttack) * skill->power / (250 * target->attribute.specialDefense * target->GetBuffValue(target->buff.specialDefense)) + 2;
+    damage *= typeEffect;
+	if (damage < 1.0) damage = 1.0;
+	Text info;
+    info.Add("宝可梦");
+    info.Add(user->name, YELLOW);
+    info.Add("使用了技能");
+    info.Add(skill->skillName, YELLOW);
+    info.Add("对");
+    info.Add(target->name, YELLOW);
+    info.Add("造成了");
+    info.Add(to_string((int)damage), YELLOW);
+    info.Add("点伤害!");
+	if (typeEffect == 2.0) info.Add(" 效果拔群!");
+    else if (typeEffect == 1.0) info.Add(" 效果一般!");
+    else if (typeEffect == 0.5) info.Add(" 效果不好!");
+    else if (typeEffect == 0.25) info.Add(" 效果极差!");
+    combat.combatLog.AddLog(info);
+    target->attribute.hp -= (int)damage;
+    if (target->attribute.hp <= 0) target->attribute.hp = 0;
+
 }
 
 void Game::ChangeMusic()
@@ -884,9 +991,22 @@ bool Game::ChangeNPCState(NPC* npc)
 		}
 		case 2 :
 		{
-			combat.InitTrainerCombat(state.stateAction[1],&pokemonLib);
+			if (pokemonLib.pokemonInGame.size() == 0)
+			{
+				log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
+				break;
+			}
 			ClearScreen();
+			combat.InitTrainerCombat(state.stateAction[1], &pokemonLib);
 			StartCombat();
+			combat.EndCombat();
+			for (auto& pokemon : pokemonLib.pokemonInGame)
+			{
+				if (pokemon->CanLevelUp())
+				{
+					log.AddLog(pokemon->LevelUp());
+				}
+			}
 			if (combat.lastCombatWin)
 			{
 				npc->state = state.stateNext;
@@ -937,11 +1057,25 @@ bool Game::ChangeNPCState(NPC* npc)
 		{
 			Pokemon* pokemon_add = new Pokemon(state.stateAction[1], state.stateAction[2]);
             pokemonLib.AddPokemon(pokemon_add);
+			Text info;
+            info.Add(npc->name,GREEN);
+            info.Add("给了你一只");
+            info.Add(pokemon_add->name, YELLOW);
+			info.Add("!可在宝可梦中心查看。");
+			log.AddLog(info);
             return true;
 		}
         case 8:
 		{
             backpack.AddProp(state.stateAction[1], state.stateAction[2]);
+			Text info;
+            info.Add(npc->name,GREEN);
+            info.Add("给了你");
+			info.Add(backpack.GetProp_(state.stateAction[1])->GetName(), YELLOW);
+            info.Add("x");
+            info.Add(to_string(state.stateAction[2]), YELLOW);
+            info.Add("!");
+            log.AddLog(info); 
             return true;
 		}
 	}
@@ -950,7 +1084,17 @@ bool Game::ChangeNPCState(NPC* npc)
 
 void Game::StartCombat() 
 {
+	if (pokemonLib.pokemonInGame.size() == 0 || combat.pokemonAvailable().size() == 0)
+	{
+		log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
+	}
 	inCombat = true;
+	int pokemon_id;
+	Pokemon* myPokemon = nullptr;
+	Prop* myProp = nullptr;
+	Skill* mySkill = nullptr;
+	bool myAction = false;
+	bool enemyAction = false;
 	vector<Text> choose;
     choose.push_back(Text("1. 使用技能"));
     choose.push_back(Text("2. 使用道具"));
@@ -958,13 +1102,67 @@ void Game::StartCombat()
     choose.push_back(Text("4. 逃离战斗"));
 	while (inCombat)
 	{
+		ClearScreen();
 		command.PrintfList(combat.ShowPokemonInfo());
 		combat.combatLog.ShowLog();
+
+		if (combat.pokemonNow->attribute.hp <= 0)
+		{
+			combat.beaten.push_back({ combat.enemyNow, combat.pokemonNow });
+			vector<Pokemon*> pokemonAlive = combat.pokemonAvailable();
+			if (pokemonAlive.size() == 0)
+			{
+
+				combat.lastCombatWin = false;
+				inCombat = false;
+				return;
+			}
+			else
+			{
+				Text("请选择你要切换的宝可梦:\n").Print();
+				int choose_pokemon = 0;
+				do {
+					choose_pokemon = command.chooseFromList(combat.PokemonAvailableText());
+					combat.ChangePokemon(pokemonAlive[choose_pokemon - 1]);
+					Text info;
+					info.Add("你的");
+					info.Add(combat.pokemonNow->name, GREEN);
+					info.Add("被");
+					info.Add(myPokemon->name, GREEN);
+					info.Add("替换了!");
+					combat.combatLog.AddLog(info);
+				} while (!choose_pokemon);
+			}
+			continue;
+		}
+		if (combat.enemyNow->attribute.hp <= 0)
+		{
+			combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
+			vector<Pokemon*> enemyPokemonAlive = combat.enemyAvailable();
+			if (enemyPokemonAlive.size() == 0)
+			{
+				combat.lastCombatWin = true;
+				inCombat = false;
+				return;
+			}
+			else
+			{
+				Text info;
+				info.Add("对方");
+				info.Add(combat.enemyNow->name, GREEN);
+				info.Add("被击败了!");
+				combat.combatLog.AddLog(info);
+				combat.enemyNow = enemyPokemonAlive[rand() % enemyPokemonAlive.size()];
+				info.Add("对方");
+				info.Add("派出了");
+				info.Add(combat.enemyNow->name, GREEN);
+				combat.combatLog.AddLog(info);
+			}
+			continue;
+		}
+
 		int choice = command.chooseFromList(choose);
-		int pokemon_id;
-		Pokemon* myPokemon = nullptr;
-		Prop* myProp = nullptr;
-		Skill* mySkill = nullptr;
+		
 		if (choice == 0)
 		{
 			continue;
@@ -987,9 +1185,16 @@ void Game::StartCombat()
 		}
 		else if (choice == 2)
 		{
-            Text("请选择要使用的道具:\n").Print();
+            
 			vector<Prop*> props = backpack.GetPropsCanUseInBattle();
+			if (props.size() == 0)
+			{
+                Text("没有可用的道具,无法使用!").Print();
+                command.Pause();
+                continue;
+			}
 			vector<Text> propList;
+			Text("请选择要使用的道具:\n").Print();
 			for (auto prop : props)
 			{
 				propList.push_back(Text(prop->GetName() + " x" + to_string(prop->GetNum()) + prop->GetDescription())); 
@@ -1021,32 +1226,73 @@ void Game::StartCombat()
 			}
 		}
 
-
-		Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
-		int myFirst = 0;
-		if (mySkill != nullptr)
-			myFirst = mySkill->priority - enamy_skill->priority;
-		if (myFirst == 0)
-		{
-			
-			myFirst = combat.pokemonNow->attribute.speed* combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.speed) - combat.enemyNow->attribute.speed;
-			if (myFirst == 0)
-			{
-				myFirst = rand() % 2;
-			}
-		}
-		bool myHit, enamyHit;
-		int myHitRate, enamyHitRate;
-		myHitRate = mySkill->accuracy * combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.accuracy) / combat.enemyNow->GetBuffValue(combat.enemyNow->buff.evasion);
-        enamyHitRate = enamy_skill->accuracy * combat.enemyNow->GetBuffValue(combat.enemyNow->buff.accuracy) / combat.pokemonNow-> GetBuffValue(combat.pokemonNow->buff.evasion);
-		myHit = rand() % 100 < myHitRate;
-        enamyHit = rand() % 100 < enamyHitRate;
-		if (mySkill->mustHit) myHit = true;
-        if (enamy_skill->mustHit) enamyHit = true;
+		//判断是否可以行动
+		//异常状态判定
 
 		if (choice == 1)
 		{
-			if(myHit)
+		}
+		else if (choice == 2)
+		{
+			UseProp(myProp);
+		}
+		else if (choice == 3)
+		{
+			Text info;
+            info.Add("你的");
+            info.Add(combat.pokemonNow->name, GREEN);
+            info.Add("被");
+            info.Add(myPokemon->name, GREEN);
+            info.Add("替换了!");
+			combat.ChangePokemon(myPokemon);
+            combat.combatLog.AddLog(info);
+		}
+		else if (choice == 4)
+		{
+			if (combat.TryToEscape())
+			{
+                Text info;
+                info.Add("你的");
+                info.Add(combat.pokemonNow->name, GREEN);
+                info.Add("成功逃脱了战斗!");
+                log.AddLog(info);
+				inCombat = false;
+				return;
+			}
+			else
+			{
+                Text info;
+                info.Add("你的");
+                info.Add(combat.pokemonNow->name, GREEN);
+                info.Add("试图逃脱战斗,但是");
+                info.Add("失败了!", RED);
+				combat.combatLog.AddLog(info);
+			}
+		}
+
+		if (choice == 1)
+		{
+			Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
+			int myFirst = 0;
+			if (mySkill != nullptr)
+				myFirst = mySkill->priority - enamy_skill->priority;
+			if (myFirst == 0)
+			{
+				myFirst = combat.pokemonNow->attribute.speed * combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.speed) - combat.enemyNow->attribute.speed;
+				if (myFirst == 0)
+				{
+					myFirst = rand() % 2;
+				}
+			}
+			bool myHit, enamyHit;
+			int myHitRate, enamyHitRate;
+			myHitRate = mySkill->accuracy * combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.accuracy) / combat.enemyNow->GetBuffValue(combat.enemyNow->buff.evasion);
+			enamyHitRate = enamy_skill->accuracy * combat.enemyNow->GetBuffValue(combat.enemyNow->buff.accuracy) / combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.evasion);
+			myHit = rand() % 100 < myHitRate;
+			enamyHit = rand() % 100 < enamyHitRate;
+			if (mySkill->mustHit) myHit = true;
+			if (enamy_skill->mustHit) enamyHit = true;
+			if (myHit)
 			{
 				if (myFirst > 0) UseSkill(mySkill, combat.pokemonNow, combat.enemyNow);
 				if (combat.enemyNow->attribute.hp > 0)
@@ -1072,113 +1318,16 @@ void Game::StartCombat()
 			}
 			else
 			{
-				mySkill->PP--;
 				Text info;
 				info.Add("你的");
 				info.Add(combat.pokemonNow->name, GREEN);
-                info.Add("使用了");
-                info.Add(mySkill->skillName, GREEN);
-                info.Add("但是被对方");
-                info.Add(combat.enemyNow->name, GREEN);
-                info.Add("躲过",RED);
-				info.Add("了!");
-				combat.combatLog.AddLog(info);
-				if (enamyHit)
-				{
-                    UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
-				}
-				else
-				{
-                    Text info;
-                    info.Add("对方");
-                    info.Add(combat.enemyNow->name, GREEN);
-                    info.Add("使用了");
-                    info.Add(enamy_skill->skillName, GREEN);
-                    info.Add("但是被你的");
-                    info.Add(combat.pokemonNow->name, GREEN);
-                    info.Add("躲过",RED);
-                    info.Add("了!");
-					combat.combatLog.AddLog(info);
-				}
-			}
-		}
-		else if (choice == 2)
-		{
-			//使用道具
-			UseProp(myProp);
-			if (enamyHit)
-			{
-				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
-				if (combat.enemyNow->attribute.hp == 0)
-				{
-					combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
-					combat.lastCombatWin= true;
-                    return;
-				}
-			}
-			else
-			{
-				Text info;
-				info.Add("对方");
-				info.Add(combat.enemyNow->name, GREEN);
 				info.Add("使用了");
-				info.Add(enamy_skill->skillName, GREEN);
-				info.Add("但是被你的");
-				info.Add(combat.pokemonNow->name, GREEN);
+				info.Add(mySkill->skillName, GREEN);
+				info.Add("但是被对方");
+				info.Add(combat.enemyNow->name, GREEN);
 				info.Add("躲过", RED);
 				info.Add("了!");
 				combat.combatLog.AddLog(info);
-			}
-
-		}
-		else if (choice == 3)
-		{
-			Text info;
-            info.Add("你的");
-            info.Add(combat.pokemonNow->name, GREEN);
-            info.Add("被");
-            info.Add(myPokemon->name, GREEN);
-            info.Add("替换了!");
-			combat.ChangePokemon(myPokemon);
-            combat.combatLog.AddLog(info);
-			if (enamyHit)
-			{
-				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
-			}
-			else
-			{
-				Text info;
-				info.Add("对方");
-				info.Add(combat.enemyNow->name, GREEN);
-				info.Add("使用了");
-				info.Add(enamy_skill->skillName, GREEN);
-				info.Add("但是被你的");
-				info.Add(combat.pokemonNow->name, GREEN);
-				info.Add("躲过", RED);
-				info.Add("了!");
-				combat.combatLog.AddLog(info);
-			}
-		}
-		else if (choice == 4)
-		{
-			if (combat.TryToEscape())
-			{
-                Text info;
-                info.Add("你的");
-                info.Add(combat.pokemonNow->name, GREEN);
-                info.Add("成功逃脱了战斗!");
-                log.AddLog(info);
-				inCombat = false;
-				return;
-			}
-			else
-			{
-                Text info;
-                info.Add("你的");
-                info.Add(combat.pokemonNow->name, GREEN);
-                info.Add("试图逃脱战斗,但是");
-                info.Add("失败了!", RED);
-                log.AddLog(info);
 				if (enamyHit)
 				{
 					UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
@@ -1197,59 +1346,45 @@ void Game::StartCombat()
 					combat.combatLog.AddLog(info);
 				}
 			}
+			mySkill->PP--;
+			enamy_skill->PP--;
 		}
-		//结算状态
-		if (combat.pokemonNow->attribute.hp <= 0)
+		else
 		{
-			combat.beaten.push_back({ combat.enemyNow, combat.pokemonNow });
-			vector<Pokemon*> pokemonAlive = combat.pokemonAvailable();
-			if (pokemonAlive.size() == 0)
+			Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
+			bool  enamyHit;
+			int  enamyHitRate;
+			enamyHitRate = enamy_skill->accuracy * combat.enemyNow->GetBuffValue(combat.enemyNow->buff.accuracy) / combat.pokemonNow->GetBuffValue(combat.pokemonNow->buff.evasion);
+			enamyHit = rand() % 100 < enamyHitRate;
+			if (enamy_skill->mustHit) enamyHit = true;
+			if (enamyHit)
 			{
-               combat.lastCombatWin = false;
-			   inCombat = false;
-               	return;
-			}
-			else
-			{
-				Text("请选择你要切换的宝可梦:\n").Print();
-				int choose_pokemon = 0;
-				do {
-					choose_pokemon = command.chooseFromList(combat.PokemonAvailableText());
-					combat.ChangePokemon(pokemonAlive[choose_pokemon - 1]);
-					Text info;
-                    info.Add("你的");
-                    info.Add(combat.pokemonNow->name, GREEN);
-                    info.Add("被");
-                    info.Add(myPokemon->name, GREEN);
-                    info.Add("替换了!");
-                    combat.combatLog.AddLog(info);
-				} while (!choose_pokemon);
-			}
-		}
-		if (combat.enemyNow->attribute.hp <= 0)
-		{
-            combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
-			vector<Pokemon*> enemyPokemonAlive = combat.enemyAvailable();
-			if (enemyPokemonAlive.size() == 0)
-			{
-                combat.lastCombatWin = true;
-				inCombat = false;
-                return;
+				UseSkill(enamy_skill, combat.enemyNow, combat.pokemonNow);
+				if (combat.enemyNow->attribute.hp == 0)
+				{
+					combat.beaten.push_back({ combat.pokemonNow, combat.enemyNow });
+					combat.lastCombatWin = true;
+					return;
+				}
 			}
 			else
 			{
 				Text info;
-                info.Add("对方");
-                info.Add(combat.enemyNow->name, GREEN);
-                info.Add("被击败了!");
-                combat.combatLog.AddLog(info);
-                combat.enemyNow = enemyPokemonAlive[rand() % enemyPokemonAlive.size()];
-                info.Add("对方");
-                info.Add("派出了");
-                info.Add(combat.enemyNow->name, GREEN);
-                combat.combatLog.AddLog(info);
+				info.Add("对方");
+				info.Add(combat.enemyNow->name, GREEN);
+				info.Add("使用了");
+				info.Add(enamy_skill->skillName, GREEN);
+				info.Add("但是被你的");
+				info.Add(combat.pokemonNow->name, GREEN);
+				info.Add("躲过", RED);
+				info.Add("了!");
+				combat.combatLog.AddLog(info);
 			}
+			enamy_skill->PP--;
 		}
+
+		//结算状态
+		
 	}
 }
 
