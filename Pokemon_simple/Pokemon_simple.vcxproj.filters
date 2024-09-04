@@ -42,9 +42,6 @@
     <ClCompile Include="SoundPlayer.cpp">
       <Filter>源文件\Finished</Filter>
     </ClCompile>
-    <ClCompile Include="worldmap.txt">
-      <Filter>资源文件</Filter>
-    </ClCompile>
     <ClCompile Include="NPC.cpp">
       <Filter>源文件\TODO</Filter>
     </ClCompile>
@@ -194,6 +191,9 @@
     </Text>
     <Text Include="map_8.txt">
       <Filter>资源文件\maps</Filter>
+    </Text>
+    <Text Include="worldmap.txt">
+      <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

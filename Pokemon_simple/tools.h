@@ -53,7 +53,7 @@ const enum Color
 #define  GAMEBAR_PATH "gamebar.txt"
 
 #define PROPS_COUNT 56
-#define NPCS_COUNT 6
+#define NPCS_COUNT 35
 #define MAX_POKEMON_INGAME 6
 
 #pragma once

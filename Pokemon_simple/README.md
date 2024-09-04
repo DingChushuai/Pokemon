@@ -41,7 +41,7 @@
 
 ### NPC_Info文件具体格式
 	格式为(每一项以逗号分隔):
-	NPC_ID,NPC_Name,(NPC_DefultPosition :)MapID/PositionX/PositionY,NPC_States:
+	NPC_ID,NPC_Name,(NPC_DefultPosition :)MapID,PositionX,PositionY,NPC_States:
 	NPC_States:NPC_State1/NPC_State2/NPC_State3/...
 	NPC_State(默认状态id=0):stateID|stateTalk|stateNotFinishTalk|stateAction|stateNext
 		stateID:状态ID

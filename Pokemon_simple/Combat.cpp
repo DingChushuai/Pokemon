@@ -117,19 +117,25 @@ vector<Text> Combat::PokemonAvailableText()
 	vector<Text> texts;
 	for (auto& pokemon : available)
 	{
-		//TODO:
-		//返回宝可梦的名称,等级,血量, 状态
+		Text text;
+		text.Add(pokemon->name, YELLOW);
+		text.Add(" Lv.");
+		text.Add(to_string(pokemon->level), YELLOW);
+		text.Add(" HP:");
+		text.Add(to_string(pokemon->attribute.hp) + "/" + to_string(pokemon->attribute.maxHp), YELLOW);
+		text.Add(pokemon->GetStatuName(pokemon->statu), CYAN);
 	}
     return texts;
 }
 
 Text Combat::ChangePokemon(Pokemon* pokemon)
 {
-	//TODO:
-	//切换宝可梦
-	//修改pokemonNow,清除前一个宝可梦的buff
-	//返回切换宝可梦的战斗日志文本
-    return Text();
+    Text text;
+    text.Add("你换上了 ");
+	text.Add(pokemon->name, GREEN);
+	pokemonNow->buff = { 0 };
+    pokemonNow = pokemon;
+    return text;
 }
 
 bool Combat::TryToEscape()
@@ -161,19 +167,66 @@ bool Combat::TryToEscape()
 
 vector<Text> Combat::ShowPokemonInfo()
 {
-	//TODO:
-	//显示当前敌我双方的宝可梦信息
-	//包括名称,等级,血量,状态
+	vector<Text> texts;
 
-	return vector<Text>();
+	Text myPokemonInfo;
+	myPokemonInfo.Add("你的 ");
+	myPokemonInfo.Add(pokemonNow->name, GREEN);
+	myPokemonInfo.Add(" Level:");
+	myPokemonInfo.Add(to_string(pokemonNow->level), YELLOW);
+	myPokemonInfo.Add(" HP:");
+	myPokemonInfo.Add(to_string(pokemonNow->attribute.hp) + "/" + to_string(pokemonNow->attribute.maxHp), YELLOW);
+	texts.push_back(myPokemonInfo);
+
+	Text enemyPokemonInfo;
+	enemyPokemonInfo.Add("对手的 ");
+	enemyPokemonInfo.Add(enemyNow->name, GREEN);
+	enemyPokemonInfo.Add(" Level:");
+	enemyPokemonInfo.Add(to_string(enemyNow->level), YELLOW);
+	enemyPokemonInfo.Add(" HP:");
+	enemyPokemonInfo.Add(to_string(enemyNow->attribute.hp) + "/" + to_string(enemyNow->attribute.maxHp), YELLOW);
+	texts.push_back(enemyPokemonInfo);
+
+	return texts;
 }
 
 vector<Text> Combat::ShowPokemonSkill()
 {
-	//TODO:
-    //显示当前宝可梦的技能
-	//包括技能名称,属性,类型,威力,pp
-	return vector<Text>();
+	vector<Text> skillTexts;
+	vector<Skill>& skills = pokemonNow->skills;
+
+	for (Skill& skill : skills)
+	{
+		Text text;
+		text.Add(skill.skillName, GREEN);
+		text.Add(": ");
+		text.Add("属性: ");
+		text.Add(skill.GetTypeName(skill.skillID), CYAN);
+		text.Add(", ");
+		switch (skill.type)
+		{
+		case 0:
+			text.Add("类型: 物理", MAGENTA);
+			break;
+		case 1:
+			text.Add("类型: 特殊", MAGENTA);
+			break;
+		case 2:
+			text.Add("类型: 变化", MAGENTA);
+			break;
+		}
+		text.Add(", ");
+		text.Add("威力:");
+		text.Add(to_string(skill.power), YELLOW);
+		text.Add(", ");
+		text.Add("PP: ");
+		text.Add(to_string(skill.PP), YELLOW);
+
+		// 将Text对象添加到skillTexts向量中
+		skillTexts.push_back(text);
+	}
+
+	return skillTexts;
 }
 
 bool Combat::IsTrainerBattle()

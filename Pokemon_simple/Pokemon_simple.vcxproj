@@ -142,7 +142,7 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="worldmap.txt" />
+    <Text Include="worldmap.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Backpack_State.csv" />

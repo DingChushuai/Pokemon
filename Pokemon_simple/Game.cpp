@@ -404,7 +404,11 @@ void Game::Init()
 	//TODO: 从NPC_Info.txt读取所有NPC信息,数量为NPCS_COUNT
 	//使用 new 创建新的对象, 构造函数使用NPC(int id);
 	//正常情况下,NPC的id与NPC_Info.txt中的行数对应(从1开始)
-
+	for (int i = 1; i <= NPCS_COUNT; i++)
+	{
+		NPC* npc = new NPC(i);
+		npcs.push_back(npc);
+	}
 	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
 	log.clearLog();
 	log.AddLog(Text("欢迎来到宝可梦世界！",GREEN));
@@ -473,7 +477,7 @@ void Game::ActOnMap()
 	{
 		if (npc->mapID == currentMap->getMapID())
 		{
-			Text(string(1, npc->name[0])+" : "+npc->name+"\t", GREEN).Print();
+			Text(to_string(npc->ID % 10) +" : "+npc->name+"\t", GREEN).Print();
 		}
 	}
 	cout << endl;
@@ -494,7 +498,7 @@ void Game::ActOnMap()
 		if (npc->mapID == currentMap->getMapID())
 		{
 			GotoXY(pos.first + npc->x, pos.second + npc->y);
-            Text(string(1, npc->name[0]),GREEN,GRAY).Print();
+            Text(to_string(npc->ID%10), GREEN, GRAY).Print();
 		}
 	}
 	GotoXY(pos.first + playerX, pos.second + playerY);

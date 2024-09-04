@@ -21,16 +21,20 @@ NPC::NPC(int id)
 	ifs.close();
 	this->ID = id;
 	name = data[1];
-	locate = Split(data[2], '/');
-	mapID = stoi(locate[0]);
-	x = stoi(locate[1]);
-	y = stoi(locate[2]);
-	state = stoi(data[3]);
-	//TODO:
-	//在NPC_NIFO_PATH中查找id对应的NPC
-	//并将npc的各项信息存入到成员变量中
-	//详细请参考README.md
-	//可以参考Prop类和map类的构造函数的写法
+	mapID = stoi(data[2]);
+	x = stoi(data[3]);
+	y = stoi(data[4]);
+	state = 0;
+	vector<string> stateList = Split(data[5], '/');
+	for (int i = 0; i < stateList.size(); i++)
+	{
+		vector<string> stateInfo = Split(stateList[i], '|');
+		vector<string> stateActionStr = Split(stateInfo[3], '\\');
+		vector<int> stateAction;
+		for (int j = 0; j < stateActionStr.size(); j++) stateAction.push_back(stoi(stateActionStr[j]));
+		State state = { stoi(stateInfo[0]), stateInfo[1], stateInfo[2], stateAction, stoi(stateInfo[4]) };
+		this->stateList.push_back(state);
+	}
 }
 
 NPC::NPC(string info)
@@ -45,13 +49,6 @@ NPC::NPC(string info)
 	a->mapID = stoi(data[2]);
 	a->x = stoi(data[3]);
 	a->y = stoi(data[4]);
-
-		
-	//TODO:
-	//此函数用于读取NPC_State.csv中的一行信息,并生成NPC对象
-	//详细请参考README.md
-	//一行信息只包含id,位置,状态
-	//使用NPC(int id)创建NPC对象,然后更改其状态和位置
 }
 
 string NPC::GetTalk()
