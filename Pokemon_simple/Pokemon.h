@@ -70,7 +70,7 @@ public:
 
     Pokemon(int ID, int level);     //根据ID和等级构造一个随机属性的宝可梦, 用于随机生成宝可梦
     Pokemon(const Pokemon& other);  //复制构造函数, 用于复制宝可梦到战斗中
-
+    Pokemon() {};
     ~Pokemon();
     vector<Text> GetDetail(); //获取宝可梦详细信息
     int GetSellPrice(); //获取出售价格

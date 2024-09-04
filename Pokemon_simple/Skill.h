@@ -56,6 +56,7 @@ class Skill
     };
 public:
     Skill(int skillID);     //从技能表读取技能信息
+    string GetTypeName(int typeID);
     ~Skill() {};
 
     int skillID;            //编号
@@ -71,6 +72,7 @@ public:
     vector<int> effectParam; //技能效果参数
     int mustHit;             //必定命中
     int priority;            //优先级
+
 };
 
 #endif // SKILL_H
