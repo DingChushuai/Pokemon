@@ -109,14 +109,12 @@ vector<Text> PokemonLib::GetPokemonInGameInfo()
     for (auto& po : pokemonInGame)
     {
         Text info;
-        info.Add(po->name, BLUE);
-        info.Add(", 血量: ");
-        info.Add(to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp), RED);
-        info.Add(", 状态: " + po->GetStatuName(po->statu));
-        info.Add(", 经验: ");
-        info.Add(to_string(po->experience) + "/" +to_string(po->experienceToNextLevel), GREEN);
-        info.Add(", 等级: " + to_string(po->level));
-
+        info.Add(po->name + 
+            "  血量:" + to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp)+ 
+            "  状态: " + po->GetStatuName(po->statu) + 
+            "  经验: " + to_string(po->experience) + "/" + to_string(po->experienceToNextLevel) + 
+            "  等级: " + to_string(po->level)
+        );
         infos.push_back(info);
     }
     return infos;
@@ -128,14 +126,12 @@ vector<Text> PokemonLib::GetPokemonInLibInfo()
     for (auto& po : pokemonInLib)
     {
         Text info;
-        info.Add(po->name, BLUE);
-        info.Add(", 血量: ");
-        info.Add(to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp), RED);
-        info.Add(", 状态: " + po->GetStatuName(po->statu));
-        info.Add(", 经验: ");
-        info.Add(to_string(po->experience) + "/" + to_string(po->experienceToNextLevel), GREEN);
-        info.Add(", 等级: " + to_string(po->level));
-
+        info.Add(po->name +
+            "  血量:" + to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp) +
+            "  状态: " + po->GetStatuName(po->statu) +
+            "  经验: " + to_string(po->experience) + "/" + to_string(po->experienceToNextLevel) +
+            "  等级: " + to_string(po->level)
+        );
         infos.push_back(info);
     }
     return infos;
@@ -148,14 +144,12 @@ vector<Text> PokemonLib::GetPokemonSellPrice()
     for (auto po : pokemonInLib)
     {
         Text sellInfo;
-        sellInfo.Add(po->name, BLUE);
-        sellInfo.Add(", 等级: ");
-        sellInfo.Add(to_string(po->level), MAGENTA);
-        sellInfo.Add(", 售卖价格: ");
-        sellInfo.Add(to_string(po->GetSellPrice()), CYAN);
-        sellInfo.Add("\n");
+        sellInfo.Add(po->name + 
+            "  血量:" + to_string(po->attribute.hp) + "/" + to_string(po->attribute.maxHp) +
+            "  等级: " + to_string(po->level) +
+            "  售卖价格: " + to_string(po->GetSellPrice())
+        );
         info.push_back(sellInfo);
-        
     }
      return info;
 }
@@ -223,13 +217,6 @@ void PokemonLib::Save()
 
     }
     ofs.close();
-        //TODO:
-    //保存上阵中的宝可梦信息
-    //保存库中的宝可梦信息
-    //储存到PokemonLib_State中:POKEMONLIB_STATE_PATH
-    //具体格式参考README.md
-    //此函数相对麻烦
-    //建议与Load函数一同完成
 }
 
 void PokemonLib::Load()
@@ -239,7 +226,6 @@ void PokemonLib::Load()
     ifs.open(POKEMONLIB_STATE_PATH, ios::in);
     string rea;
     vector<string>data;
-  //  vector<Pokemon*>load;
     while (getline(ifs, rea))
     {
         data = Split(rea, ',');
@@ -251,17 +237,9 @@ void PokemonLib::Load()
         a->level = stoi(data[4]);
         a->experience = stoi(data[5]);
         a->experienceToNextLevel = stoi(data[6]);
-     //   a->statu =(data[7]);
-           
-
-         //   load.push_back(a); 
         count++;
         if (count > 6)     pokemonInLib.push_back(a);
         else  pokemonInGame.push_back(a);
       
     }
-    //TODO:
-    //加载宝可梦信息
-    //与Save函数对应
-    //详细信息查看Save函数
 }

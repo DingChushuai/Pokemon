@@ -243,7 +243,12 @@ void ChooseList::ShowList()
             firstShow = false;
         }
         pair<int, int> pos = GetPos();
-        if (chooseNow == 0)
+        if (list.size() == 1)
+        {
+            GotoXY(0, startLine);
+            list[chooseNow].Print();
+        }
+        else if (chooseNow == 0)
         {
             GotoXY(0,startLine);
             list[chooseNow].Print();

@@ -70,5 +70,5 @@ State NPC::GetState()
             return this->stateList[i];
 		}
 	}
-	return State();//返回一个空的State
+	return State();
 }

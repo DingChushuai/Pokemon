@@ -6,11 +6,8 @@
 #include"tools.h"
 Pokemon::Pokemon(int ID, int level)
 {
-    //TODO:
-    //构造函数
     //从 POKEMON_INFO_PATH 中读取ID对应的宝可梦信息
     //生成一个随机的等级为level的宝可梦
-    //POKEMON_INFO_PATH中没有的信息设定:
     ifstream ifs;
     ifs.open(POKEMON_INFO_PATH, ios::in);
     string rea;
@@ -18,7 +15,6 @@ Pokemon::Pokemon(int ID, int level)
     vector<string>ethnic;
     vector<string>fault;
     vector<int> skill;
-    int j = 0;
     int l;
     while (getline(ifs, rea))
     {
@@ -29,7 +25,8 @@ Pokemon::Pokemon(int ID, int level)
         else
             continue;
     }
-    name = stoi(data[1]);
+    this->ID = ID;
+    name = data[1];
     type.first = (Type)stoi(data[2]);
     type.second = (Type)stoi(data[3]);
     growthRate = stoi(data[4]);
@@ -46,13 +43,13 @@ Pokemon::Pokemon(int ID, int level)
     for (int i = 0; i < fault.size(); i+=2)
     {
         l = stoi(fault[i + 1]);
-        if(level>=l) skill[j] = stoi(fault[i]), j++;
+        if (level >= l) skill.push_back(stoi(fault[i]));
     }
     if (skill.size() < 4)
     {
         for (int i = 0; i < skill.size(); i++)
         {
-            Skill* a = new Skill(skill[i]);
+            skills.push_back(Skill(skill[i]));
         }
     }
     else
@@ -65,7 +62,7 @@ Pokemon::Pokemon(int ID, int level)
             vector<int>result(skill.begin(), skill.begin() + 4);
             for (int k = 0; k < result.size(); k++)
             {
-                Skill* a = new Skill(result[i]);
+                skills.push_back(Skill(result[i]));
             }
             
         }
@@ -74,12 +71,11 @@ Pokemon::Pokemon(int ID, int level)
     this->level = level;
     experience = 0;
     experienceToNextLevel = CalculateExperienceToNextLevel();
+    individualValue = GetRandomIndividualValue();
     statu = None;
     buff = {0};
     basicValue = { 0 };
-    //个体值GetRandomIndividualValue();
-    UpdateAttribute();  //完成种族值,个体值后,更新属性 
-    //技能: 从所有可以学习的技能中随机选择4个
+    UpdateAttribute();
 }
 
 Pokemon::Pokemon(const Pokemon& other)
@@ -264,6 +260,7 @@ float Pokemon::GetBuffValue(int buffLevel)
 void Pokemon::UpdateAttribute()
 {
     ATTRIBUTE newAttribute = CalculateAttribute();
+    attribute.hp = newAttribute.hp;
     attribute.maxHp = newAttribute.hp;
     attribute.attack = newAttribute.attack; 
     attribute.defense = newAttribute.defense; 
@@ -295,7 +292,7 @@ int Pokemon::ExperienceOfLevel(int level)
     case 1:
         return 1.25 * pow(level, 3);
     case 2:
-        return 1.2 * pow(level, 3) - 15 * pow(level, 2) - 140;
+        return 1.2 * pow(level, 3) - 15 * pow(level, 2) + 100*level- 140;
     case 3:
         return pow(level, 3);
     case 4:

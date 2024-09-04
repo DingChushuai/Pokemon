@@ -560,6 +560,7 @@ void Game::ActOnMap()
                             info.Add(" : ");
                             info.Add(npc->GetTalk(), YELLOW);
 							log.AddLog(info);
+							npc->state = npc->GetState().stateNext;
                             break;
 						}
 					}
@@ -872,7 +873,6 @@ bool Game::ChangeNPCState(NPC* npc)
 	{
 		case 0: 
 		{
-			npc->state = state.stateNext;
 			return true;
 		}
         case 1:
@@ -880,7 +880,6 @@ bool Game::ChangeNPCState(NPC* npc)
 			npc->mapID = state.stateAction[1];
 			npc->x = state.stateAction[2];
             npc->y = state.stateAction[3];
-			npc->state = state.stateNext;
             return true;
 		}
 		case 2 :
@@ -903,7 +902,6 @@ bool Game::ChangeNPCState(NPC* npc)
 				{
 					if (npc1->state == state.stateAction[2])
 					{
-                        npc->state = state.stateNext;
                         return true;
 					}
 				}
@@ -914,7 +912,6 @@ bool Game::ChangeNPCState(NPC* npc)
 		{
 			if (backpack.GetProp_(state.stateAction[1]))
 			{
-                npc->state = state.stateNext;
                 return true;
 			}
             return false;
@@ -924,7 +921,6 @@ bool Game::ChangeNPCState(NPC* npc)
 			if (backpack.GetProp_(state.stateAction[1])->GetNum() >= state.stateAction[2])
 			{
 				backpack.ReduceProp(state.stateAction[1], state.stateAction[2]);
-                npc->state = state.stateNext;
                 return true;
 			}
             return false;
@@ -933,7 +929,6 @@ bool Game::ChangeNPCState(NPC* npc)
 		{
 			if (pokemonLib.CheckPokemon(state.stateAction[1]))
 			{
-				npc->state = state.stateNext;
 				return true;
 			}
             return false;
@@ -942,13 +937,11 @@ bool Game::ChangeNPCState(NPC* npc)
 		{
 			Pokemon* pokemon_add = new Pokemon(state.stateAction[1], state.stateAction[2]);
             pokemonLib.AddPokemon(pokemon_add);
-            npc->state = state.stateNext;
             return true;
 		}
         case 8:
 		{
             backpack.AddProp(state.stateAction[1], state.stateAction[2]);
-            npc->state = state.stateNext;
             return true;
 		}
 	}
@@ -1027,8 +1020,12 @@ void Game::StartCombat()
 				}
 			}
 		}
+
+
 		Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
-		int myFirst = mySkill->priority - enamy_skill->priority;
+		int myFirst = 0;
+		if (mySkill != nullptr)
+			myFirst = mySkill->priority - enamy_skill->priority;
 		if (myFirst == 0)
 		{
 			
@@ -1046,6 +1043,7 @@ void Game::StartCombat()
         enamyHit = rand() % 100 < enamyHitRate;
 		if (mySkill->mustHit) myHit = true;
         if (enamy_skill->mustHit) enamyHit = true;
+
 		if (choice == 1)
 		{
 			if(myHit)

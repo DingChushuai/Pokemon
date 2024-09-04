@@ -39,7 +39,7 @@ void Combat::InitTrainerCombat(int battleId, PokemonLib* pokemonLib)
 	myPokemons.clear();
 	enemyPokemons.clear();
 	this->pokemonLib = pokemonLib;
-	for (int i = 0; i < MAX_POKEMON_INGAME; i++)
+	for (int i = 0; i < pokemonLib->pokemonInGame.size(); i++)
 	{
 		Pokemon* pokemon = new Pokemon(*pokemonLib->GetPokemonInGame(i + 1));
 		myPokemons.push_back(pokemon);
@@ -261,7 +261,12 @@ void Combat::EndCombat()
 	escapeFailedTimes = 0;
 	beaten.clear();
 	combatLog.clearLog();
-	//To do:
+	for (int i = 0; i < beaten.size(); i++)
+	{
+		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
+		combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
+
+	}
 	//将经验和获得的基础点数分配给对应宝可梦
 	//添加战斗记录(获取经验)
 	//回传宝可梦的血量,状态,技能pp,基础点数
