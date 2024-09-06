@@ -180,7 +180,7 @@ void PokemonLib::Save()
                     << pokemonInGame[i]->skills[j].skillEffect << "|";
                        for (int k = 0; k < pokemonInGame[i]->skills[j].effectParam.size(); k++)
                        {
-                           ofs<<pokemonInGame[i]->skills[j].effectParam[k]<<"/";
+                           ofs<<pokemonInGame[i]->skills[j].effectParam[k]<<"\\";
                        }        
                        ofs << "|" << pokemonInGame[i]->skills[j].mustHit << "|" << pokemonInGame[i]->skills[j].priority;
             }
@@ -222,10 +222,12 @@ void PokemonLib::Save()
 void PokemonLib::Load()
 {
     int count = 0;
+    int k;
     ifstream ifs;
     ifs.open(POKEMONLIB_STATE_PATH, ios::in);
     string rea;
     vector<string>data;
+    vector<string>attri, ethnic, individual, basic, skl;
     while (getline(ifs, rea))
     {
         data = Split(rea, ',');
@@ -237,7 +239,63 @@ void PokemonLib::Load()
         a->level = stoi(data[4]);
         a->experience = stoi(data[5]);
         a->experienceToNextLevel = stoi(data[6]);
-        count++;
+        k = stoi(data[7]);
+        switch (k)
+        {
+        case 0:a->statu = Pokemon::None;
+        case 1:a->statu = Pokemon::Poison;
+        case 2:a->statu = Pokemon::Paralysis;
+        case 3:a->statu = Pokemon::Burn;
+        case 4:a->statu = Pokemon::Sleep;
+        case 5:a->statu = Pokemon::Freeze;
+        case 6:a->statu = Pokemon::Frostbite;
+        }
+        attri = Split(data[8], '/');
+        a->attribute.hp = stoi(attri[0]);
+        a->attribute.maxHp = stoi(attri[1]);
+        a->attribute.attack = stoi(attri[2]);
+        a->attribute.defense = stoi(attri[3]);
+        a->attribute.speed = stoi(attri[4]);
+        a->attribute.specialAttack = stoi(attri[5]);
+        a->attribute.specialDefense= stoi(attri[6]);
+
+        a->evolutionLevel = stoi(data[9]);
+        a->evolutionID = stoi(data[10]);
+        a->captureRate = stoi(data[11]);
+        a->growthRate = stoi(data[12]);
+        a->basicExperience = stoi(data[13]);
+        
+        ethnic = Split(data[14], '/');
+        a->ethnicValue.hp = stoi(ethnic[0]);
+        a->ethnicValue.attack = stoi(ethnic[1]);
+        a->ethnicValue.defense = stoi(ethnic[2]);
+        a->ethnicValue.defense = stoi(ethnic[3]);
+        a->ethnicValue.specialAttack = stoi(ethnic[4]);
+        a->ethnicValue.specialDefense = stoi(ethnic[5]);
+        a->ethnicValue.speed = stoi(attri[6]);
+        
+        individual = Split(data[15], '/');
+        a->individualValue.hp = stoi(individual[0]);
+        a->individualValue.attack = stoi(individual[1]);
+        a->individualValue.defense = stoi(individual[2]);
+        a->individualValue.defense = stoi(individual[3]);
+        a->individualValue.specialAttack = stoi(individual[4]);
+        a->individualValue.specialDefense = stoi(individual[5]);
+        a->individualValue.speed = stoi(individual[6]);
+
+        basic = Split(data[16], '/');
+        a->basicValue.hp = stoi(basic[0]);
+        a->basicValue.attack = stoi(basic[1]);
+        a->basicValue.defense = stoi(basic[2]);
+        a->basicValue.defense = stoi(basic[3]);
+        a->basicValue.specialAttack = stoi(basic[4]);
+        a->basicValue.specialDefense = stoi(basic[5]);
+        a->basicValue.speed = stoi(basic[6]);
+
+
+        skl=Split(data[17],'/')
+         
+            count++;
         if (count > 6)     pokemonInLib.push_back(a);
         else  pokemonInGame.push_back(a);
     }
