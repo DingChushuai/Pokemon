@@ -293,7 +293,7 @@ void PokemonLib::Load()
         a->basicValue.speed = stoi(basic[6]);
 
 
-        skl=Split(data[17],'/')
+        skl = Split(data[17], '/');
          
             count++;
         if (count > 6)     pokemonInLib.push_back(a);
