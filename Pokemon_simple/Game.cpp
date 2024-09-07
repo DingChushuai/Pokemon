@@ -27,6 +27,7 @@ void Game::Run()
 			case START_MENU:
 			{
 				DrawTitle();
+				Text("操作提示: ws(ad)选择, ESC退出 (空格)确认\n").Print();
 				vector<Text> Menu;
 				Menu.push_back(Text("1. 开始新游戏"));
 				Menu.push_back(Text("2. 加载游戏"));
@@ -55,6 +56,8 @@ void Game::Run()
 			}
 			case SETTING:
 			{
+				Text("设置\n",GREEN).Print();
+				Text("操作提示: ws(ad)选择, ESC退出 (空格)确认\n").Print();
                 vector<Text> Menu;
 				Menu.push_back(Text("1. 保存游戏"));
 				Menu.push_back(Text("2. 返回游戏"));
@@ -106,11 +109,11 @@ void Game::Run()
 			{
 				{
 					Text("\n你上阵中的宝可梦：\n").Print();
-					Text("\n选择并查看宝可梦的详细信息, ESC退出\n", RED, GRAY).Print();
+					Text("\n选择并查看宝可梦的详细信息, ESC退出\n", YELLOW, GRAY).Print();
 					vector<Text> pokemonsInGame = pokemonLib.GetPokemonInGameInfo();
 					if (pokemonsInGame.size() == 0)
 					{
-                        Text("\n你的队伍中没有宝可梦,请先获取一只宝可梦!\n", RED, GRAY).Print();
+                        Text("\n你的队伍中没有宝可梦,请先获取一只宝可梦!\n", RED).Print();
                         command.Pause();
                         gameSenceStack.pop_back();
                         break;
@@ -138,13 +141,13 @@ void Game::Run()
 					vector<Text> props = backpack.GetPropsInfo();
                     if (props.size() == 0)
                     {
-                        Text("\n你的背包中没有道具,请先获取一些道具!\n", RED, GRAY).Print();
+                        Text("\n你的背包中没有道具,请先获取一些道具!\n", RED).Print();
                         command.Pause();
                         gameSenceStack.pop_back();
                         break;
                     }
 					int choice = command.chooseFromList(props,10);
-                    if (choice == 0) { gameSenceStack.pop_back(); break; } 
+                    if (choice == 0) { gameSenceStack.pop_back(); break; }
 					Prop* PropNow = backpack.GetPropFromIndex(choice);
 					if (!PropNow->IsCanUseInField())
 					{
@@ -234,31 +237,39 @@ void Game::Run()
 			}
 			case BUY_ITEM:
 			{
+				Text("你的金币:"+to_string(money), YELLOW).Print();
+				Text("商品列表:").Print();
 				vector<Text> props = shop.GetPropsInShop();
-				int choice = command.chooseFromList(props,10);
-				if (choice == 0) { gameSenceStack.pop_back(); break; }
-				int price = shop.GetPriceOfProp(choice);
-				if (money < price)
+				int choice = command.chooseFromList(props, 10);
+				while (choice)
 				{
-                    Text("\n你的钱不够了,请先去赚点钱吧!\n", RED).Print();
+					int price = shop.GetPriceOfProp(choice);
+					if (money < price)
+					{
+						Text("\n你的金币不够了,请先去赚点金币吧!\n", RED).Print();
+						command.Pause();
+						break;
+					}
+					int maxCount = money / price;
+					int count = command.ChooseCount(maxCount);
+					if (count == 0) { gameSenceStack.pop_back(); break; }
+					money -= price * count;
+					Prop buyedProp = shop.BuyProp(choice, count);
+					backpack.AddProp(new Prop(buyedProp));
+					Text info;
+					info.Add("你购买了");
+					info.Add(buyedProp.GetName(), GREEN);
+					info.Add("x");
+					info.Add(to_string(count), YELLOW);
+					info.Add("，花费了");
+                    info.Add(to_string(price * count), YELLOW);
+                    info.Add("金币");
+					log.AddLog(info);
+					info.Print();
 					command.Pause();
-                    gameSenceStack.pop_back();
-					break;
+					ClearScreen();
+					choice = command.chooseFromList(props, 10);
 				}
-				int maxCount = money / price;
-				int count = command.ChooseCount(maxCount);
-                if (count == 0) { gameSenceStack.pop_back(); break; }
-                money -= price * count;
-				Prop buyedProp = shop.BuyProp(choice, count);
-				backpack.AddProp(new Prop(buyedProp));
-				Text info;
-                info.Add("你购买了");
-                info.Add(buyedProp.GetName(), GREEN);
-                info.Add("x");
-                info.Add(to_string(count), YELLOW);
-                log.AddLog(info);
-				info.Print();
-                command.Pause();
                 gameSenceStack.pop_back();
                 break;
 			}
@@ -270,23 +281,31 @@ void Game::Run()
 					Text("\n你的背包中没有道具,请先去获取一些道具吧!\n", RED).Print();
                     command.Pause();
                     gameSenceStack.pop_back();
-                    break;				}
+                    break;
+				}
                 int choice = command.chooseFromList(props,10);
-                if (choice == 0) { gameSenceStack.pop_back(); break; }
-				Prop* prop = backpack.GetPropFromIndex(choice);
-				int price = prop->GetSellPrice();
-                int count = command.ChooseCount(prop->GetNum());
-                if (count == 0) { gameSenceStack.pop_back(); break; }
-                money += price * count;
-				backpack.ReduceProp(choice, count);
-                Text info;
-                info.Add("你卖出了"); 
-                info.Add(prop->GetName(), GREEN); 
-                info.Add("x"); 
-                info.Add(to_string(count), YELLOW); 
-                log.AddLog(info); 
-                info.Print();
-                command.Pause(); 
+				while (choice)
+				{
+					Prop* prop = backpack.GetPropFromIndex(choice);
+					int price = prop->GetSellPrice();
+					int count = command.ChooseCount(prop->GetNum());
+					if (count == 0) { gameSenceStack.pop_back(); break; }
+					money += price * count;
+					backpack.ReduceProp(choice, count);
+					Text info;
+					info.Add("你卖出了");
+					info.Add(prop->GetName(), GREEN);
+					info.Add("x");
+					info.Add(to_string(count), YELLOW);
+                    info.Add("，获得了");
+                    info.Add(to_string(price * count), YELLOW);
+                    info.Add("金币");
+					log.AddLog(info);
+					info.Print();
+					command.Pause();
+					ClearScreen();
+					choice = command.chooseFromList(props, 10);
+				}
                 gameSenceStack.pop_back(); 
                 break;
 			}
@@ -301,17 +320,24 @@ void Game::Run()
                     break;
 				}
                 int choice = command.chooseFromList(pokemonNames,10);
-                if (choice == 0) { gameSenceStack.pop_back(); break; }
-                Pokemon* pokemon = pokemonLib.GetPokemonInLib(choice);
-                int price = pokemon->GetSellPrice();
-                money += price;
-                pokemonLib.DeletePokemon(pokemon);
-                Text info;
-                info.Add("你卖出了");
-                info.Add(pokemon->name, GREEN);
-                log.AddLog(info);
-                info.Print();
-                command.Pause();
+                while (choice)
+				{
+					Pokemon* pokemon = pokemonLib.GetPokemonInLib(choice);
+					int price = pokemon->GetSellPrice();
+					money += price;
+					pokemonLib.DeletePokemon(pokemon);
+					Text info;
+					info.Add("你卖出了");
+					info.Add(pokemon->name, GREEN);
+                    info.Add("，获得了");
+                    info.Add(to_string(price), YELLOW);
+                    info.Add("金币");
+					log.AddLog(info);
+					info.Print();
+					command.Pause();
+					ClearScreen();
+					choice = command.chooseFromList(pokemonNames, 10);
+                }
                 gameSenceStack.pop_back();
                 break;
 			}
@@ -324,6 +350,7 @@ void Game::Run()
                     break;
 				}
 				StartCombat();
+				combat.combatLog.ShowLog();
 				combat.EndCombat();
 				for (auto& pokemon : pokemonLib.pokemonInGame)
 				{
@@ -408,9 +435,9 @@ void Game::Run()
 
 void Game::Init()
 {
-	playerX = 1;
-    playerY = 8;
-	money = 0;
+	playerX = 35;
+    playerY = 4;
+	money = 2000;
 	inCombat = false;
 	Map* map0= new Map(0);
 	currentMap = map0;
@@ -427,27 +454,81 @@ void Game::Init()
 
 void Game::Load()
 {
-    //TODO: 从Game_State.txt读取
-    //读取内容在README.md中有详细说明
-	// 注意处理空文件的情况
+	ifstream game_state;
+	game_state.open(GAME_STATE_PATH);
+	bool hasData = false;
+	if (game_state.is_open())
+	{
+        string line;
+		getline(game_state, line);
+		if (line != "")
+		{
+			vector<string> data = Split(line, ',');
+            playerX = stoi(data[0]);
+            playerY = stoi(data[1]);
+            Map* loadmap = new Map(stoi(data[2]));
+            currentMap = loadmap;
+            maps.push_back(loadmap);
+            money = stoi(data[3]);
+            hasData = true;
+		}
+		else
+		{
+			hasData = false;
+		}
+		if (hasData)
+		{
+            log.AddLog(Text("成功载入游戏", GREEN));
+		}
+	}
+	game_state.close();
+	if (!hasData)
+	{
+		Text("没有找到存档，将创建新存档", RED).Print();
+		command.Pause();
+		Init();
+		return;
+	}
 
-    //TODO: 从NPC_State.csv读取,并存入npcs
-    //读取内容在README.md中有详细说明
-	//读取每个npc时使用 new 创建新的对象, 构造函数使用NPC(string info);
-    //注意处理空文件的情况
-
+    ifstream npc_state;
+    npc_state.open(NPC_STATE_PATH);
+	if (npc_state.is_open())
+	{
+		string line; 
+		for (auto npc : npcs)
+		{
+			getline(npc_state, line);
+			vector<string> data = Split(line, ',');
+			NPC* npc = new NPC(stoi(data[0]));
+			npc->state = stoi(data[1]);
+			npc->mapID = stoi(data[2]);
+            npc->x = stoi(data[3]);
+            npc->y = stoi(data[4]);
+            npcs.push_back(npc);
+		}
+	}
     backpack.Load(); 
     pokemonLib.Load(); 
 }
 
 void Game::Save()
 {
-	//TODO: 储存到Game_State.txt
-	//储存内容在README.md中有详细说明
-
-	//TODO: 储存到NPC_State.csv
-	//NPC: vector<NPC*> npcs;
-	//储存内容在README.md中有详细说明
+	ofstream game_state;
+    game_state.open(GAME_STATE_PATH);
+    if (game_state.is_open())
+    {
+        game_state << playerX << "," << playerY << "," << currentMap->getMapID() << "," << money << endl;
+    }
+    game_state.close();
+	ofstream npc_state;
+    npc_state.open(NPC_STATE_PATH);
+	if (npc_state.is_open())
+	{
+		for (auto npc : npcs)
+		{
+            npc_state << npc->ID << "," << npc->state << "," << npc->mapID << "," << npc->x << "," << npc->y << endl;
+		}
+	}
 	backpack.Save();
 	pokemonLib.Save();
 }
@@ -483,7 +564,8 @@ void Game::DrawWorldMap()
 void Game::ActOnMap()
 {
 	Text("这里是: " + currentMap->getMapName(), GREEN).Print();
-	Text("\n拥有金币： " + to_string(money), BLUE).Print();
+	Text("\n拥有金币： " + to_string(money), YELLOW).Print();
+	Text("\n操作提示: wasd移动,e背包,f宝可梦,ESC设置,m地图,'/'指令 ").Print();
 	cout << endl; 
 	int maxX = currentMap->getMapWidth();
     int maxY = currentMap->getMapHeight();
@@ -666,9 +748,16 @@ void Game::ActOnMap()
 			}
 			else if (block.type == Map::HOSPITAL)
 			{
-				//TODO:
-                //将玩家当前上阵的所有宝可梦的体力恢复到满值
-				//打印一条log,并刷新log
+				for (auto poke : pokemonLib.pokemonInGame)
+				{
+                    poke->attribute.hp = poke->attribute.maxHp;
+					for (int i = 0; i < poke->skills.size(); i++)
+					{
+                        poke->skills[i].PP = poke->skills[i].maxPP;
+					}
+				}
+                log.AddLog(Text("你的宝可梦已恢复到最佳状态!",GREEN));
+                break;
 			}
 			else if (block.type == Map::POKEMON_CENTER)
 			{
@@ -679,7 +768,7 @@ void Game::ActOnMap()
 	}
 }
 
-void Game::UseProp(Prop* prop)
+bool Game::UseProp(Prop* prop)
 {
 	/*
 		CHANGE_SKILL_ATTRIBUTE,  //改变技能属性(改变条件,条件参数,技能属性,改变值,技能属性,改变值...)
@@ -693,16 +782,12 @@ void Game::UseProp(Prop* prop)
 		3.PP;                 //pp
 		4.maxPP;              //最大pp
 		//BUFF,   //改变能力状态修正值(能力状态修正值,改变值,...)  //在战斗中临时改变
-		HEAL,  //回复体力(濒死时是否可用,回复方式(0按百分比,1按具体值),百分比/具体值)
-		GET_SKILL,   //使宝可梦获得技能(技能ID), 生效前需要判断是否合理
-		CAPTURE,    //精灵球类型(捕获率加成,对特定的Type属性的宝可梦,特定捕获率加成)
-		SPECIAL_PROP,  //特殊道具(特殊函数id,函数参数1,函数参数2...)
 	*/
 	switch (prop->GetType())
 	{
         case 0:
 		{
-            break;
+            return false;
 		}
         case 1:
 		{
@@ -728,6 +813,7 @@ void Game::UseProp(Prop* prop)
                     info.Add(poke->name, YELLOW);
                     info.Add("的状态恢复正常了");
 					combat.combatLog.AddLog(info);
+					return true;
 				}
 				else
 				{
@@ -738,6 +824,7 @@ void Game::UseProp(Prop* prop)
                     info.Add(prop->GetName(), YELLOW);
                     info.Add("消除");
                     combat.combatLog.AddLog(info);
+					return false;
 				}
 			}
 			else
@@ -762,6 +849,7 @@ void Game::UseProp(Prop* prop)
 					info.Add(poke->name, YELLOW);
 					info.Add("的状态恢复正常了");
 					log.AddLog(info);
+                    return true;
 				}
 			}
             break;
@@ -798,6 +886,7 @@ void Game::UseProp(Prop* prop)
             info.Add(poke->name, YELLOW);
             info.Add("的属性提升了");
             log.AddLog(info);
+            return true;
         	break;
 		}
         case 3:
@@ -855,7 +944,47 @@ void Game::UseProp(Prop* prop)
             info.Add(poke->name, YELLOW);
             info.Add("的战斗属性提升了!");
             log.AddLog(info);
+            return true;
             break;
+		}
+		case 5:
+		{
+			Pokemon* poke;
+			if(inCombat)
+				poke = combat.pokemonNow;
+			else
+			{
+                vector<Pokemon*> pokes = pokemonLib.pokemonInGame;
+                int index;
+				Text("选择一个宝可梦使用道具:\n").Print();
+                do {
+                    index = command.chooseFromList(pokemonLib.GetPokemonInGameInfo());
+                } while (index == 0);
+                poke = pokes[index - 1];
+            }
+            vector<int> param = prop->GetEffectPara();
+			//回复体力(濒死时是否可用,回复方式(0按百分比,1按具体值),百分比/具体值)
+			if (param[0] == 0)
+			{
+				if (poke->attribute.hp == 0)
+				{
+					if(inCombat) combat.combatLog.AddLog(Text("宝可梦濒死,不能使用回复道具!", RED));
+                    else log.AddLog(Text("宝可梦濒死,不能使用回复道具!", RED));
+                    return false;
+				}
+			}
+			if (param[1] == 0)
+			{
+                poke->attribute.hp += poke->attribute.maxHp * param[2] / 100;
+			}
+			else
+			{
+				poke->attribute.hp += param[2];
+			}
+            if (poke->attribute.hp > poke->attribute.maxHp) poke->attribute.hp = poke->attribute.maxHp;
+			if(inCombat) combat.combatLog.AddLog(Text("宝可梦体力回复成功!当前生命:" + to_string(poke->attribute.hp) + " / " + to_string(poke->attribute.maxHp), GREEN));
+            else log.AddLog(Text("宝可梦体力回复成功!当前生命:" + to_string(poke->attribute.hp) + " / " + to_string(poke->attribute.maxHp), GREEN));
+			return true;
 		}
 		case 7:
 		{
@@ -915,12 +1044,11 @@ void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
 	if (typeEffect == 0.0)
 	{
 		Text info;
-        info.Add("宝可梦");
-        info.Add(user->name, YELLOW);
+        info.Add(user->name, GREEN);
         info.Add("的技能");
         info.Add(skill->skillName, YELLOW);
         info.Add("对");
-        info.Add(target->name, YELLOW);
+        info.Add(target->name, GREEN);
         info.Add("没有效果!");
 		combat.combatLog.AddLog(info);
         return;
@@ -933,14 +1061,13 @@ void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
     damage *= typeEffect;
 	if (damage < 1.0) damage = 1.0;
 	Text info;
-    info.Add("宝可梦");
-    info.Add(user->name, YELLOW);
+    info.Add(user->name, GREEN);
     info.Add("使用了技能");
     info.Add(skill->skillName, YELLOW);
     info.Add("对");
-    info.Add(target->name, YELLOW);
+    info.Add(target->name, GREEN);
     info.Add("造成了");
-    info.Add(to_string((int)damage), YELLOW);
+    info.Add(to_string((int)damage), RED);
     info.Add("点伤害!");
 	if (typeEffect == 2.0) info.Add(" 效果拔群!");
     else if (typeEffect == 1.0) info.Add(" 效果一般!");
@@ -1123,12 +1250,13 @@ void Game::StartCombat()
 				int choose_pokemon = 0;
 				do {
 					choose_pokemon = command.chooseFromList(combat.PokemonAvailableText());
-					combat.ChangePokemon(pokemonAlive[choose_pokemon - 1]);
+					
 					Text info;
 					info.Add("你的");
 					info.Add(combat.pokemonNow->name, GREEN);
+					combat.ChangePokemon(pokemonAlive[choose_pokemon - 1]); 
 					info.Add("被");
-					info.Add(myPokemon->name, GREEN);
+					info.Add(combat.pokemonNow->name, GREEN);
 					info.Add("替换了!");
 					combat.combatLog.AddLog(info);
 				} while (!choose_pokemon);
@@ -1387,4 +1515,3 @@ void Game::StartCombat()
 		
 	}
 }
-

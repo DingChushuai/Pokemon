@@ -269,6 +269,7 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 	experience *= 1.5f;
 	experience *= beatenPokemon->level;
 	int s = pokemonAvailable().size();
+	if (s == 0) s = 1;
 	experience /= s;
 	experience /= 7;
     return (int)experience;
@@ -276,7 +277,7 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 
 void Combat::EndCombat()
 {
-	for (int i = 0; i < beaten.size(); i++)
+ 	for (int i = 0; i < beaten.size(); i++)
 	{
 		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
 		combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));

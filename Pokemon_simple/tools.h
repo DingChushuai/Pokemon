@@ -52,7 +52,7 @@ const enum Color
 #define  WORLD_MAP_PATH "worldmap.txt"
 #define  GAMEBAR_PATH "gamebar.txt"
 
-#define PROPS_COUNT 56
+#define PROPS_COUNT 70
 #define NPCS_COUNT 35
 #define MAX_POKEMON_INGAME 6
 

@@ -204,17 +204,9 @@ void PokemonLib::Save()
         for (int j = 0; j < pokemonInLib[i]->skills.size(); j++)
         {
             ofs << pokemonInLib[i]->skills[j].skillID << "|" << pokemonInLib[i]->skills[j].skillName << "|" << pokemonInLib[i]->skills[j].skillDescription << "|" << pokemonInLib[i]->skills[j].type << "|"
-                << pokemonInLib[i]->skills[j].skillType << "|" << pokemonInLib[i]->skills[j].power << "|" << pokemonInLib[i]->skills[j].accuracy << "|" << pokemonInLib[i]->skills[j].PP << "|" << pokemonInLib[i]->skills[j].maxPP << "|"
-                << pokemonInLib[i]->skills[j].skillEffect << "|";
-            for (int k = 0; k < pokemonInLib[i]->skills[j].effectParam.size(); k++)
-            {
-                ofs << pokemonInLib[i]->skills[j].effectParam[k] << "\\";
-            }
-            ofs << "|" << pokemonInLib[i]->skills[j].mustHit << "|" << pokemonInLib[i]->skills[j].priority;
+                << pokemonInLib[i]->skills[j].skillType << "|" << pokemonInLib[i]->skills[j].power << "|" << pokemonInLib[i]->skills[j].accuracy << "|" << pokemonInLib[i]->skills[j].PP << "|" << pokemonInLib[i]->skills[j].maxPP;
+            ofs << endl;
         }
-
-        ofs << endl;
-
     }
     ofs.close();
 }
@@ -292,8 +284,18 @@ void PokemonLib::Load()
         a->basicValue.specialDefense = stoi(basic[5]);
         a->basicValue.speed = stoi(basic[6]);
 
-
-        skl=Split(data[17],'/')
+        skl = Split(data[17], '/');
+        for (int i = 0; i < skl.size(); i++)
+        {
+            vector<string> sk = Split(skl[i],'|');
+            Skill s(stoi(sk[0]));
+            s.type = (Type)stoi(sk[3]);
+            s.skillType = (Skill::SkillType)stoi(sk[4]);
+            s.power = stoi(sk[6]);
+            s.accuracy = stoi(sk[7]);
+            s.PP = stoi(sk[8]);
+            s.maxPP = stoi(sk[9]);
+        }
          
             count++;
         if (count > 6)     pokemonInLib.push_back(a);
