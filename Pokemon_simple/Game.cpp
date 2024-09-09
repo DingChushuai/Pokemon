@@ -566,7 +566,7 @@ void Game::ActOnMap()
 {
 	Text("这里是: " + currentMap->getMapName(), GREEN).Print();
 	Text("\n拥有金币： " + to_string(money), YELLOW).Print();
-	Text("\n操作提示: wasd移动,e背包,f宝可梦,ESC设置,m地图,'/'指令 ").Print();
+	Text("\n操作提示: wasd:上左下右移动,e:打开背包,f:查看宝可梦,ESC:进入设置,m:查看地图,'/':进入修改器(debug时用) ").Print();
 	cout << endl; 
 	int maxX = currentMap->getMapWidth();
     int maxY = currentMap->getMapHeight();
