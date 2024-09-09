@@ -372,7 +372,6 @@ void Game::Run()
 			case DEBUG:
 			{
 				Text("指令表:\n").Print();
-				Text("音乐(s): 更改现音乐\n").Print();
 				Text("金币(m):设置金币数量\n").Print();
 				Text("升级(l): 给所有宝可梦升一级\n").Print();
 				Text("退出(e): 退出debug\n").Print();
@@ -380,21 +379,7 @@ void Game::Run()
 				string input;
                 cin >> input;
                 if (input == "exit"  || input == "e") { gameSenceStack.pop_back(); break; }
-				else if (input == "s")
-				{
-                    Text("input music id:", RED).Print();
-                    int id;
-					do {
-						cin >> id;
-						if (cin.fail())
-						{
-							cin.clear();
-							cin.ignore(1024, '\n');
-						}
-					} while (id< 0 || id > 20);
-                    soundPlayer.PlayMusic((SoundPlayer::SoundID)id);
-					command.Pause();
-				}
+				
 				else if (input == "money" || input == "m") 
 				{
 					Text("input money to set:", RED).Print();
@@ -458,7 +443,7 @@ void Game::Init()
 	}
 	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
 	log.clearLog();
-	log.AddLog(Text("欢迎来到宝可梦世界！",GREEN));
+	log.AddLog(Text("欢迎来到宝可梦世界！\n这里有着大量神奇的精灵宝可梦等待着你去探索和发现，在探索的途中，你会遇到许多人物，他们对你或是指引或是挑战(温馨提示:1个npc可能不止一次对话哦）,请开始你的宝可梦之旅吧!",GREEN));
 }
 
 void Game::Load()
