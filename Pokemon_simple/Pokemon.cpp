@@ -1,6 +1,7 @@
 #include "Pokemon.h"
 #pragma once
 #include "Command.h"
+#include "SoundPlayer.h"
 #include<fstream>
 #include<algorithm>
 #include<random>
@@ -234,6 +235,9 @@ Text Pokemon::LevelUp()
             {
                 Skill s(stoi(fault[i]));
                 Text("你的宝可梦学习了新技能:" + s.skillName+ "!选择一个技能替换(ESC取消替换)\n").Print();
+                Text(s.skillName + "  PP:" + to_string(s.PP) + "/" + to_string(s.maxPP) + "  类型:" + GetTypeName(s.type) + "  威力:" + to_string(s.power) + "  命中:" + to_string(s.accuracy)).Print();  
+                Text("\n技能描述:"+s.skillDescription).Print();
+                Text("\n你的宝可梦当前技能列表:\n").Print();
                 vector<Text> infos;
                 for (int i = 0; i < skills.size(); i++)
                 {
@@ -260,7 +264,6 @@ Text Pokemon::LevelUp()
             }
         }
     }
-    
     text.Add("你的宝可梦");
     text.Add(name, GREEN);
     text.Add("升到");
@@ -286,6 +289,8 @@ Text Pokemon::Evolve()
     growthRate = sample->growthRate;
     captureRate = sample->captureRate;
     ethnicValue = sample->ethnicValue;
+    SoundPlayer s;
+    s.Play_Sound(SoundPlayer::SOUND_JINHUA);
     return Text(info,GREEN);
 }
 

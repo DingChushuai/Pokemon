@@ -1,5 +1,7 @@
 #include "Combat.h"
 #include <fstream>
+#include "SoundPlayer.h"
+SoundPlayer s;
 using namespace std;
 #pragma once
 
@@ -32,6 +34,7 @@ void Combat::InitWildCombat(int id, int level, PokemonLib* pokemonLib)
 {
 	myPokemons.clear();
     enemyPokemons.clear();
+	s.PlayMusic(SoundPlayer::MUSIC_YeSheng);
 	this->pokemonLib = pokemonLib;
 	for (int i = 0; i < pokemonLib->pokemonInGame.size(); i++) 
 	{
@@ -62,6 +65,7 @@ void Combat::InitTrainerCombat(int battleId, PokemonLib* pokemonLib)
 {
 	myPokemons.clear();
 	enemyPokemons.clear();
+    s.PlayMusic(SoundPlayer::MUSIC_DuiZhan);
 	this->pokemonLib = pokemonLib;
 	for (int i = 0; i < pokemonLib->pokemonInGame.size(); i++)
 	{
@@ -278,10 +282,12 @@ void Combat::EndCombat()
 {
 	combatLog.clearLog();
 	combatLog.AddLog(Text("战斗结束\n"));
+	if(lastCombatWin) combatLog.AddLog(Text("你赢了!\n"));
+    	else combatLog.AddLog(Text("你输了!\n"));
  	for (int i = 0; i < beaten.size(); i++)
 	{
 		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
-		for (auto pk : pokemonLib->pokemonInGame)
+		for (auto pk : myPokemons)
 		{
 			if(pk == battleResult.first)
 			combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
@@ -305,6 +311,6 @@ void Combat::EndCombat()
 	enemyNow = nullptr;
 	isTrainer = false;
 	escapeFailedTimes = 0;
+	s.StopMusic();
 	beaten.clear();
-	
 }

@@ -74,11 +74,13 @@ void Command::Pause()
 int Command::chooseFromList(vector<Text> list, int showMax)
 {
     ChooseList chooseList(list, showMax);
+    SoundPlayer s; 
     vector<char> possibleCommands = { UP, LEFT, DOWN, RIGHT, YES, ESC };
     char command;
     do {
         chooseList.ShowList();
         command = GetCommand(possibleCommands);
+        s.Play_Sound(SoundPlayer::SOUND_CHOOSE);
         switch (command)
         {
         case UP:

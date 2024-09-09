@@ -47,13 +47,13 @@ const enum Color
 #define  NPC_STATE_PATH "NPC_State.csv"
 #define  POKEMONLIB_STATE_PATH "PokemonLib_State.csv"
 #define  BACKPACK_STATE_PATH "Backpack_State.csv"
-#define  GAME_STATE_PATH "Game_State.csv"
+#define  GAME_STATE_PATH "Game_State.txt"
 
 #define  WORLD_MAP_PATH "worldmap.txt"
 #define  GAMEBAR_PATH "gamebar.txt"
 
 #define PROPS_COUNT 70
-#define NPCS_COUNT 35
+#define NPCS_COUNT 37
 #define MAX_POKEMON_INGAME 6
 
 #pragma once
