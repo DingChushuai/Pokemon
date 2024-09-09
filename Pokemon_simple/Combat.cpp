@@ -56,7 +56,6 @@ void Combat::InitWildCombat(int id, int level, PokemonLib* pokemonLib)
     text.Add(pokemonNow->name,YELLOW);
     text.Add("“—…œ’Û!");
     combatLog.AddLog(text);
-
 }
 
 void Combat::InitTrainerCombat(int battleId, PokemonLib* pokemonLib)
