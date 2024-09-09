@@ -44,7 +44,7 @@ bool SoundPlayer::PlayMusic(SoundID soundID)
 	根据soundID播放相应的背景音乐
 	背景音乐应当是循环播放的, 直到调用stopMusic函数, 或者使用playMusic播放其他音乐
 	*/
-	if (forbidMusic)
+	if (forbidMusic || soundID == MUSIC_NONE)
 	{
 		mciSendString(L"stop bgm", NULL, 0, 0);
 		mciSendString(L"close bgm", NULL, 0, 0);

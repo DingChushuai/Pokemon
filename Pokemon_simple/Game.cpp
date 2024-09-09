@@ -371,12 +371,12 @@ void Game::Run()
 			}
 			case DEBUG:
 			{
-				Text("command list:\n").Print();
-				Text("music: change music now\n").Print();
-                Text("money(m): set money number\n").Print();
-				Text("levelup(l): levelup all pokemon\n").Print();
-                Text("exit(e): exit debug\n").Print();
-				Text("Debug:\ninput cmd:", RED).Print();
+				Text("指令表:\n").Print();
+				Text("音乐: 更改现音乐\n").Print();
+				Text("金币(m):设置金币数量\n").Print();
+				Text("升级(l): 给所有宝可梦升一级\n").Print();
+				Text("退出(e): 退出debug\n").Print();
+				Text("Debug:\n输入指令:", RED).Print();
 				string input;
                 cin >> input;
                 if (input == "exit"  || input == "e") { gameSenceStack.pop_back(); break; }
@@ -768,6 +768,7 @@ void Game::ActOnMap()
 				for (auto poke : pokemonLib.pokemonInGame)
 				{
                     poke->attribute.hp = poke->attribute.maxHp;
+					poke->statu = Pokemon::PokemonStatu::None;
 					for (int i = 0; i < poke->skills.size(); i++)
 					{
                         poke->skills[i].PP = poke->skills[i].maxPP;
@@ -1525,6 +1526,7 @@ void Game::StartCombat()
 	if (pokemonLib.pokemonInGame.size() == 0 || combat.pokemonAvailable().size() == 0)
 	{
 		log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
+        return;
 	}
 	inCombat = true;
 	int pokemon_id;
@@ -1583,7 +1585,7 @@ void Game::StartCombat()
 			{
 				combat.lastCombatWin = true;
 				inCombat = false;
-				soundPlayer.Play_Sound(SoundPlayer::MUSIC_Lose);
+				soundPlayer.Play_Sound(SoundPlayer::MUSIC_Win);
 				return;
 			}
 			else
@@ -1667,9 +1669,6 @@ void Game::StartCombat()
 					}
 				}
 			}
-
-			//判断是否可以行动
-			//异常状态判定
 
 			if (choice == 1)
 			{
