@@ -362,15 +362,14 @@ void Game::Run()
 			case COMBAT:
 			{
 				//触发与野生宝可梦的战斗
-				if (pokemonLib.pokemonInGame.size() == 0)
+				if (pokemonLib.pokemonInGame.size() == 0 || combat.pokemonAvailable().size() == 0)
 				{
-                    log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
+					log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
 					gameSenceStack.pop_back();
-                    break;
+					break;
 				}
 				StartCombat();
 				combat.EndCombat();
-				combat.combatLog.ShowLog();	//显示战斗结算日志
 				//判断升级
 				for (auto& pokemon : pokemonLib.pokemonInGame)
 				{
@@ -379,7 +378,6 @@ void Game::Run()
 						log.AddLog(pokemon->LevelUp());
 					}
 				}
-				command.Pause();
 				gameSenceStack.pop_back();
 				break;
 			}
@@ -658,9 +656,9 @@ void Game::ActOnMap()
             switch (cmd)
             {
             case UP: if(newY>0) newY--; break;
-            case DOWN:if(newY<maxY-2) newY++; break;
+            case DOWN:if(newY<maxY-1) newY++; break;
             case LEFT:if(newX>0) newX--; break; 
-            case RIGHT:if(newX<maxX-2) newX++; break; 
+            case RIGHT:if(newX<maxX-1) newX++; break; 
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
@@ -1774,7 +1772,8 @@ void Game::StartCombat()
 				if (enamy_skill->mustHit) enamyHit = true;
 				if (myHit)
 				{
-					if (myFirst > 0) UseSkill(mySkill, combat.pokemonNow, combat.enemyNow);
+					if (myFirst > 0) 
+					UseSkill(mySkill, combat.pokemonNow, combat.enemyNow);
 					if (combat.enemyNow->attribute.hp > 0)
 					{
 						if (enamyHit)
@@ -1795,6 +1794,7 @@ void Game::StartCombat()
 							combat.combatLog.AddLog(info);
 						}
 					}
+					if(myFirst<= 0) UseSkill(mySkill, combat.pokemonNow, combat.enemyNow);
 				}
 				else
 				{

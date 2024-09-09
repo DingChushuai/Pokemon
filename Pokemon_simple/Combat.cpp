@@ -1,6 +1,7 @@
 #include "Combat.h"
 #include <fstream>
 #include "SoundPlayer.h"
+#include <conio.h>
 SoundPlayer s;
 using namespace std;
 #pragma once
@@ -331,4 +332,6 @@ void Combat::EndCombat()
 	escapeFailedTimes = 0;
 	s.StopMusic();	//Õ£÷π’Ω∂∑“Ù¿÷
 	beaten.clear();
+	combatLog.ShowLog();
+	_getch();
 }
