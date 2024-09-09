@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "tools.h"
 #include "Map.h"
+#include "SoundPlayer.h"
 using namespace std;
 
 const char UP = 'w';

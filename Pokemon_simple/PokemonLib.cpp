@@ -160,31 +160,32 @@ void PokemonLib::Save()
     ofs.open(POKEMONLIB_STATE_PATH, ios::out);
     for (int i = 0; i < pokemonInGame.size(); i++)
     {
-        ofs << pokemonInGame[i]->ID << "," << pokemonInGame[i]->name << "," << pokemonInGame[i]->type.first << "," << pokemonInGame[i]->type.second << "," << pokemonInGame[i]->level
-            << "," << pokemonInGame[i]->experience << "," << pokemonInGame[i]->experienceToNextLevel << "," << pokemonInGame[i]->statu << ","
-            << pokemonInGame[i]->attribute.hp << "/" << pokemonInGame[i]->attribute.maxHp << "/" << pokemonInGame[i]->attribute.attack << "/" << pokemonInGame[i]->attribute.defense
-            << "/" << pokemonInGame[i]->attribute.speed << "/" << pokemonInGame[i]->attribute.specialAttack << "/" << pokemonInGame[i]->attribute.specialDefense << "/" << pokemonInGame[i]->attribute.speed
-            << "," << pokemonInGame[i]->evolutionLevel << "," << pokemonInGame[i]->evolutionID << "," << pokemonInGame[i]->captureRate << "," << pokemonInGame[i]->growthRate << ","
-            << pokemonInGame[i]->basicExperience << ","
-            << pokemonInGame[i]->ethnicValue.hp << "/" << pokemonInGame[i]->ethnicValue.attack << "/" << pokemonInGame[i]->ethnicValue.defense << "/" << pokemonInGame[i]->ethnicValue.specialAttack << "/"
-            << pokemonInGame[i]->ethnicValue.specialDefense << "/" << pokemonInGame[i]->ethnicValue.speed << ","
-            << pokemonInGame[i]->individualValue.hp << "/" << pokemonInGame[i]->individualValue.attack << "/" << pokemonInGame[i]->individualValue.defense << "/" << pokemonInGame[i]->individualValue.specialAttack << "/"
-            << pokemonInGame[i]->individualValue.specialDefense << "/" << pokemonInGame[i]->individualValue.speed << ","
-            << pokemonInGame[i]->basicValue.hp << "/" << pokemonInGame[i]->basicValue.attack << "/" << pokemonInGame[i]->basicValue.defense << "/" << pokemonInGame[i]->basicValue.specialAttack << "/"
-            << pokemonInGame[i]->basicValue.specialDefense << "/" << pokemonInGame[i]->basicValue.speed << ",";
+    ofs << pokemonInGame[i]->ID << "," << pokemonInGame[i]->name << "," << pokemonInGame[i]->type.first << "," << pokemonInGame[i]->type.second << "," << pokemonInGame[i]->level
+        << "," << pokemonInGame[i]->experience << "," << pokemonInGame[i]->experienceToNextLevel << "," << pokemonInGame[i]->statu << ","
+        << pokemonInGame[i]->attribute.hp << "/" << pokemonInGame[i]->attribute.maxHp << "/" << pokemonInGame[i]->attribute.attack << "/" << pokemonInGame[i]->attribute.defense
+        << "/" << pokemonInGame[i]->attribute.speed << "/" << pokemonInGame[i]->attribute.specialAttack << "/" << pokemonInGame[i]->attribute.specialDefense << "/" << pokemonInGame[i]->attribute.speed
+        << "," << pokemonInGame[i]->evolutionLevel << "," << pokemonInGame[i]->evolutionID << "," << pokemonInGame[i]->captureRate << "," << pokemonInGame[i]->growthRate << ","
+        << pokemonInGame[i]->basicExperience << ","
+        << pokemonInGame[i]->ethnicValue.hp << "/" << pokemonInGame[i]->ethnicValue.attack << "/" << pokemonInGame[i]->ethnicValue.defense << "/" << pokemonInGame[i]->ethnicValue.specialAttack << "/"
+        << pokemonInGame[i]->ethnicValue.specialDefense << "/" << pokemonInGame[i]->ethnicValue.speed << ","
+        << pokemonInGame[i]->individualValue.hp << "/" << pokemonInGame[i]->individualValue.attack << "/" << pokemonInGame[i]->individualValue.defense << "/" << pokemonInGame[i]->individualValue.specialAttack << "/"
+        << pokemonInGame[i]->individualValue.specialDefense << "/" << pokemonInGame[i]->individualValue.speed << ","
+        << pokemonInGame[i]->basicValue.hp << "/" << pokemonInGame[i]->basicValue.attack << "/" << pokemonInGame[i]->basicValue.defense << "/" << pokemonInGame[i]->basicValue.specialAttack << "/"
+        << pokemonInGame[i]->basicValue.specialDefense << "/" << pokemonInGame[i]->basicValue.speed << ",";
             
-            for (int j = 0; j < pokemonInGame[i]->skills.size(); j++)
+        for (int j = 0; j < pokemonInGame[i]->skills.size(); j++)
+        {
+            ofs << pokemonInGame[i]->skills[j].skillID << "|" << pokemonInGame[i]->skills[j].skillName << "|" << pokemonInGame[i]->skills[j].skillDescription << "|" << pokemonInGame[i]->skills[j].type << "|"
+                << pokemonInGame[i]->skills[j].skillType << "|" << pokemonInGame[i]->skills[j].power << "|" << pokemonInGame[i]->skills[j].accuracy << "|" << pokemonInGame[i]->skills[j].PP << "|" << pokemonInGame[i]->skills[j].maxPP << "|"
+                << pokemonInGame[i]->skills[j].skillEffect << "|";
+            for (int k = 0; k < pokemonInGame[i]->skills[j].effectParam.size(); k++)
             {
-                ofs << pokemonInGame[i]->skills[j].skillID << "|" << pokemonInGame[i]->skills[j].skillName << "|" << pokemonInGame[i]->skills[j].skillDescription << "|" << pokemonInGame[i]->skills[j].type << "|"
-                    << pokemonInGame[i]->skills[j].skillType << "|" << pokemonInGame[i]->skills[j].power << "|" << pokemonInGame[i]->skills[j].accuracy << "|" << pokemonInGame[i]->skills[j].PP << "|" << pokemonInGame[i]->skills[j].maxPP << "|"
-                    << pokemonInGame[i]->skills[j].skillEffect << "|";
-                       for (int k = 0; k < pokemonInGame[i]->skills[j].effectParam.size(); k++)
-                       {
-                           ofs<<pokemonInGame[i]->skills[j].effectParam[k]<<"\\";
-                       }        
-                       ofs << "|" << pokemonInGame[i]->skills[j].mustHit << "|" << pokemonInGame[i]->skills[j].priority;
-            }
-            ofs << endl;
+                ofs<<pokemonInGame[i]->skills[j].effectParam[k]<<"\\";
+            }        
+            ofs << "|" << pokemonInGame[i]->skills[j].mustHit << "|" << pokemonInGame[i]->skills[j].priority;
+            ofs << '/';
+        }
+        ofs << endl;
     }
     for (int i = 0; i < pokemonInLib.size(); i++)
     {
@@ -205,14 +206,17 @@ void PokemonLib::Save()
         {
             ofs << pokemonInLib[i]->skills[j].skillID << "|" << pokemonInLib[i]->skills[j].skillName << "|" << pokemonInLib[i]->skills[j].skillDescription << "|" << pokemonInLib[i]->skills[j].type << "|"
                 << pokemonInLib[i]->skills[j].skillType << "|" << pokemonInLib[i]->skills[j].power << "|" << pokemonInLib[i]->skills[j].accuracy << "|" << pokemonInLib[i]->skills[j].PP << "|" << pokemonInLib[i]->skills[j].maxPP;
-            ofs << endl;
+            ofs << '/';
         }
+        ofs << endl;
     }
     ofs.close();
 }
 
 void PokemonLib::Load()
 {
+    pokemonInGame.clear(); 
+    pokemonInLib.clear();  
     int count = 0;
     int k;
     ifstream ifs;
@@ -262,10 +266,9 @@ void PokemonLib::Load()
         a->ethnicValue.hp = stoi(ethnic[0]);
         a->ethnicValue.attack = stoi(ethnic[1]);
         a->ethnicValue.defense = stoi(ethnic[2]);
-        a->ethnicValue.defense = stoi(ethnic[3]);
-        a->ethnicValue.specialAttack = stoi(ethnic[4]);
-        a->ethnicValue.specialDefense = stoi(ethnic[5]);
-        a->ethnicValue.speed = stoi(attri[6]);
+        a->ethnicValue.specialAttack = stoi(ethnic[3]);
+        a->ethnicValue.specialDefense = stoi(ethnic[4]);
+        a->ethnicValue.speed = stoi(attri[5]);
         
         individual = Split(data[15], '/');
         a->individualValue.hp = stoi(individual[0]);
@@ -286,6 +289,7 @@ void PokemonLib::Load()
         skl = Split(data[17], '/');
         for (int i = 0; i < skl.size(); i++)
         {
+            if (skl[i] == "")continue;
             vector<string> sk = Split(skl[i],'|');
             Skill s(stoi(sk[0]));
             s.type = (Type)stoi(sk[3]);
@@ -294,10 +298,10 @@ void PokemonLib::Load()
             s.accuracy = stoi(sk[7]);
             s.PP = stoi(sk[8]);
             s.maxPP = stoi(sk[9]);
+            a->skills.push_back(s);
         }
-         
-            count++;
-        if (count > 6)     pokemonInLib.push_back(a);
+        count++;
+        if (count > 6) pokemonInLib.push_back(a);
         else  pokemonInGame.push_back(a);
     }
 }
