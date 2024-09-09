@@ -222,6 +222,7 @@ void PokemonLib::Load()
     vector<string>attri, ethnic, individual, basic, skl;
     while (getline(ifs, rea))
     {
+        if (rea == "")return;
         data = Split(rea, ',');
         Pokemon* a = new Pokemon;
         a->ID = stoi(data[0]);
@@ -270,19 +271,17 @@ void PokemonLib::Load()
         a->individualValue.hp = stoi(individual[0]);
         a->individualValue.attack = stoi(individual[1]);
         a->individualValue.defense = stoi(individual[2]);
-        a->individualValue.defense = stoi(individual[3]);
-        a->individualValue.specialAttack = stoi(individual[4]);
-        a->individualValue.specialDefense = stoi(individual[5]);
-        a->individualValue.speed = stoi(individual[6]);
+        a->individualValue.specialAttack = stoi(individual[3]);
+        a->individualValue.specialDefense = stoi(individual[4]);
+        a->individualValue.speed = stoi(individual[5]);
 
         basic = Split(data[16], '/');
         a->basicValue.hp = stoi(basic[0]);
         a->basicValue.attack = stoi(basic[1]);
         a->basicValue.defense = stoi(basic[2]);
-        a->basicValue.defense = stoi(basic[3]);
-        a->basicValue.specialAttack = stoi(basic[4]);
-        a->basicValue.specialDefense = stoi(basic[5]);
-        a->basicValue.speed = stoi(basic[6]);
+        a->basicValue.specialAttack = stoi(basic[3]);
+        a->basicValue.specialDefense = stoi(basic[4]);
+        a->basicValue.speed = stoi(basic[5]);
 
         skl = Split(data[17], '/');
         for (int i = 0; i < skl.size(); i++)

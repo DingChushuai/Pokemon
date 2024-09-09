@@ -336,6 +336,7 @@ void Game::Run()
 					info.Print();
 					command.Pause();
 					ClearScreen();
+					pokemonNames = pokemonLib.GetPokemonSellPrice();
 					choice = command.chooseFromList(pokemonNames, 10);
                 }
                 gameSenceStack.pop_back();
@@ -489,22 +490,22 @@ void Game::Load()
 		Init();
 		return;
 	}
-
+	npcs.clear();
     ifstream npc_state;
     npc_state.open(NPC_STATE_PATH);
 	if (npc_state.is_open())
 	{
-		string line; 
-		for (auto npc : npcs)
+		for (int i = 0; i < NPCS_COUNT; i++)
 		{
+			string line;
 			getline(npc_state, line);
 			vector<string> data = Split(line, ',');
 			NPC* npc = new NPC(stoi(data[0]));
 			npc->state = stoi(data[1]);
 			npc->mapID = stoi(data[2]);
-            npc->x = stoi(data[3]);
-            npc->y = stoi(data[4]);
-            npcs.push_back(npc);
+			npc->x = stoi(data[3]);
+			npc->y = stoi(data[4]);
+			npcs.push_back(npc);
 		}
 	}
     backpack.Load(); 
@@ -770,18 +771,6 @@ void Game::ActOnMap()
 
 bool Game::UseProp(Prop* prop)
 {
-	/*
-		CHANGE_SKILL_ATTRIBUTE,  //改变技能属性(改变条件,条件参数,技能属性,改变值,技能属性,改变值...)
-		* 改变条件,条件参数:
-		* 0.无条件(参数无效)
-		* 1.技能类型(SkillType)
-		* 2.技能属性(Type)
-		技能属性id:
-		1.power;              //威力
-		2.accuracy;           //命中
-		3.PP;                 //pp
-		4.maxPP;              //最大pp
-	*/
 	switch (prop->GetType())
 	{
         case 0:
@@ -920,6 +909,31 @@ bool Game::UseProp(Prop* prop)
 			} while (skillIndex == 0);
 			Skill* skill = &poke->skills[skillIndex - 1];
 			vector<int> param = prop->GetEffectPara();
+			if (param[0]==1)
+			{
+                if (param[1] != skill->skillType) return false;
+			}
+			if (param[0] == 2)
+			{
+                if (param[1] != skill->type) return false;
+			}
+			for (int i = 2; i < param.size(); i += 2)
+			{
+				switch (param[i])
+				{
+					case 1:skill->power += param[i + 1]; break;
+                    case 2:skill->accuracy += param[i + 1]; break;
+                    case 3:skill->PP += param[i + 1]; break;
+                    case 4:skill->maxPP += param[i + 1]; break;
+				}
+			}
+            Text info;
+            info.Add("技能");
+            info.Add(skill->skillName, YELLOW);
+            info.Add("的属性提升了");
+			if (inCombat) combat.combatLog.AddLog(info);
+            else log.AddLog(info);
+            return true;
 		}
         case 4:
 		{
@@ -1060,22 +1074,294 @@ void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
     damage *= typeEffect;
 	if (damage < 1.0) damage = 1.0;
 	Text info;
-    info.Add(user->name, GREEN);
-    info.Add("使用了技能");
-    info.Add(skill->skillName, YELLOW);
-    info.Add("对");
-    info.Add(target->name, GREEN);
-    info.Add("造成了");
-    info.Add(to_string((int)damage), RED);
-    info.Add("点伤害!");
-	if (typeEffect == 2.0) info.Add(" 效果拔群!");
-    else if (typeEffect == 1.0) info.Add(" 效果一般!");
-    else if (typeEffect == 0.5) info.Add(" 效果不好!");
-    else if (typeEffect == 0.25) info.Add(" 效果极差!");
-    combat.combatLog.AddLog(info);
-    target->attribute.hp -= (int)damage;
-    if (target->attribute.hp <= 0) target->attribute.hp = 0;
-
+	switch (skill->skillEffect)
+	{
+	case 0:
+		info.Add(user->name, GREEN);
+		info.Add("使用了技能");
+		info.Add(skill->skillName, YELLOW);
+		info.Add("对");
+		info.Add(target->name, GREEN);
+		info.Add("造成了");
+		info.Add(to_string((int)damage), RED);
+		info.Add("点伤害!");
+		if (typeEffect == 2.0) info.Add(" 效果拔群!");
+		else if (typeEffect == 1.0) info.Add(" 效果一般!");
+		else if (typeEffect == 0.5) info.Add(" 效果不好!");
+		else if (typeEffect == 0.25) info.Add(" 效果极差!");
+		combat.combatLog.AddLog(info);
+		target->attribute.hp -= (int)damage;
+		if (target->attribute.hp <= 0) target->attribute.hp = 0;
+        return;
+	case 1:
+	{
+		int min = skill->effectParam[0], max = skill->effectParam[1];
+		int random = rand() % (max - min + 1) + min;
+		info.Add(user->name, GREEN);
+		info.Add("使用了技能");
+		info.Add(skill->skillName, YELLOW);
+		info.Add("对");
+		info.Add(target->name, GREEN);
+		info.Add("造成了");
+		info.Add(to_string(random), RED);
+		info.Add("次攻击,共造成了");
+		info.Add(to_string(random * damage), RED);
+		info.Add("点伤害!");
+		combat.combatLog.AddLog(info);
+		target->attribute.hp -= (int)(random * damage);
+		if (target->attribute.hp <= 0) target->attribute.hp = 0;
+		return;
+	}
+    case 2:
+	{
+		info.Add(user->name, GREEN);
+		info.Add("使用了技能");
+		info.Add(skill->skillName, YELLOW);
+		info.Add("对");
+		info.Add(target->name, GREEN);
+		info.Add("造成了");
+		info.Add(to_string((int)damage), RED);
+		info.Add("点伤害!");
+		if (typeEffect == 2.0) info.Add(" 效果拔群!");
+		else if (typeEffect == 1.0) info.Add(" 效果一般!");
+		else if (typeEffect == 0.5) info.Add(" 效果不好!");
+		else if (typeEffect == 0.25) info.Add(" 效果极差!");
+		for (int i = 0; i < skill->effectParam.size(); i+=2)
+		{
+			int statuID = skill->effectParam[i];
+			int chance = skill->effectParam[i + 1];
+			if (rand() % 100 < chance)
+			{
+				target->statu = (Pokemon::PokemonStatu)statuID;
+				info.Add("并且");
+				info.Add(target->name, GREEN);
+				info.Add("受到了");
+				info.Add(target->GetStatuName(target->statu), RED);
+				info.Add("状态!");
+				break;
+			}
+		}
+        combat.combatLog.AddLog(info);
+        target->attribute.hp -= (int)damage;
+        if (target->attribute.hp <= 0) target->attribute.hp = 0;
+        return;
+	}
+    case 3:
+	{
+		info.Add(user->name, GREEN);
+		info.Add("使用了技能");
+		info.Add(skill->skillName, YELLOW);
+		info.Add("对");
+		info.Add(target->name, GREEN);
+		info.Add("造成了");
+		info.Add(to_string((int)damage), RED);
+		info.Add("点伤害!");
+		if (typeEffect == 2.0) info.Add(" 效果拔群!");
+		else if (typeEffect == 1.0) info.Add(" 效果一般!");
+		else if (typeEffect == 0.5) info.Add(" 效果不好!");
+		else if (typeEffect == 0.25) info.Add(" 效果极差!");
+		for (int i = 0; i < skill->effectParam.size(); i += 3)
+		{
+			int buffID = skill->effectParam[i];
+            int changeWay = skill->effectParam[i + 1];
+			int value = skill->effectParam[i + 2];
+			if (changeWay == 1)
+			{
+				switch (buffID)
+				{
+                    case 1: user->buff.attack += value; break;
+                    case 2: user->buff.defense += value; break;
+                    case 3: user->buff.speed += value; break;
+                    case 4: user->buff.specialAttack += value; break;
+                    case 5: user->buff.specialDefense += value; break;
+                    case 6: user->buff.accuracy += value; break;
+                    case 7: user->buff.evasion += value; break;
+				}
+			}
+			else if (changeWay == 2)
+			{
+				switch (buffID)
+				{
+                    case 1: user->buff.attack = value; break;
+                    case 2: user->buff.defense = value; break;
+                    case 3: user->buff.speed = value; break;
+                    case 4: user->buff.specialAttack = value; break;
+                    case 5: user->buff.specialDefense = value; break;
+                    case 6: user->buff.accuracy = value; break;
+                    case 7: user->buff.evasion = value; break;
+				}
+			}
+		}
+		info.Add(user->name, GREEN);
+        info.Add("的战斗属性发生了改变!");
+        combat.combatLog.AddLog(info);
+        target->attribute.hp -= (int)damage;
+        if (target->attribute.hp <= 0) target->attribute.hp = 0;
+        return;
+	}
+    case 4:
+	{
+		info.Add(user->name, GREEN);
+		info.Add("使用了技能");
+		info.Add(skill->skillName, YELLOW);
+		info.Add("对");
+		info.Add(target->name, GREEN);
+		info.Add("造成了");
+		info.Add(to_string((int)damage), RED);
+		info.Add("点伤害!");
+		if (typeEffect == 2.0) info.Add(" 效果拔群!");
+		else if (typeEffect == 1.0) info.Add(" 效果一般!");
+		else if (typeEffect == 0.5) info.Add(" 效果不好!");
+		else if (typeEffect == 0.25) info.Add(" 效果极差!");
+		for (int i = 0; i < skill->effectParam.size(); i += 3)
+		{
+			int buffID = skill->effectParam[i];
+			int changeWay = skill->effectParam[i + 1];
+			int value = skill->effectParam[i + 2];
+			if (changeWay == 1)
+			{
+				switch (buffID)
+				{
+				case 1: target->buff.attack += value; break;
+				case 2: target->buff.defense += value; break;
+				case 3: target->buff.speed += value; break;
+				case 4: target->buff.specialAttack += value; break;
+				case 5: target->buff.specialDefense += value; break;
+				case 6: target->buff.accuracy += value; break;
+				case 7: target->buff.evasion += value; break;
+				}
+			}
+			else if (changeWay == 2)
+			{
+				switch (buffID)
+				{
+				case 1: target->buff.attack = value; break;
+				case 2: target->buff.defense = value; break;
+				case 3: target->buff.speed = value; break;
+				case 4: target->buff.specialAttack = value; break;
+				case 5: target->buff.specialDefense = value; break;
+				case 6: target->buff.accuracy = value; break;
+				case 7: target->buff.evasion = value; break;
+				}
+			}
+		}
+		info.Add(target->name, GREEN);
+		info.Add("的战斗属性发生了改变!");
+		combat.combatLog.AddLog(info);
+		target->attribute.hp -= (int)damage;
+		if (target->attribute.hp <= 0) target->attribute.hp = 0;
+		return;
+	}
+    case 5:
+	{
+		for (int i = 0; i < skill->effectParam.size(); i += 3)
+		{
+			int buffID = skill->effectParam[i];
+			int changeWay = skill->effectParam[i + 1];
+			int value = skill->effectParam[i + 2];
+			if (changeWay == 1)
+			{
+				switch (buffID)
+				{
+				case 1: user->buff.attack += value; break;
+				case 2: user->buff.defense += value; break;
+				case 3: user->buff.speed += value; break;
+				case 4: user->buff.specialAttack += value; break;
+				case 5: user->buff.specialDefense += value; break;
+				case 6: user->buff.accuracy += value; break;
+				case 7: user->buff.evasion += value; break;
+				}
+			}
+			else if (changeWay == 2)
+			{
+				switch (buffID)
+				{
+				case 1: user->buff.attack = value; break;
+				case 2: user->buff.defense = value; break;
+				case 3: user->buff.speed = value; break;
+				case 4: user->buff.specialAttack = value; break;
+				case 5: user->buff.specialDefense = value; break;
+				case 6: user->buff.accuracy = value; break;
+				case 7: user->buff.evasion = value; break;
+				}
+			}
+		}
+		info.Add(user->name, GREEN);
+		info.Add("使用技能");
+        info.Add(skill->skillName, GREEN);
+        info.Add("!使");
+		info.Add(user->name, GREEN);
+		info.Add("的战斗属性发生了改变!");
+		combat.combatLog.AddLog(info);
+        return;
+	}
+	case 6:
+	{
+		for (int i = 0; i < skill->effectParam.size(); i += 3)
+		{
+			int buffID = skill->effectParam[i];
+			int changeWay = skill->effectParam[i + 1];
+			int value = skill->effectParam[i + 2];
+			if (changeWay == 1)
+			{
+				switch (buffID)
+				{
+				case 1: target->buff.attack += value; break;
+				case 2: target->buff.defense += value; break;
+				case 3: target->buff.speed += value; break;
+				case 4: target->buff.specialAttack += value; break;
+				case 5: target->buff.specialDefense += value; break;
+				case 6: target->buff.accuracy += value; break;
+				case 7: target->buff.evasion += value; break;
+				}
+			}
+			else if (changeWay == 2)
+			{
+				switch (buffID)
+				{
+				case 1: target->buff.attack = value; break;
+				case 2: target->buff.defense = value; break;
+				case 3: target->buff.speed = value; break;
+				case 4: target->buff.specialAttack = value; break;
+				case 5: target->buff.specialDefense = value; break;
+				case 6: target->buff.accuracy = value; break;
+				case 7: target->buff.evasion = value; break;
+				}
+			}
+		}
+		info.Add(user->name, GREEN);
+		info.Add("使用技能");
+		info.Add(skill->skillName, GREEN);
+		info.Add("!使");
+		info.Add(target->name, GREEN);
+		info.Add("的战斗属性发生了改变!");
+		combat.combatLog.AddLog(info);
+        return;
+	}
+    case 7:
+	{
+		for (int i = 0; i < skill->effectParam.size(); i += 2)
+		{
+			int statuID = skill->effectParam[i];
+			int chance = skill->effectParam[i + 1];
+			if (rand() % 100 < chance)
+			{
+				info.Add(user->name, GREEN);
+                info.Add("使用技能");
+                info.Add(skill->skillName, GREEN);
+                info.Add("!使");
+				target->statu = (Pokemon::PokemonStatu)statuID;
+				info.Add(target->name, GREEN);
+				info.Add("受到了");
+				info.Add(target->GetStatuName(target->statu), RED);
+				info.Add("状态!");
+				break;
+			}
+		}
+		combat.combatLog.AddLog(info);
+		return;
+	}
+	}
 }
 
 void Game::ChangeMusic()
