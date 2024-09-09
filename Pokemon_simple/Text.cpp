@@ -57,7 +57,7 @@ void Text::Clear()
 
 void Text::Print()
 {
-	//TODO: 遍历texts，打印出对应的color和str
+	//遍历texts，打印出对应的color和str
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	for (int i = 0; i < texts.size(); i++)
 	{

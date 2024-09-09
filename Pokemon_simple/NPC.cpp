@@ -4,6 +4,8 @@
 #include"tools.h"
 NPC::NPC(int id)
 {
+	//从文件中读取信息
+	//文件格式详见README.md
 	ifstream ifs;
 	ifs.open(NPC_INFO_PATH, ios::in);
 	string rea;
@@ -26,6 +28,7 @@ NPC::NPC(int id)
 	y = stoi(data[4]);
 	state = 0;
 	vector<string> stateList = Split(data[5], '/');
+	//处理npc的状态
 	for (int i = 0; i < stateList.size(); i++)
 	{
 		vector<string> stateInfo = Split(stateList[i], '|');
@@ -39,7 +42,7 @@ NPC::NPC(int id)
 
 NPC::NPC(string info)
 {
-	
+	//从存档中读取信息
 	vector<string>data;
 	data = Split(info, ',');
 	int id0;

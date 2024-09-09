@@ -42,6 +42,7 @@ Pokemon::Pokemon(int ID, int level)
     ethnicValue.specialDefense = stoi(ethnic[4]); 
     ethnicValue.speed = stoi(ethnic[5]); 
     fault = Split(data[8], '/');
+    //随机选择4个可用技能
     for (int i = 0; i < fault.size(); i+=2)
     {
         l = stoi(fault[i + 1]);
@@ -81,6 +82,7 @@ Pokemon::Pokemon(int ID, int level)
 
 Pokemon::Pokemon(const Pokemon& other)
 {
+    //拷贝构造函数,用于在战斗中创建副本
     ID = other.ID;
     name = other.name;
     type = other.type;
@@ -107,6 +109,7 @@ Pokemon::~Pokemon()
 
 vector<Text> Pokemon::GetDetail()
 {
+    //返回宝可梦的详细信息,没有采用彩色文本
     vector<Text> info;
     info.push_back(Text("宝可梦名称: " + name +"\n"));
     info.push_back(Text("宝可梦等级: " + to_string(level) + "  "));
@@ -190,9 +193,11 @@ bool Pokemon::CanLevelUp()
 
 Text Pokemon::LevelUp()
 {
+    //升级,返回升级信息和可能的进化信息或学习新技能信息
     Text text; 
     while (CanLevelUp())
     {
+        //升级后重新计算下级经验和属性值,并恢复宝可梦状态
         level++;
         if (level == evolutionLevel) text = Evolve();
         experience -= experienceToNextLevel;
@@ -215,6 +220,7 @@ Text Pokemon::LevelUp()
         if (temp == ID) 
             break;
     }
+    //判断是否可以学习新技能
     fault = Split(data[8], '/');
     for (int i = 0; i < fault.size(); i += 2)
     {
@@ -233,6 +239,7 @@ Text Pokemon::LevelUp()
             }
             else
             {
+                //如果技能数量已经达到上限,则替换一个技能
                 Skill s(stoi(fault[i]));
                 Text("你的宝可梦学习了新技能:" + s.skillName+ "!选择一个技能替换(ESC取消替换)\n").Print();
                 Text(s.skillName + "  PP:" + to_string(s.PP) + "/" + to_string(s.maxPP) + "  类型:" + GetTypeName(s.type) + "  威力:" + to_string(s.power) + "  命中:" + to_string(s.accuracy)).Print();  
@@ -264,6 +271,7 @@ Text Pokemon::LevelUp()
             }
         }
     }
+    //升级信息
     text.Add("你的宝可梦");
     text.Add(name, GREEN);
     text.Add("升到");
@@ -274,6 +282,7 @@ Text Pokemon::LevelUp()
 
 Text Pokemon::Evolve()
 {
+    //进化
     Pokemon* sample =new Pokemon(evolutionID,level);
     string info = "你的宝可梦";
     info += name;
@@ -290,17 +299,18 @@ Text Pokemon::Evolve()
     captureRate = sample->captureRate;
     ethnicValue = sample->ethnicValue;
     SoundPlayer s;
-    s.Play_Sound(SoundPlayer::SOUND_JINHUA);
+    s.Play_Sound(SoundPlayer::SOUND_JINHUA);    //播放进化音效
     return Text(info,GREEN);
 }
 
 int Pokemon::GetBasicExperience()
 {
-    return basicExperience; 
+    return basicExperience;     //返回基础经验值,用于计算真正的经验值
 }
 
 Text Pokemon::GetExperience(int experience)
 {
+    //获得经验值,不判断是否升级
     this->experience += experience;
     Text text;
     text.Add("你的宝可梦");
@@ -318,6 +328,7 @@ int Pokemon::GetCaptureRate()
 
 void Pokemon::AddBasicValue(Value add)
 {
+    //增加基础点数,更新能力值
     basicValue.hp+=add.hp;
     basicValue.attack+=add.attack; 
     basicValue.defense+=add.defense;
@@ -329,6 +340,8 @@ void Pokemon::AddBasicValue(Value add)
 
 float Pokemon::GetBuffValue(int buffLevel)
 {
+    //根据buff等级返回buff值
+    //buff相关内容查看Pokemon.h
     float A = 1.0f;
     switch (buffLevel)
     {
@@ -351,6 +364,7 @@ float Pokemon::GetBuffValue(int buffLevel)
 
 void Pokemon::UpdateAttribute()
 {
+    //更新能力值
     ATTRIBUTE newAttribute = CalculateAttribute();
     attribute.maxHp = newAttribute.hp;
     attribute.attack = newAttribute.attack; 
@@ -362,6 +376,7 @@ void Pokemon::UpdateAttribute()
 
 Pokemon::Value Pokemon::GetRandomIndividualValue()
 {
+    //返回随机个体值,用于初始化,每个值在0-15之间
     Value individualValue;
     individualValue.hp = rand() % 16; 
     individualValue.attack = rand() % 16; 
@@ -374,6 +389,8 @@ Pokemon::Value Pokemon::GetRandomIndividualValue()
 
 int Pokemon::ExperienceOfLevel(int level)
 {
+    //根据升级速度计算某等级的经验值
+    //参考宝可梦维基
     switch (growthRate)
     {
     case 0:
@@ -398,11 +415,13 @@ int Pokemon::ExperienceOfLevel(int level)
 
 int Pokemon::CalculateExperienceToNextLevel()
 {
+    //计算升级所需经验值
     return ExperienceOfLevel(level + 1) - ExperienceOfLevel(level);
 }
 
 Pokemon::ATTRIBUTE Pokemon::CalculateAttribute()
 {
+    //计算能力值,参考宝可梦维基
     ATTRIBUTE newAttribute;
     newAttribute.hp = (int)(ethnicValue.hp + individualValue.hp + sqrt(basicValue.hp)/8)*level/50 + 10 + level;
     newAttribute.attack = (int)(ethnicValue.attack + individualValue.attack + sqrt(basicValue.attack) / 8) * level / 50 + 5; 

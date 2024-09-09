@@ -6,7 +6,9 @@ using namespace std;
 
 Map::Map(int mapID)
 {
-	//在maps文件夹中寻找mapID对应的地图文件,并加载
+	//寻找mapID对应的地图文件,并加载
+    //读取地图文件，解析地图信息
+	//地图信息详见README.md
     this->mapID = mapID;
 	ifstream file("map_" + to_string(mapID) + ".txt");
 	if (!file.is_open())
@@ -44,11 +46,7 @@ Map::Map(int mapID)
 			exits.push_back(exit);
 		}
 	}
-	
-
 	getline(file, line);
-
-	
 	vector<string> pokemonInfos = Split(line, ',');
 	for (const auto& pokemonInfo : pokemonInfos)
 	{
@@ -60,8 +58,6 @@ Map::Map(int mapID)
 			wildPokemon.push_back(wildPokemonInfo);
 		}
 	}
-
-
 	for (int i = 0; i < mapHeight; i++) 
 	{
 		getline(file, line); 
@@ -120,6 +116,7 @@ Map::BlockType Map::getBlockType(int x, int y)
 
 vector<int> Map::getExit(int x, int y)
 {
+    //寻找(x,y)对应的出口，返回出口的地图ID和坐标
 	for (const auto& exit : exits)
 	{ 
 		if (exit[0] == x && exit[1] == y)

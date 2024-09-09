@@ -13,7 +13,7 @@ public:
 	Pokemon* CheckPokemon(int pokemonId);
 	Pokemon* GetPokemonInGame(int index);	//start from 1
     Pokemon* GetPokemonInLib(int index);	//start from 1
-	Text SwitchPokemon(int indexInLib, int indexInGame);
+	Text SwitchPokemon(int indexInLib, int indexInGame);	//交换上阵宝可梦和背包宝可梦
 	Text AddPokemonToGame(int indexInLib);
 	vector<Text> GetPokemonInGameInfo();
 	vector<Text> GetPokemonInLibInfo();

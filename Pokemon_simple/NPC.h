@@ -9,8 +9,8 @@ using namespace std;
 struct State
 {
     int ID;
-    string stateTalk;
-    string stateNotFinishTalk;
+    string stateTalk;   //状态完成后的对话
+    string stateNotFinishTalk;  //状态未完成时的对话
     vector<int> stateAction;    //第一位为动作类型,后面为动作参数
     int stateNext;
 };

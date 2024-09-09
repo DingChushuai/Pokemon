@@ -2,6 +2,7 @@
 
 Shop::Shop()
 {
+    //初始化商店,一次性读取所有可以购买的道具
     for (int i = 1; i <= PROPS_COUNT; i++)
     {
         Prop* prop = new Prop(i);
@@ -14,6 +15,7 @@ Shop::Shop()
 
 vector<Text> Shop::GetPropsInShop()
 {
+    //获取商店中所有可以购买的道具的信息
     vector<Text> props;
     vector<Prop*> shopProps = shop.GetProps();
     for (int i = 0; i < shopProps.size(); i++)

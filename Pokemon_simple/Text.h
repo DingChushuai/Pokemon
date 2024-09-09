@@ -23,7 +23,7 @@ public:
     void Print();
 
 private:
-    vector<pair<string, pair<Color, Color>>> texts;
+    vector<pair<string, pair<Color, Color>>> texts; //×Ö·û´® + ×ÖÌåÑÕÉ« + ±³¾°ÑÕÉ«
 };
 
 #endif // !TEXT_H

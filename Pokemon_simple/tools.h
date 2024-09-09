@@ -64,6 +64,7 @@ const enum Color
 #include <cstdlib>
 using namespace std;
 
+//按照特定字符切分字符串
 inline vector<string> Split(const string& s, char delimiter)
 {
     vector<string>out;
@@ -77,11 +78,7 @@ inline vector<string> Split(const string& s, char delimiter)
     return out;
 }
 
-inline int Stoi(const string& s)
-{
-    return atoi(s.c_str());
-}
-
+//获取当前光标位置
 inline pair<int, int> GetPos() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO  pos;
@@ -92,16 +89,21 @@ inline pair<int, int> GetPos() {
         return make_pair(-1, -1);
     }
 }
+
+//设置光标位置
 inline void GotoXY(int x, int y) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD pos = { (SHORT)x, (SHORT)y };
     SetConsoleCursorPosition(hConsole, pos);
 }
+
+//清屏
 inline void ClearScreen()
 {
     system("cls");
 }
 
+//隐藏光标
 inline void HideCursor() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -110,6 +112,7 @@ inline void HideCursor() {
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 
+//显示光标
 inline  void ShowCursor() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;

@@ -13,6 +13,7 @@ PokemonLib::~PokemonLib()
 
 Text PokemonLib::AddPokemon(Pokemon* p)
 {
+    //添加宝可梦到宝可梦库,优先放入宝可梦队伍中,如果队伍已满则放入宝可梦库
     if (p != nullptr)
     {
         if (pokemonInGame.size() < MAX_POKEMON_INGAME)
@@ -105,6 +106,7 @@ Text PokemonLib::AddPokemonToGame(int indexInLib)
 
 vector<Text> PokemonLib::GetPokemonInGameInfo()
 {
+    //获取宝可梦队伍信息
     vector<Text> infos;
     for (auto& po : pokemonInGame)
     {
@@ -122,6 +124,7 @@ vector<Text> PokemonLib::GetPokemonInGameInfo()
 
 vector<Text> PokemonLib::GetPokemonInLibInfo()
 {
+    //获取宝可梦库信息
     vector<Text> infos;
     for (auto& po : pokemonInLib)
     {
@@ -140,7 +143,7 @@ vector<Text> PokemonLib::GetPokemonInLibInfo()
 vector<Text> PokemonLib::GetPokemonSellPrice()
 {
     vector<Text> info;
-
+    //获取宝可梦售卖价格
     for (auto po : pokemonInLib)
     {
         Text sellInfo;
@@ -156,6 +159,7 @@ vector<Text> PokemonLib::GetPokemonSellPrice()
 
 void PokemonLib::Save()
 {
+    //保存宝可梦信息
     ofstream ofs;
     ofs.open(POKEMONLIB_STATE_PATH, ios::out);
     for (int i = 0; i < pokemonInGame.size(); i++)
@@ -172,7 +176,7 @@ void PokemonLib::Save()
         << pokemonInGame[i]->individualValue.specialDefense << "/" << pokemonInGame[i]->individualValue.speed << ","
         << pokemonInGame[i]->basicValue.hp << "/" << pokemonInGame[i]->basicValue.attack << "/" << pokemonInGame[i]->basicValue.defense << "/" << pokemonInGame[i]->basicValue.specialAttack << "/"
         << pokemonInGame[i]->basicValue.specialDefense << "/" << pokemonInGame[i]->basicValue.speed << ",";
-            
+        //保存技能
         for (int j = 0; j < pokemonInGame[i]->skills.size(); j++)
         {
             ofs << pokemonInGame[i]->skills[j].skillID << "|" << pokemonInGame[i]->skills[j].skillName << "|" << pokemonInGame[i]->skills[j].skillDescription << "|" << pokemonInGame[i]->skills[j].type << "|"
@@ -187,6 +191,7 @@ void PokemonLib::Save()
         }
         ofs << endl;
     }
+    //保存宝可梦库信息
     for (int i = 0; i < pokemonInLib.size(); i++)
     {
         ofs << pokemonInLib[i]->ID << "," << pokemonInLib[i]->name << "," << pokemonInLib[i]->type.first << "," << pokemonInLib[i]->type.second << "," << pokemonInLib[i]->level
@@ -215,6 +220,7 @@ void PokemonLib::Save()
 
 void PokemonLib::Load()
 {
+    //加载宝可梦信息
     pokemonInGame.clear(); 
     pokemonInLib.clear();  
     int count = 0;

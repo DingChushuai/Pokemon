@@ -4,6 +4,7 @@
 
 Game::Game()
 {
+	//初始化状态栈和各个组件
 	gameSenceStack.push_back(START_MENU);
     gameSence = START_MENU;
 	playerX= 0;
@@ -12,20 +13,22 @@ Game::Game()
     currentMap = nullptr;
 	inCombat = false;
 	pokemonNow = nullptr;
-	HideCursor(); 
+	HideCursor(); //隐藏光标
 }
 
 void Game::Run()
 {
+	//游戏主循环,根据状态栈来切换游戏场景
 	while (gameSenceStack.empty() == false)
 	{
-		ClearScreen();
+		ClearScreen();	//切换场景时清屏
 		gameSence = gameSenceStack.back();
-		ChangeMusic();
+		ChangeMusic();	//切换场景时切换音乐
 		switch (gameSence)
 		{
 			case START_MENU:
 			{
+				//游戏开始菜单,选择开始新游戏,加载游戏或退出游戏
 				DrawTitle();
 				Text("操作提示: ws(ad)选择, ESC退出 (空格)确认\n").Print();
 				vector<Text> Menu;
@@ -51,11 +54,13 @@ void Game::Run()
 			}
 			case GAME:
 			{
+				//游戏主场景,玩家控制角色在地图上移动
 				ActOnMap();
 				break;
 			}
 			case SETTING:
 			{
+				//设置菜单,选择保存游戏,返回游戏,开关音乐,保存并退出,返回菜单
 				Text("设置\n",GREEN).Print();
 				Text("操作提示: ws(ad)选择, ESC退出 (空格)确认\n").Print();
                 vector<Text> Menu;
@@ -107,6 +112,7 @@ void Game::Run()
 			}
 			case POKEMON_LIB:
 			{
+				//查看宝可梦队伍
 				{
 					Text("\n你上阵中的宝可梦：\n").Print();
 					Text("\n选择并查看宝可梦的详细信息, ESC退出\n", YELLOW, GRAY).Print();
@@ -127,6 +133,7 @@ void Game::Run()
 			}
             case POKEMON_INFO:
             {
+				//从宝可梦队伍中选择一只宝可梦查看详细信息
 				{
 					command.PrintfList(pokemonNow->GetDetail());
 					Text("按任意键返回").Print();
@@ -138,6 +145,7 @@ void Game::Run()
 			case BACKPACK:
 			{
 				{
+					//查看背包,选择道具使用
 					vector<Text> props = backpack.GetPropsInfo();
                     if (props.size() == 0)
                     {
@@ -162,6 +170,7 @@ void Game::Run()
 			}
 			case  POKEMON_CENTER:
 			{
+				//宝可梦中心,选择宝可梦交换,宝可梦优先存入队伍,不会出现队伍不满6个而仓库有宝可梦的情况
 				{
 					vector<Text> pokemonsIngame = pokemonLib.GetPokemonInGameInfo();
 					vector<Text> pokemonsInLib = pokemonLib.GetPokemonInLibInfo();
@@ -237,6 +246,7 @@ void Game::Run()
 			}
 			case BUY_ITEM:
 			{
+				//商店,购买道具
 				Text("你的金币:"+to_string(money), YELLOW).Print();
 				Text("商品列表:").Print();
 				vector<Text> props = shop.GetPropsInShop();
@@ -277,6 +287,7 @@ void Game::Run()
 			}
             case SELL_ITEM:
 			{
+				//商店,卖出道具
 				vector<Text> props = backpack.GetPropsSellPrice();
 				if (props.size() == 0)
 				{
@@ -315,6 +326,7 @@ void Game::Run()
 			}
 			case SELL_POKEMON:
 			{
+				//商店,卖出宝可梦
                 vector<Text> pokemonNames = pokemonLib.GetPokemonSellPrice();
 				if (pokemonNames.size() == 0)
 				{
@@ -349,6 +361,7 @@ void Game::Run()
 			}
 			case COMBAT:
 			{
+				//触发与野生宝可梦的战斗
 				if (pokemonLib.pokemonInGame.size() == 0)
 				{
                     log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
@@ -357,7 +370,8 @@ void Game::Run()
 				}
 				StartCombat();
 				combat.EndCombat();
-				combat.combatLog.ShowLog();
+				combat.combatLog.ShowLog();	//显示战斗结算日志
+				//判断升级
 				for (auto& pokemon : pokemonLib.pokemonInGame)
 				{
 					if (pokemon->CanLevelUp())
@@ -371,6 +385,7 @@ void Game::Run()
 			}
 			case DEBUG:
 			{
+				//debug指令
 				Text("指令表:\n").Print();
 				Text("金币(m):设置金币数量\n").Print();
 				Text("升级(l): 给所有宝可梦升一级\n").Print();
@@ -411,6 +426,7 @@ void Game::Run()
 			}
 			case WORLD_MAP:  
 			{
+				//世界地图
 				{
                     Text("这里是世界地图:\n", GREEN).Print();
                     DrawWorldMap();
@@ -426,6 +442,7 @@ void Game::Run()
 
 void Game::Init()
 {
+	//初始化新游戏
 	playerX = 35;
     playerY = 4;
 	money = 2000;
@@ -443,11 +460,13 @@ void Game::Init()
 	}
 	soundPlayer.PlayMusic(SoundPlayer::MUSIC_ZhenXinZhen);
 	log.clearLog();
-	log.AddLog(Text("欢迎来到宝可梦世界！\n这里有着大量神奇的精灵宝可梦等待着你去探索和发现，在探索的途中，你会遇到许多人物，他们对你或是指引或是挑战(温馨提示:1个npc可能不止一次对话哦）,请开始你的宝可梦之旅吧!",GREEN));
+	log.AddLog(Text("欢迎来到宝可梦世界！请使用全屏游玩.\n"
+		"\n这里有着大量神奇的精灵宝可梦等待着你去探索和发现，在探索的途中，你会遇到许多人物，他们对你或是指引或是挑战(温馨提示:1个npc可能不止一次对话哦）,请开始你的宝可梦之旅吧!",GREEN));
 }
 
 void Game::Load()
 {
+	//载入游戏
 	ifstream game_state;
 	game_state.open(GAME_STATE_PATH);
 	bool hasData = false;
@@ -507,6 +526,7 @@ void Game::Load()
 
 void Game::Save()
 {
+	//保存游戏
 	ofstream game_state;
     game_state.open(GAME_STATE_PATH);
     if (game_state.is_open())
@@ -557,12 +577,14 @@ void Game::DrawWorldMap()
 
 void Game::ActOnMap()
 {
+	//在地图上行动的逻辑
 	Text("这里是: " + currentMap->getMapName(), GREEN).Print();
 	Text("\n拥有金币： " + to_string(money), YELLOW).Print();
 	Text("\n操作提示: wasd:上左下右移动,e:打开背包,f:查看宝可梦,ESC:进入设置,m:查看地图,'/':进入修改器(debug时用) ").Print();
 	cout << endl; 
 	int maxX = currentMap->getMapWidth();
     int maxY = currentMap->getMapHeight();
+	//遍历npc并选出在当前地图上的npc,显示尾号对应的npc名称
 	for (auto npc : npcs)
 	{
 		if (npc->mapID == currentMap->getMapID())
@@ -571,9 +593,10 @@ void Game::ActOnMap()
 		}
 	}
 	cout << endl;
-	command.PrintfList(currentMap->getTexts());
+	command.PrintfList(currentMap->getTexts());	//打印地图说明
 	cout << endl;
 	pair<int, int> pos = GetPos();
+	//打印地图
 	for (int i = 0; i < maxY; i++)
 	{
 		for (int j = 0; j < maxX; j++)
@@ -585,6 +608,7 @@ void Game::ActOnMap()
 	}
 	pair<int, int> logPos = GetPos();
 	log.ShowLog();
+	//打印npc,使用尾号代替显示
 	for (auto npc : npcs)
 	{
 		if (npc->mapID == currentMap->getMapID())
@@ -594,10 +618,11 @@ void Game::ActOnMap()
 		}
 	}
 	GotoXY(pos.first + playerX, pos.second + playerY);
-	Text("@", MAGENTA).Print();
+	Text("@", MAGENTA).Print();	//打印玩家
 	
 	while (true)
 	{
+		//获取指令
 		char cmd = command.GetCommand({ UP,DOWN,LEFT,RIGHT,ESC,OPEN_BACKPACK,POKEMON_LIST,OPEN_WORLD_MAP,COMMAND});
 		if (cmd == ESC)
 		{
@@ -626,17 +651,20 @@ void Game::ActOnMap()
 		}
 		else
 		{
+			//移动玩家
             int newX = playerX;
             int newY = playerY;
+			//获取新的坐标
             switch (cmd)
             {
             case UP: if(newY>0) newY--; break;
-            case DOWN:if(newY<maxY-1) newY++; break;
+            case DOWN:if(newY<maxY-2) newY++; break;
             case LEFT:if(newX>0) newX--; break; 
-            case RIGHT:if(newX<maxX-1) newX++; break; 
+            case RIGHT:if(newX<maxX-2) newX++; break; 
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
+			//优先判断是否是npc
 			bool isNPC = false;
 			for (auto npc : npcs)
 			{
@@ -645,7 +673,7 @@ void Game::ActOnMap()
 					if (npc->x == newX && npc->y == newY)
 					{
 						isNPC = true;
-						if (ChangeNPCState(npc))
+						if (ChangeNPCState(npc))	//尝试改变npc状态,并显示成功/失败的对话
 						{
 							Text info;
 							info.Add(npc->name, GREEN);
@@ -667,8 +695,10 @@ void Game::ActOnMap()
 				}
 			}
             if (isNPC) break;
+			//依次判断新位置的坐标类型
 			if (block.type == Map::EMPTY)
 			{
+				//只更改两个位置显示的内容
 				GotoXY(pos.first + playerX, pos.second + playerY);
                 Text(string(1, blockOld.symbol), blockOld.color).Print();
                 playerX = newX;
@@ -682,6 +712,7 @@ void Game::ActOnMap()
 			}
 			else if (block.type == Map::GRASS)
 			{
+				//草丛,随机遇到野生宝可梦
 				GotoXY(pos.first + playerX, pos.second + playerY);
 				Text(string(1, blockOld.symbol), blockOld.color).Print();
 				playerX = newX;
@@ -690,6 +721,7 @@ void Game::ActOnMap()
 				Text("@", MAGENTA).Print();
 				vector<vector<int>> wilds = currentMap->getWildPokemon();
 				int wild_index = -1;
+				//依次判断是否遇到野生宝可梦
 				for (int i = 0; i < wilds.size(); i++)
 				{
 					if (rand() % wilds[i][2] == 0)
@@ -702,7 +734,7 @@ void Game::ActOnMap()
 				{
 					if (pokemonLib.pokemonInGame.size() > 0)
 					{
-						combat.InitWildCombat(wilds[wild_index][0], wilds[wild_index][1], &pokemonLib);
+						combat.InitWildCombat(wilds[wild_index][0], wilds[wild_index][1], &pokemonLib);	//初始化战斗
 						gameSenceStack.push_back(COMBAT);
 					}
                     break;
@@ -710,16 +742,18 @@ void Game::ActOnMap()
 			}
 			else if (block.type == Map::EXIT)
 			{
+				//切换地图
 				Text info;
                 info.Add("你离开了");
                 info.Add(currentMap->getMapName(), YELLOW);
                 info.Add("来到了");
-                
+                //获取出口信息
 				vector<int> newMap = currentMap->getExit(newX, newY);
 				if (newMap.size() == 0)
 				{
 					break;
 				}
+				//判断是否已经存在该地图
 				for (auto map : maps)
 				{
 					if (map->getMapID() == newMap[0])
@@ -732,6 +766,7 @@ void Game::ActOnMap()
                         break;
 					}
 				}
+				//如果不存在,则创建新的地图
 				if (currentMap->getMapID() != newMap[0])
 				{
                     currentMap = new Map(newMap[0]);
@@ -750,6 +785,7 @@ void Game::ActOnMap()
 			}
 			else if (block.type == Map::HOSPITAL)
 			{
+				//宝可梦医院,恢复所有宝可梦的HP和PP
 				for (auto poke : pokemonLib.pokemonInGame)
 				{
                     poke->attribute.hp = poke->attribute.maxHp;
@@ -773,6 +809,8 @@ void Game::ActOnMap()
 
 bool Game::UseProp(Prop* prop)
 {
+	//根据道具类型和使用场景使用道具
+	//道具类型信息参考README.md
 	switch (prop->GetType())
 	{
         case 0:
@@ -781,6 +819,7 @@ bool Game::UseProp(Prop* prop)
 		}
         case 1:
 		{
+			//消除状态
 			if (inCombat)
 			{
 				vector<Pokemon*> pokes = combat.myPokemons;
@@ -846,6 +885,7 @@ bool Game::UseProp(Prop* prop)
 		}
         case 2:
 		{
+			//提升基础点数
 			vector<Pokemon*> pokes;
             pokes = pokemonLib.pokemonInGame;
 			vector<Text> pokemonInfo;
@@ -881,6 +921,7 @@ bool Game::UseProp(Prop* prop)
 		}
         case 3:
 		{
+			//提升技能效果
 			vector<Pokemon*> pokes;
 			if (inCombat) pokes = combat.myPokemons;
 			else pokes = pokemonLib.pokemonInGame;
@@ -939,6 +980,7 @@ bool Game::UseProp(Prop* prop)
 		}
         case 4:
 		{
+			//提升战斗属性
 			Pokemon* poke = combat.pokemonNow;
             vector<int> param = prop->GetEffectPara();
 			for (int i = 0; i < param.size(); i += 2)
@@ -964,6 +1006,7 @@ bool Game::UseProp(Prop* prop)
 		}
 		case 5:
 		{
+			//恢复宝可梦血量
 			Pokemon* poke;
 			if(inCombat)
 				poke = combat.pokemonNow;
@@ -1004,6 +1047,7 @@ bool Game::UseProp(Prop* prop)
 		}
 		case 7:
 		{
+			//捕捉宝可梦
 			Pokemon* poke = combat.enemyNow;
 			if (combat.IsTrainerBattle())
 			{
@@ -1049,6 +1093,8 @@ bool Game::UseProp(Prop* prop)
 
 void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
 {
+	//根据技能类型进行攻击
+	//技能类型信息详见README.md
     if (user->attribute.hp <= 0) return;
 	Type type = skill->type;
 	Type type1, type2;
@@ -1076,7 +1122,7 @@ void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
     damage = (2 * user->level + 10) * user->attribute.specialAttack * user->GetBuffValue(user->buff.specialAttack) * skill->power / (250 * target->attribute.specialDefense * target->GetBuffValue(target->buff.specialDefense)) + 2;
     damage *= typeEffect;
 	if (damage < 1.0) damage = 1.0;
-	int randHitMusic = rand() % 3;
+	int randHitMusic = rand() % 3;	//随机播放攻击音效
 	switch (randHitMusic)
 	{
 		case 0:soundPlayer.Play_Sound(SoundPlayer::SOUND_HIT_1);
@@ -1379,6 +1425,7 @@ void Game::UseSkill(Skill* skill, Pokemon* user,Pokemon* target)
 
 void Game::ChangeMusic()
 {
+	//根据地图改变背景音乐
 	SoundPlayer::SoundID BGM;
 	if (currentMap == nullptr) return;
 	int mapID = currentMap->getMapID();
@@ -1400,6 +1447,7 @@ void Game::ChangeMusic()
 
 bool Game::ChangeNPCState(NPC* npc)
 {
+	//根据NPC状态改变NPC状态
 	State state = npc->GetState();
 	switch (state.stateAction[0])
 	{
@@ -1425,6 +1473,8 @@ bool Game::ChangeNPCState(NPC* npc)
 			combat.InitTrainerCombat(state.stateAction[1], &pokemonLib);
 			StartCombat();
 			combat.EndCombat();
+			combat.combatLog.ShowLog();
+			command.Pause();
 			for (auto& pokemon : pokemonLib.pokemonInGame)
 			{
 				if (pokemon->CanLevelUp())
@@ -1508,6 +1558,7 @@ bool Game::ChangeNPCState(NPC* npc)
 
 void Game::StartCombat() 
 {
+	//初始化战斗
 	if (pokemonLib.pokemonInGame.size() == 0 || combat.pokemonAvailable().size() == 0)
 	{
 		log.AddLog(Text("你没有可以战斗的宝可梦了,无法触发战斗!", RED));
@@ -1520,7 +1571,7 @@ void Game::StartCombat()
 	Skill* mySkill = nullptr;
 	bool myAction = true;
 	bool enemyAction = true;
-	vector<Text> choose;
+	vector<Text> choose;	//选择列表
     choose.push_back(Text("1. 使用技能"));
     choose.push_back(Text("2. 使用道具"));
     choose.push_back(Text("3. 交换上阵"));
@@ -1530,7 +1581,7 @@ void Game::StartCombat()
 		ClearScreen();
 		command.PrintfList(combat.ShowPokemonInfo());
 		combat.combatLog.ShowLog();
-
+		//结束战斗判断
 		if (combat.pokemonNow->attribute.hp <= 0)
 		{
 			combat.beaten.push_back({ combat.enemyNow, combat.pokemonNow });
@@ -1545,6 +1596,7 @@ void Game::StartCombat()
 			}
 			else
 			{
+				//如果没有宝可梦存活,则切换宝可梦
 				Text("请选择你要切换的宝可梦:\n").Print();
 				int choose_pokemon = 0;
 				do {
@@ -1588,15 +1640,15 @@ void Game::StartCombat()
 			}
 			continue;
 		}
-		if (myAction)
+		if (myAction)	//如果玩家可以行动
 		{
 			int choice = command.chooseFromList(choose);
-
+			//选择行动
 			if (choice == 0)
 			{
 				continue;
 			}
-			else if (choice == 1)
+			else if (choice == 1)	//使用技能
 			{
 				Text("请选择要使用的技能:\n").Print();
 				int skill_id = command.chooseFromList(combat.ShowPokemonSkill());
@@ -1612,7 +1664,7 @@ void Game::StartCombat()
 					}
 				}
 			}
-			else if (choice == 2)
+			else if (choice == 2)	//使用道具
 			{
 
 				vector<Prop*> props = backpack.GetPropsCanUseInBattle();
@@ -1635,7 +1687,7 @@ void Game::StartCombat()
 					myProp = props[prop_id - 1];
 				}
 			}
-			else if (choice == 3)
+			else if (choice == 3)	//交换宝可梦
 			{
 				vector<Pokemon*> pokemons = combat.pokemonAvailable();
 				if (pokemons.size() == 0)
@@ -1673,7 +1725,7 @@ void Game::StartCombat()
 				combat.ChangePokemon(myPokemon);
 				combat.combatLog.AddLog(info);
 			}
-			else if (choice == 4)
+			else if (choice == 4)	//逃跑
 			{
 				if (combat.TryToEscape())
 				{
@@ -1699,6 +1751,7 @@ void Game::StartCombat()
 
 			if (choice == 1)
 			{
+				//判断是否命中,技能优先级
 				Skill* enamy_skill = &combat.enemyNow->skills[rand() % combat.enemyNow->skills.size()];
 				int myFirst = 0;
 				if (mySkill != nullptr)
@@ -1851,7 +1904,7 @@ void Game::StartCombat()
                 combat.combatLog.AddLog(info);
 			}
 		}
-
+		//我方宝可梦状态判断
 		if (combat.pokemonNow->statu == Pokemon::Poison)
 		{
 			int damage = combat.pokemonNow->attribute.maxHp / 8;
@@ -1936,7 +1989,7 @@ void Game::StartCombat()
 				combat.combatLog.AddLog(info); 
 			}
 		}
-
+		//敌方宝可梦状态判断
 		if (combat.enemyNow->statu == Pokemon::Poison)
 		{
 			int damage = combat.enemyNow->attribute.maxHp / 8;

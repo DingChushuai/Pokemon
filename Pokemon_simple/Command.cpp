@@ -29,7 +29,6 @@ bool Command::DoubleConfirmation(Text message)
     vector<Text> Menu;
     Menu.push_back(Text("1. 是"));
     Menu.push_back(Text("2. 否"));
-    //示例代码
     vector<char> possibleCommands = { UP, LEFT, DOWN, RIGHT, YES, ESC };
     ChooseList MenuList(Menu);
     char command;
@@ -68,19 +67,19 @@ Command::~Command()
 
 void Command::Pause()
 {
-    _getch();
+    _getch();   //等待用户按键
 }
 
 int Command::chooseFromList(vector<Text> list, int showMax)
 {
-    ChooseList chooseList(list, showMax);
+    ChooseList chooseList(list, showMax);   //创建选择列表
     SoundPlayer s; 
     vector<char> possibleCommands = { UP, LEFT, DOWN, RIGHT, YES, ESC };
     char command;
     do {
         chooseList.ShowList();
-        command = GetCommand(possibleCommands);
-        s.Play_Sound(SoundPlayer::SOUND_CHOOSE);
+        command = GetCommand(possibleCommands);     //获取用户输入
+        s.Play_Sound(SoundPlayer::SOUND_CHOOSE);    //播放选择音效
         switch (command)
         {
         case UP:
@@ -109,6 +108,12 @@ void Command::PrintfList(vector<Text> list)
 
 int Command::ChooseCount(int max)
 {
+    //选择数量
+    //max为最大数量,在外部计算
+    //返回用户选择的数量
+    //可以通过按'/'输入具体数量
+    //如果用户按'ESC'则返回0
+    //'/'输入的数量必须大于0且小于等于max,否则重新输入,直到输入正确
     int count = 1;
     Text message("请选择数量：");
     message.Print();
@@ -158,6 +163,8 @@ int Command::ChooseCount(int max)
 using namespace std;
 ChooseList::ChooseList(vector<Text> list)
 {
+    //初始化选择列表,将所有字符串长度补齐,以便整齐显示
+    //初始化选择并高亮第一个选择
     maxstrlen = 0;
     vector<Text> listNew = list;
     for (int i = 0; i < list.size(); i++)
@@ -185,6 +192,7 @@ ChooseList::ChooseList(vector<Text> list)
 
 ChooseList::ChooseList(vector<Text> list, int showMax)
 {
+    //同上
     maxstrlen = 0;
     vector<Text> listNew;
     for (int i = 0; i < list.size(); i++)
@@ -215,6 +223,7 @@ ChooseList::ChooseList(vector<Text> list, int showMax)
 
 void ChooseList::SetSelect(int select)
 {
+    //更改选择
     if (select < 0 || select >=list.size())
         throw "choose list index out of range";
     if (select == chooseNow)
@@ -226,9 +235,13 @@ void ChooseList::SetSelect(int select)
 
 void ChooseList::ShowList()
 {
+    //显示选择列表
+    //如果showMax小于list.size(),则只显示showMax个,并且可以上下滚动
+    // 如果showMax大于等于list.size(),则显示全部
     int n = list.size();
     if (startLine == -1)
     {
+        //初始化第一次选择
         chooseNow = 0;
         list[chooseNow].SetColor(None, GREEN);
         pair<int, int> pos = GetPos();
@@ -236,6 +249,7 @@ void ChooseList::ShowList()
     }
     if (showMax >=n)
     {
+        //显示全部
         if (firstShow)
         {
             for (int i = 0; i < list.size(); i++)
@@ -245,6 +259,7 @@ void ChooseList::ShowList()
             firstShow = false;
         }
         pair<int, int> pos = GetPos();
+        //处理特殊情况
         if (list.size() == 1)
         {
             GotoXY(0, startLine);
@@ -276,7 +291,7 @@ void ChooseList::ShowList()
         GotoXY(pos.first, pos.second);
         return;
     }
-
+    //滚动显示逻辑
     GotoXY(0, startLine);
     int showStart, showEnd;
     if (chooseNow < showMax / 2)
@@ -287,7 +302,7 @@ void ChooseList::ShowList()
         {
             list[i].Print();
         }
-        Text("▼", Color::YELLOW).Print();
+        Text("▼", Color::YELLOW).Print();   //显示箭头,表示可以向下滚动
         string str = "";
         for (int i = 0; i < maxstrlen; i++)
             str += " ";

@@ -5,6 +5,8 @@
 
 Prop::Prop(int ID)
 {
+	//从文件中读取
+	//详细信息参考README.md
 	ifstream file(PROP_INFO_PATH);
 	string line;
 	vector<string> data;
@@ -36,6 +38,7 @@ Prop::Prop(int ID)
 
 Prop::Prop(const Prop& prop)
 {
+	//复制构造
 	ID = prop.ID;
 	name = prop.name;
 	description = prop.description;

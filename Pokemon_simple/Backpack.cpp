@@ -15,6 +15,7 @@ Backpack::~Backpack()
 
 void Backpack::Load()
 {
+    //从文件中读取背包信息
     Clear();
     ifstream ifs;
     ifs.open(BACKPACK_STATE_PATH, ios::in);
@@ -30,6 +31,7 @@ void Backpack::Load()
 
 void Backpack::AddProp(Prop* prop)
 {
+    //向背包中添加道具
     for (auto it : props)
     {
         if (it->GetID() == prop->GetID())
@@ -62,6 +64,7 @@ Prop* Backpack::GetProp_(int id)
 
 Prop* Backpack::GetPropFromIndex(int index)
 {
+    //返回index对应的道具
     if (index >= 0 && index <= props.size()) {
         return props[index-1];
     }
@@ -70,6 +73,7 @@ Prop* Backpack::GetPropFromIndex(int index)
 
 bool Backpack::ReduceProp(int id, int num)
 {
+    //减少id对应的道具数量,返回是否成功,归零则删除
     for (auto prop : props)
     {
         if (prop->GetID() == id)
@@ -77,7 +81,7 @@ bool Backpack::ReduceProp(int id, int num)
             int n;
             n = prop->GetNum();
             
-            if (n - num >= 0)
+            if (n - num > 0)
             {
                 prop->SetNum(n - num);
                 return true;
@@ -98,9 +102,10 @@ bool Backpack::ReduceProp(int id, int num)
 
 bool Backpack::ReduceProp(Prop* prop,int num)
 {
+    //减少prop对应的道具数量,返回是否成功,归零则删除
     int n;
     n = prop->GetNum();
-    if (n - num >=0)
+    if (n - num >0)
     {
         prop->SetNum(prop->GetNum() - num);
         return true;
@@ -115,6 +120,7 @@ bool Backpack::ReduceProp(Prop* prop,int num)
 
 void Backpack::IncreaseProp(int id, int num)
 {
+    //增加id对应的道具数量
     for (auto prop:props)
     {
         if (prop->GetID() == id)
@@ -155,6 +161,7 @@ vector<Prop*> Backpack::GetProps()
 
 vector<Prop*> Backpack::GetPropsCanUseInBattle()
 {
+    //筛选返回可以用于战斗的道具
     vector<Prop*> res;
     for (auto prop : props)
     {
@@ -168,6 +175,7 @@ vector<Prop*> Backpack::GetPropsCanUseInBattle()
 
 vector<Prop*> Backpack::GetPropsCanUseInField()
 {
+    //筛选返回可以用于野外的道具
     vector<Prop*> res;
     {
         for (auto prop : props)
@@ -183,6 +191,7 @@ vector<Prop*> Backpack::GetPropsCanUseInField()
 
 vector<Text> Backpack::GetPropsInfo()
 {
+    //返回所有道具信息
     vector<Text> infoTexts;
     vector<Prop*> backpackProps = props;
     for (int i = 0; i < backpackProps.size(); i++)
@@ -201,6 +210,7 @@ vector<Text> Backpack::GetPropsInfo()
 }
 vector<Text> Backpack::GetPropsSellPrice()
 {
+    //返回所有可出售道具信息,用于商店
     vector<Text> sellPrices;
     for (int i = 0; i < props.size(); i++)
     {
@@ -222,6 +232,7 @@ vector<Text> Backpack::GetPropsSellPrice()
 
 vector<Text> Backpack::GetPropsBuyPrice()
 {
+    //返回所有可购买道具信息,用于商店
     vector<Text> buyPrices;
     for (int i = 0; i < props.size(); i++)
     {
