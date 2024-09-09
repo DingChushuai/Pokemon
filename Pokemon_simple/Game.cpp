@@ -372,7 +372,7 @@ void Game::Run()
 			case DEBUG:
 			{
 				Text("指令表:\n").Print();
-				Text("音乐: 更改现音乐\n").Print();
+				Text("音乐(s): 更改现音乐\n").Print();
 				Text("金币(m):设置金币数量\n").Print();
 				Text("升级(l): 给所有宝可梦升一级\n").Print();
 				Text("退出(e): 退出debug\n").Print();
@@ -380,7 +380,7 @@ void Game::Run()
 				string input;
                 cin >> input;
                 if (input == "exit"  || input == "e") { gameSenceStack.pop_back(); break; }
-				else if (input == "music")
+				else if (input == "s")
 				{
                     Text("input music id:", RED).Print();
                     int id;
@@ -1440,6 +1440,8 @@ bool Game::ChangeNPCState(NPC* npc)
 			combat.InitTrainerCombat(state.stateAction[1], &pokemonLib);
 			StartCombat();
 			combat.EndCombat();
+			combat.combatLog.ShowLog();
+			command.Pause();
 			for (auto& pokemon : pokemonLib.pokemonInGame)
 			{
 				if (pokemon->CanLevelUp())
