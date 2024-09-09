@@ -43,7 +43,7 @@ private:
     bool UseProp(Prop* prop);
     void UseSkill(Skill* skill, Pokemon* user, Pokemon* target); 
     void ChangeMusic();
-    bool ChangeNPCState(NPC* npc);  //尝试改变NPC状态，如果成功返回true
+    bool ChangeNPCState(NPC* npc);
     void StartCombat();
 };
 

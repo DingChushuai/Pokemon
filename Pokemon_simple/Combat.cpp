@@ -277,10 +277,16 @@ int Combat::GetExperienceFromBattle(Pokemon* beatenPokemon)
 
 void Combat::EndCombat()
 {
+	combatLog.clearLog();
+	combatLog.AddLog(Text("Õ½¶·½áÊø\n"));
  	for (int i = 0; i < beaten.size(); i++)
 	{
 		pair<Pokemon*, Pokemon*> battleResult = beaten[i];
-		combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
+		for (auto pk : pokemonLib->pokemonInGame)
+		{
+			if(pk == battleResult.first)
+			combatLog.AddLog(battleResult.first->GetExperience(GetExperienceFromBattle(battleResult.second)));
+		}
 		battleResult.first->AddBasicValue(battleResult.second->basicValue);
 	}
 	for (int i = 0; i < myPokemons.size(); i++)
@@ -301,5 +307,5 @@ void Combat::EndCombat()
 	isTrainer = false;
 	escapeFailedTimes = 0;
 	beaten.clear();
-	combatLog.clearLog();
+	
 }

@@ -291,7 +291,7 @@ void Game::Run()
 					int count = command.ChooseCount(prop->GetNum());
 					if (count == 0) { gameSenceStack.pop_back(); break; }
 					money += price * count;
-					backpack.ReduceProp(choice, count);
+					backpack.ReduceProp(prop,count);
 					Text info;
 					info.Add("你卖出了");
 					info.Add(prop->GetName(), GREEN);
@@ -350,8 +350,8 @@ void Game::Run()
                     break;
 				}
 				StartCombat();
-				combat.combatLog.ShowLog();
 				combat.EndCombat();
+				combat.combatLog.ShowLog();
 				for (auto& pokemon : pokemonLib.pokemonInGame)
 				{
 					if (pokemon->CanLevelUp())
@@ -659,8 +659,8 @@ void Game::ActOnMap()
                             info.Add(npc->GetTalk(), YELLOW);
 							log.AddLog(info);
 							npc->state = npc->GetState().stateNext;
-                            break;
 						}
+						break;
 					}
 				}
 			}
@@ -781,7 +781,6 @@ bool Game::UseProp(Prop* prop)
 		2.accuracy;           //命中
 		3.PP;                 //pp
 		4.maxPP;              //最大pp
-		//BUFF,   //改变能力状态修正值(能力状态修正值,改变值,...)  //在战斗中临时改变
 	*/
 	switch (prop->GetType())
 	{
@@ -1136,7 +1135,6 @@ bool Game::ChangeNPCState(NPC* npc)
 			}
 			if (combat.lastCombatWin)
 			{
-				npc->state = state.stateNext;
                 return true;
 			}
             return false;
