@@ -371,12 +371,12 @@ void Game::Run()
 			}
 			case DEBUG:
 			{
-				Text("command list:\n").Print();
-				Text("music: change music now\n").Print();
-                Text("money(m): set money number\n").Print();
-				Text("levelup(l): levelup all pokemon\n").Print();
-                Text("exit(e): exit debug\n").Print();
-				Text("Debug:\ninput cmd:", RED).Print();
+				Text("指令表:\n").Print();
+				Text("音乐: 更改现音乐\n").Print();
+				Text("金币(m):设置金币数量\n").Print();
+				Text("升级(l): 给所有宝可梦升一级\n").Print();
+				Text("退出(e): 退出debug\n").Print();
+				Text("Debug:\n输入指令:", RED).Print();
 				string input;
                 cin >> input;
                 if (input == "exit"  || input == "e") { gameSenceStack.pop_back(); break; }
