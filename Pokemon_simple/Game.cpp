@@ -631,9 +631,9 @@ void Game::ActOnMap()
             switch (cmd)
             {
             case UP: if(newY>0) newY--; break;
-            case DOWN:if(newY<maxY-1) newY++; break;
+            case DOWN:if(newY<maxY-2) newY++; break;
             case LEFT:if(newX>0) newX--; break; 
-            case RIGHT:if(newX<maxX-1) newX++; break; 
+            case RIGHT:if(newX<maxX-2) newX++; break; 
             }
             Map::MapBlock block = currentMap->getMapBlock(newX, newY);
 			Map::MapBlock blockOld = currentMap->getMapBlock(playerX, playerY);
@@ -1425,6 +1425,8 @@ bool Game::ChangeNPCState(NPC* npc)
 			combat.InitTrainerCombat(state.stateAction[1], &pokemonLib);
 			StartCombat();
 			combat.EndCombat();
+			combat.combatLog.ShowLog();
+			command.Pause();
 			for (auto& pokemon : pokemonLib.pokemonInGame)
 			{
 				if (pokemon->CanLevelUp())

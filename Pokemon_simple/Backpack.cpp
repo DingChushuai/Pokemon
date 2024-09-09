@@ -77,7 +77,7 @@ bool Backpack::ReduceProp(int id, int num)
             int n;
             n = prop->GetNum();
             
-            if (n - num >= 0)
+            if (n - num > 0)
             {
                 prop->SetNum(n - num);
                 return true;
@@ -100,7 +100,7 @@ bool Backpack::ReduceProp(Prop* prop,int num)
 {
     int n;
     n = prop->GetNum();
-    if (n - num >=0)
+    if (n - num >0)
     {
         prop->SetNum(prop->GetNum() - num);
         return true;
